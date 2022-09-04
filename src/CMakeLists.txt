@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(ALL_FILES
     flightinformationregion/FlightInformationRegion.h
     flightinformationregion/ConcreteFlightInformationRegion.h flightinformationregion/ConcreteFlightInformationRegion.cpp
-    true.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})

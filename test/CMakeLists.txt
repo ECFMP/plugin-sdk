@@ -12,7 +12,6 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/
 #### FILES IN THIS PROJECT AND EXECUTABLE
 set(ALL_FILES
         main.cpp
-        test.cpp
         flightinformationregion/ConcreteFlightInformationRegionTest.cpp
         )
 
