@@ -46,10 +46,7 @@ jobs:
 
       - name: Run Tests
         working-directory: build
-        run:
-          | 
-            dir 
-            ctest -C Release --output-on-failure --no-tests=error
+        run: ctest -C Release --output-on-failure --no-tests=error
 
   format:
     name: Format

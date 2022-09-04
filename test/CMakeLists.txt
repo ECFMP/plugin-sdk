@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.23)
 project(flow_plugin_sdk_tests)
 
-#### GOOGLE TEST SETUP
 set(CMAKE_CXX_STANDARD 20)
+enable_testing()
 
+#### GOOGLE TEST SETUP
 include(GoogleTest)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/googletest")
@@ -15,6 +16,7 @@ set(ALL_FILES
         )
 
 add_executable(${PROJECT_NAME} ${ALL_FILES})
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 #### DEPENDENCIES
 add_dependencies(${PROJECT_NAME}
