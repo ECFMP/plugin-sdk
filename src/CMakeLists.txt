@@ -4,8 +4,9 @@ project(flow_plugin_sdk_src)
 set(CMAKE_CXX_STANDARD 20)
 
 set(ALL_FILES
-        true.cpp
-        )
+    flightinformationregion/FlightInformationRegion.h
+    flightinformationregion/ConcreteFlightInformationRegion.h flightinformationregion/ConcreteFlightInformationRegion.cpp
+)
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
