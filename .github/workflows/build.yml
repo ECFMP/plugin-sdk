@@ -1,0 +1,78 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    concurrency:
+      group: flow-sdk-build-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout Code and Submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      # Environment - needs MSVC
+      - name: Set up Visual Studio Shell
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x86
+
+      - name: Check Clang Version
+        run: clang-cl --version
+
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Run CMake
+        env:
+          CC: clang-cl
+          CFLAGS: -m32
+          CXX: clang-cl
+          CXXFLAGS: -m32
+        run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G Ninja -Bbuild
+
+      # Run the build and tests
+      - name: Run Ninja Build
+        working-directory: build
+        run: ninja
+
+      - name: Run Tests
+        working-directory: build
+        run: ctest -C Release --output-on-failure --no-tests=error
+
+  format:
+    name: Format
+    runs-on: windows-latest
+    concurrency:
+      group: flow-sdk-format-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      # Environment things
+      - name: Check Clang Version
+        run: clang-cl --version
+
+      - name: Get All Changed Files
+        id: changed-files
+        uses: Ana06/get-changed-files@v2.0.0
+        with:
+          filter: |
+            src/**/*.cpp
+            src/**/*.h
+            test/**/*.cpp
+            test/**/*.h
+      - name: Clang Format
+        run: |
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-format --style=file --dry-run -Werror ${{ steps.changed-files.outputs.added_modified }} }

@@ -1,0 +1,81 @@
+cmake_minimum_required(VERSION 3.23)
+project(flow_plugin_sdk_tests)
+
+#### GOOGLE TEST SETUP
+set(CMAKE_CXX_STANDARD 20)
+
+include(GoogleTest)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/googletest")
+
+#### FILES IN THIS PROJECT AND EXECUTABLE
+set(ALL_FILES
+        main.cpp
+        test.cpp
+        )
+
+add_executable(${PROJECT_NAME} ${ALL_FILES})
+
+#### DEPENDENCIES
+add_dependencies(${PROJECT_NAME}
+        flow_plugin_sdk_src
+        gtest
+        )
+
+#### INCLUDES
+target_include_directories(${PROJECT_NAME} PUBLIC
+        "${CMAKE_CURRENT_SOURCE_DIR}/.;"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src;"
+        )
+
+#### LINKS
+target_link_directories(
+        ${PROJECT_NAME} PUBLIC
+        "${CMAKE_BINARY_DIR}/src/"
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        GTest::gtest_main
+        flow_plugin_sdk_src
+        )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+
+#### COMPILE OPTIONS
+target_compile_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Debug>:
+        /Od;
+        -Zm200
+        >
+        $<$<CONFIG:Release>:
+        /O2;
+        /Oi;
+        /Gy;
+        -Zm120
+        >
+        /std:c++20;
+        /sdl;
+        /W4;
+        /WX;
+        ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+        ${DEFAULT_CXX_EXCEPTION_HANDLING}
+        -Wno-unused-parameter # Lots of interfaces don't use everything
+        -Wno-missing-field-initializers # Windows has loads of this sadly
+        )
+
+#### LINK OPTIONS
+target_link_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Debug>:
+        /DEBUG:FASTLINK;
+        /INCREMENTAL
+        -flto=thin
+        >
+        $<$<CONFIG:Release>:
+        /DEBUG;
+        /OPT:REF;
+        /OPT:ICF;
+        /INCREMENTAL:NO
+        >
+        /NODEFAULTLIB:LIBCMT;
+        /SUBSYSTEM:CONSOLE;
+        )
