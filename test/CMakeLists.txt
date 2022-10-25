@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 project(flow_plugin_sdk_tests)
+SET(PROJECT_NAME flow_plugin_sdk_tests)
 
 set(CMAKE_CXX_STANDARD 20)
 enable_testing()
@@ -12,11 +13,12 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/
 #### FILES IN THIS PROJECT AND EXECUTABLE
 set(ALL_FILES
         main.cpp
-        flightinformationregion/ConcreteFlightInformationRegionTest.cpp
-        )
+        event/ConcreteEventTest.cpp
+        flightinformationregion/ConcreteFlightInformationRegionTest.cpp)
 
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
+target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 #### DEPENDENCIES
 add_dependencies(${PROJECT_NAME}
