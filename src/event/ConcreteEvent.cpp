@@ -4,8 +4,9 @@ namespace FlowSdk::Event {
 
     ConcreteEvent::ConcreteEvent(int id, std::string name, std::chrono::system_clock::time_point start,
                                  std::chrono::system_clock::time_point end,
-                                 std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir)
-        : id(id), name(std::move(name)), start(start), end(end), fir(std::move(fir))
+                                 std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir,
+                                 std::string vatcanCode)
+        : id(id), name(std::move(name)), start(start), end(end), fir(std::move(fir)), vatcanCode(std::move(vatcanCode))
     {}
 
     auto FlowSdk::Event::ConcreteEvent::Id() const -> int
@@ -31,5 +32,10 @@ namespace FlowSdk::Event {
     auto ConcreteEvent::FlightInformationRegion() const -> const FlightInformationRegion::FlightInformationRegion&
     {
         return *fir;
+    }
+
+    auto ConcreteEvent::VatcanCode() const -> const std::string&
+    {
+        return vatcanCode;
     }
 }// namespace FlowSdk::Event

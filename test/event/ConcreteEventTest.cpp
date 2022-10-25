@@ -12,7 +12,7 @@ namespace FlowSdkTest::Event {
         ConcreteEventTest()
             : start(std::chrono::system_clock::now()), end(std::chrono::system_clock::now() + std::chrono::minutes(10)),
               fir(std::make_shared<ConcreteFlightInformationRegion>(1, "EGTT", "London")),
-              event(1, "Some event", start, end, fir)
+              event(1, "Some event", start, end, fir, "VATCAN")
         {}
 
         std::chrono::system_clock::time_point start;
@@ -44,5 +44,10 @@ namespace FlowSdkTest::Event {
     TEST_F(ConcreteEventTest, ItHasAFir)
     {
         EXPECT_EQ(fir.get(), &event.FlightInformationRegion());
+    }
+
+    TEST_F(ConcreteEventTest, ItHasAVatcanCode)
+    {
+        EXPECT_EQ("VATCAN", event.VatcanCode());
     }
 }// namespace FlowSdkTest::Event

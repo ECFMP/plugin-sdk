@@ -15,5 +15,6 @@ namespace FlowSdk::Event {
         [[nodiscard]] virtual auto End() const -> const std::chrono::system_clock::time_point& = 0;
         [[nodiscard]] virtual auto FlightInformationRegion() const
                 -> const FlightInformationRegion::FlightInformationRegion& = 0;
+        [[nodiscard]] virtual auto VatcanCode() const -> const std::string& = 0;
     };
 }// namespace FlowSdk::Event
