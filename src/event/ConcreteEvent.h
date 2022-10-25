@@ -31,7 +31,7 @@ namespace FlowSdk::Event {
 
         // The end time
         const std::chrono::system_clock::time_point end;
-        
+
         // The FIR for the event
         std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir;
     };

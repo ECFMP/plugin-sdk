@@ -22,12 +22,12 @@ namespace FlowSdk::Event {
     {
         return start;
     }
-    
+
     auto ConcreteEvent::End() const -> const std::chrono::system_clock::time_point&
     {
         return end;
     }
-    
+
     auto ConcreteEvent::FlightInformationRegion() const -> const FlightInformationRegion::FlightInformationRegion&
     {
         return *fir;
