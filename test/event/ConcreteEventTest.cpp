@@ -27,7 +27,7 @@ namespace FlowSdkTest::Event {
 
     TEST_F(ConcreteEventTest, ItHasAName)
     {
-        EXPECT_EQ("Some event", event.Name());
+        EXPECT_EQ(0, strcmp("Some event", event.Name()));
     }
 
     TEST_F(ConcreteEventTest, ItHasAStart)
@@ -47,6 +47,6 @@ namespace FlowSdkTest::Event {
 
     TEST_F(ConcreteEventTest, ItHasAVatcanCode)
     {
-        EXPECT_EQ("VATCAN", event.VatcanCode());
+        EXPECT_EQ(0, strcmp("VATCAN", event.VatcanCode()));
     }
 }// namespace FlowSdkTest::Event

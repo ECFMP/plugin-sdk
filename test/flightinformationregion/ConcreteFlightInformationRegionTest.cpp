@@ -17,11 +17,11 @@ namespace FlowSdkTest::FlightInformationRegion {
 
     TEST_F(ConcreteFlightInformationRegionTest, ItHasAnIdentifier)
     {
-        EXPECT_EQ("EGTT", fir.Identifier());
+        EXPECT_EQ(0, strcmp("EGTT", fir.Identifier()));
     }
 
     TEST_F(ConcreteFlightInformationRegionTest, ItHasAName)
     {
-        EXPECT_EQ("London", fir.Name());
+        EXPECT_EQ(0, strcmp("London", fir.Name()));
     }
 }// namespace FlowSdkTest::FlightInformationRegion

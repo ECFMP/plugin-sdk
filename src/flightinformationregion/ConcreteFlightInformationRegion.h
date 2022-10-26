@@ -5,11 +5,11 @@ namespace FlowSdk::FlightInformationRegion {
     class ConcreteFlightInformationRegion : public FlightInformationRegion
     {
         public:
-        ConcreteFlightInformationRegion(int id, std::string identifier, std::string name);
+        ConcreteFlightInformationRegion(int id, const char* identifier, const char* name);
 
-        [[nodiscard]] auto Id() const -> int;
-        [[nodiscard]] auto Identifier() const -> const std::string&;
-        [[nodiscard]] auto Name() const -> const std::string&;
+        [[nodiscard]] auto Id() const -> int override;
+        [[nodiscard]] auto Identifier() const -> const char* override;
+        [[nodiscard]] auto Name() const -> const char* override;
 
         private:
         // ID of the FIR
@@ -17,9 +17,9 @@ namespace FlowSdk::FlightInformationRegion {
 
         private:
         // The FIR identifier, e.g. EGTT
-        const std::string identifier;
+        const char* identifier;
 
         // The name, e.g. London
-        const std::string name;
+        const char* name;
     };
 }// namespace FlowSdk::FlightInformationRegion
