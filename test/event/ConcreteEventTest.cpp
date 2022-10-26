@@ -9,8 +9,8 @@ namespace FlowSdkTest::Event {
     {
         public:
         ConcreteEventTest()
-            : start(std::chrono::time_point<std::chrono::system_clock>() + std::chrono::seconds(1666803606)), end
-              (std::chrono::time_point<std::chrono::system_clock>() + std::chrono::seconds(1666803626)),
+            : start(std::chrono::time_point<std::chrono::system_clock>() + std::chrono::seconds(1666803606)),
+              end(std::chrono::time_point<std::chrono::system_clock>() + std::chrono::seconds(1666803626)),
               fir(std::make_shared<ConcreteFlightInformationRegion>(1, "EGTT", "London")),
               event(1, "Some event", start, end, fir, "VATCAN")
         {}
