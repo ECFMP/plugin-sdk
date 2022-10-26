@@ -1,5 +1,4 @@
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
-#include "gtest/gtest.h"
 
 namespace FlowSdkTest::FlightInformationRegion {
     class ConcreteFlightInformationRegionTest : public testing::Test

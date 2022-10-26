@@ -1,5 +1,4 @@
 #include "event/ConcreteEventParticipant.h"
-#include "gtest/gtest.h"
 
 using FlowSdk::Event::ConcreteEventParticipant;
 

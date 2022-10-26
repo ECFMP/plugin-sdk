@@ -1,6 +1,5 @@
 #include "event/ConcreteEvent.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
-#include "gtest/gtest.h"
 
 using FlowSdk::Event::ConcreteEvent;
 using FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion;
