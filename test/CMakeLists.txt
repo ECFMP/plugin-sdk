@@ -14,6 +14,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/
 set(ALL_FILES
         main.cpp
         event/ConcreteEventTest.cpp
+        event/ConcreteEventParticipantTest.cpp
         flightinformationregion/ConcreteFlightInformationRegionTest.cpp)
 
 add_executable(${PROJECT_NAME} ${ALL_FILES})
