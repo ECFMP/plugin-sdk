@@ -10,7 +10,10 @@ set(src_flight_information_regions
 
 set(src_events
         event/Event.h
-        event/ConcreteEvent.cpp event/ConcreteEvent.h)
+        event/ConcreteEvent.cpp event/ConcreteEvent.h
+        event/EventParticipant.h
+        event/ConcreteEventParticipant.cpp "event/ConcreteEventParticipant.h"
+        )
 
 set(src_pch
         pch.h pch.cpp)
