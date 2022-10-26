@@ -11,8 +11,8 @@ namespace FlowSdk::Event {
         virtual ~Event() = default;
         [[nodiscard]] virtual auto Id() const -> int = 0;
         [[nodiscard]] virtual auto Name() const -> const char* = 0;
-        [[nodiscard]] virtual auto Start() const -> const std::chrono::system_clock::time_point& = 0;
-        [[nodiscard]] virtual auto End() const -> const std::chrono::system_clock::time_point& = 0;
+        [[nodiscard]] virtual auto Start() const -> unsigned int = 0;
+        [[nodiscard]] virtual auto End() const -> unsigned int = 0;
         [[nodiscard]] virtual auto FlightInformationRegion() const
                 -> const FlightInformationRegion::FlightInformationRegion& = 0;
         [[nodiscard]] virtual auto VatcanCode() const -> const char* = 0;

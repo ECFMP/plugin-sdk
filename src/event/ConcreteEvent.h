@@ -14,8 +14,8 @@ namespace FlowSdk::Event {
                       std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir, const char*);
         [[nodiscard]] auto Id() const -> int override;
         [[nodiscard]] auto Name() const -> const char* override;
-        [[nodiscard]] auto Start() const -> const std::chrono::system_clock::time_point& override;
-        [[nodiscard]] auto End() const -> const std::chrono::system_clock::time_point& override;
+        [[nodiscard]] auto Start() const -> unsigned int override;
+        [[nodiscard]] auto End() const -> unsigned int override;
         [[nodiscard]] auto FlightInformationRegion() const
                 -> const FlightInformationRegion::FlightInformationRegion& override;
         [[nodiscard]] auto VatcanCode() const -> const char* override;

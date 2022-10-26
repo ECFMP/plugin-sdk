@@ -19,14 +19,14 @@ namespace FlowSdk::Event {
         return name;
     }
 
-    auto FlowSdk::Event::ConcreteEvent::Start() const -> const std::chrono::system_clock::time_point&
+    auto FlowSdk::Event::ConcreteEvent::Start() const -> unsigned int
     {
-        return start;
+        return std::chrono::duration_cast<std::chrono::seconds>(start.time_since_epoch()).count();
     }
 
-    auto ConcreteEvent::End() const -> const std::chrono::system_clock::time_point&
+    auto ConcreteEvent::End() const -> unsigned int
     {
-        return end;
+        return std::chrono::duration_cast<std::chrono::seconds>(end.time_since_epoch()).count();
     }
 
     auto ConcreteEvent::FlightInformationRegion() const -> const FlightInformationRegion::FlightInformationRegion&
