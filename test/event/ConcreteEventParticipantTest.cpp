@@ -19,11 +19,11 @@ namespace FlowSdkTest::Event {
 
     TEST_F(ConcreteEventParticipantTest, ItHasAnOrigin)
     {
-        EXPECT_EQ("EGKK", participant.OriginAirfield());
+        EXPECT_EQ("EGKK", participant.OriginAirport());
     }
 
     TEST_F(ConcreteEventParticipantTest, ItHasADestination)
     {
-        EXPECT_EQ("EDDM", participant.DestinationAirfield());
+        EXPECT_EQ("EDDM", participant.DestinationAirport());
     }
 }// namespace FlowSdkTest::Event

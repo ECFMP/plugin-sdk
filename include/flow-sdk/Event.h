@@ -19,17 +19,17 @@ namespace FlowSdk::Event {
         /**
          * Returns the name of the event.
          */
-        [[nodiscard]] virtual auto Name() const noexcept -> const char* = 0;
+        [[nodiscard]] virtual auto Name() const noexcept -> const std::string& = 0;
 
         /**
          * The start time of the event as a unix timestamp.
          */
-        [[nodiscard]] virtual auto Start() const noexcept -> unsigned int = 0;
+        [[nodiscard]] virtual auto Start() const noexcept -> const std::chrono::system_clock::time_point& = 0;
 
         /**
          * The end time of the event as a unix timestamp.
          */
-        [[nodiscard]] virtual auto End() const noexcept -> unsigned int = 0;
+        [[nodiscard]] virtual auto End() const noexcept -> const std::chrono::system_clock::time_point& = 0;
 
         /**
          * The flight information region that is hosting the event.
@@ -40,7 +40,7 @@ namespace FlowSdk::Event {
         /**
          * The VATCAN events code associated with the event, if one exists. NULL otherwise.
          */
-        [[nodiscard]] virtual auto VatcanCode() const noexcept -> const char* = 0;
+        [[nodiscard]] virtual auto VatcanCode() const noexcept -> const std::string& = 0;
 
         /**
          * Compares events.

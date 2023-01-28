@@ -17,11 +17,11 @@ namespace FlowSdk::Event {
         /**
          * Returns the origin airfield of the event participants flight, or NULL if not found.
          */
-        [[nodiscard]] virtual auto OriginAirfield() const noexcept -> const char* = 0;
+        [[nodiscard]] virtual auto OriginAirport() const noexcept -> const std::string& = 0;
 
         /**
          * Returns the destination airfield of the event participants flight, or NULL if not found.
          */
-        [[nodiscard]] virtual auto DestinationAirfield() const noexcept -> const char* = 0;
+        [[nodiscard]] virtual auto DestinationAirport() const noexcept -> const std::string& = 0;
     };
 }// namespace FlowSdk::Event

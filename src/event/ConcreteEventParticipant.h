@@ -7,8 +7,8 @@ namespace FlowSdk::Event {
         public:
         ConcreteEventParticipant(int cid, std::string originAirfield, std::string destinationAirfield);
         [[nodiscard]] auto Cid() const noexcept -> int override;
-        [[nodiscard]] auto OriginAirfield() const noexcept -> const std::string& override;
-        [[nodiscard]] auto DestinationAirfield() const noexcept -> const std::string& override;
+        [[nodiscard]] auto OriginAirport() const noexcept -> const std::string& override;
+        [[nodiscard]] auto DestinationAirport() const noexcept -> const std::string& override;
 
         private:
         // The cid of the member

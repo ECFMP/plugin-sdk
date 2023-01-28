@@ -23,7 +23,7 @@ set(ALL_FILES
         ${src_flowmeasures}
         ${src_flight_information_regions}
         ${src_pch}
-        )
+        ../include/mock/FlightInformationRegionMock.h ../include/mock/LevelFilterMock.h)
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")

@@ -11,12 +11,12 @@ namespace FlowSdk::Event {
         return cid;
     }
 
-    auto FlowSdk::Event::ConcreteEventParticipant::OriginAirfield() const noexcept -> const std::string&
+    auto FlowSdk::Event::ConcreteEventParticipant::OriginAirport() const noexcept -> const std::string&
     {
         return originAirfield;
     }
 
-    auto FlowSdk::Event::ConcreteEventParticipant::DestinationAirfield() const noexcept -> const std::string&
+    auto FlowSdk::Event::ConcreteEventParticipant::DestinationAirport() const noexcept -> const std::string&
     {
         return destinationAirfield;
     }

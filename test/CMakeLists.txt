@@ -15,7 +15,7 @@ set(ALL_FILES
         main.cpp
         event/ConcreteEventTest.cpp
         event/ConcreteEventParticipantTest.cpp
-        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp)
+        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp FlowSdkMockHeaderTest.cpp)
 
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
@@ -25,6 +25,7 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 add_dependencies(${PROJECT_NAME}
         flow_plugin_sdk_src
         gtest
+        gmock
         )
 
 #### INCLUDES
@@ -32,6 +33,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/.;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../src;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/googletest/googlemock/include;"
         )
 
 #### LINKS
@@ -41,7 +43,7 @@ target_link_directories(
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        GTest::gtest_main
+        gmock
         flow_plugin_sdk_src
         )
 
