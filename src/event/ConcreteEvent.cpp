@@ -6,35 +6,38 @@ namespace FlowSdk::Event {
                                  std::chrono::system_clock::time_point end,
                                  std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir,
                                  const char* vatcanCode)
-        : id(id), name(name), start(start), end(end), fir(std::move(fir)), vatcanCode(vatcanCode)
-    {}
+        : id(id), name(name), start(start), end(end), fir(fir), vatcanCode(vatcanCode)
+    {
+        assert(fir && "flight information region not set in event");
+    }
 
-    auto FlowSdk::Event::ConcreteEvent::Id() const -> int
+    auto FlowSdk::Event::ConcreteEvent::Id() const noexcept -> int
     {
         return id;
     }
 
-    auto FlowSdk::Event::ConcreteEvent::Name() const -> const char*
+    auto FlowSdk::Event::ConcreteEvent::Name() const noexcept -> const char*
     {
         return name;
     }
 
-    auto FlowSdk::Event::ConcreteEvent::Start() const -> unsigned int
+    auto FlowSdk::Event::ConcreteEvent::Start() const noexcept -> unsigned int
     {
         return std::chrono::duration_cast<std::chrono::seconds>(start.time_since_epoch()).count();
     }
 
-    auto ConcreteEvent::End() const -> unsigned int
+    auto ConcreteEvent::End() const noexcept -> unsigned int
     {
         return std::chrono::duration_cast<std::chrono::seconds>(end.time_since_epoch()).count();
     }
 
-    auto ConcreteEvent::FlightInformationRegion() const -> const FlightInformationRegion::FlightInformationRegion&
+    auto ConcreteEvent::FlightInformationRegion() const noexcept
+            -> const FlightInformationRegion::FlightInformationRegion&
     {
         return *fir;
     }
 
-    auto ConcreteEvent::VatcanCode() const -> const char*
+    auto ConcreteEvent::VatcanCode() const noexcept -> const char*
     {
         return vatcanCode;
     }

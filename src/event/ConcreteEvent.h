@@ -6,19 +6,19 @@ namespace FlowSdk::FlightInformationRegion {
 }// namespace FlowSdk::FlightInformationRegion
 
 namespace FlowSdk::Event {
-    class ConcreteEvent : public Event
+    class ConcreteEvent : public Event::Event
     {
         public:
         ConcreteEvent(int id, const char*, std::chrono::system_clock::time_point start,
                       std::chrono::system_clock::time_point end,
-                      std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir, const char*);
-        [[nodiscard]] auto Id() const -> int override;
-        [[nodiscard]] auto Name() const -> const char* override;
-        [[nodiscard]] auto Start() const -> unsigned int override;
-        [[nodiscard]] auto End() const -> unsigned int override;
-        [[nodiscard]] auto FlightInformationRegion() const
+                      std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir, const char* vatcanCode);
+        [[nodiscard]] auto Id() const noexcept -> int override;
+        [[nodiscard]] auto Name() const noexcept -> const char* override;
+        [[nodiscard]] auto Start() const noexcept -> unsigned int override;
+        [[nodiscard]] auto End() const noexcept -> unsigned int override;
+        [[nodiscard]] auto FlightInformationRegion() const noexcept
                 -> const FlightInformationRegion::FlightInformationRegion& override;
-        [[nodiscard]] auto VatcanCode() const -> const char* override;
+        [[nodiscard]] auto VatcanCode() const noexcept -> const char* override;
 
         private:
         // Api event id

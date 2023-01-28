@@ -5,15 +5,15 @@ namespace FlowSdk::FlightInformationRegion {
         : id(id), identifier(identifier), name(name)
     {}
 
-    auto ConcreteFlightInformationRegion::Id() const -> int
+    auto ConcreteFlightInformationRegion::Id() const noexcept -> int
     {
         return id;
     }
-    auto ConcreteFlightInformationRegion::Identifier() const -> const char*
+    auto ConcreteFlightInformationRegion::Identifier() const noexcept -> const char*
     {
         return identifier;
     }
-    auto ConcreteFlightInformationRegion::Name() const -> const char*
+    auto ConcreteFlightInformationRegion::Name() const noexcept -> const char*
     {
         return name;
     }

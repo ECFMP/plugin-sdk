@@ -15,7 +15,7 @@ set(ALL_FILES
         main.cpp
         event/ConcreteEventTest.cpp
         event/ConcreteEventParticipantTest.cpp
-        flightinformationregion/ConcreteFlightInformationRegionTest.cpp)
+        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp)
 
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
@@ -31,6 +31,7 @@ add_dependencies(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/.;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../src;"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
         )
 
 #### LINKS
@@ -66,6 +67,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
         -Wno-unused-parameter # Lots of interfaces don't use everything
         -Wno-missing-field-initializers # Windows has loads of this sadly
+        /EHa
         )
 
 #### LINK OPTIONS

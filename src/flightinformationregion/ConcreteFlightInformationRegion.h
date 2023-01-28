@@ -7,9 +7,9 @@ namespace FlowSdk::FlightInformationRegion {
         public:
         ConcreteFlightInformationRegion(int id, const char* identifier, const char* name);
 
-        [[nodiscard]] auto Id() const -> int override;
-        [[nodiscard]] auto Identifier() const -> const char* override;
-        [[nodiscard]] auto Name() const -> const char* override;
+        [[nodiscard]] auto Id() const noexcept -> int override;
+        [[nodiscard]] auto Identifier() const noexcept -> const char* override;
+        [[nodiscard]] auto Name() const noexcept -> const char* override;
 
         private:
         // ID of the FIR

@@ -51,4 +51,12 @@ namespace FlowSdkTest::Event {
     {
         EXPECT_EQ(0, strcmp("VATCAN", event.VatcanCode()));
     }
+
+    TEST_F(ConcreteEventTest, ItChecksEquality)
+    {
+        ConcreteEvent event2(1, "Some event", start, end, fir, "VATCAN");
+        ConcreteEvent event3(2, "Some event2", start, end, fir, "VATCAN");
+        EXPECT_EQ(event2, event);
+        EXPECT_NE(event3, event);
+    }
 }// namespace FlowSdkTest::Event
