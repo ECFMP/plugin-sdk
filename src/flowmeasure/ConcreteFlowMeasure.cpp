@@ -1,5 +1,5 @@
 #include "ConcreteFlowMeasure.h"
-#include "Measure.h"
+#include "flow-sdk/Measure.h"
 
 namespace FlowSdk::FlowMeasure {
 

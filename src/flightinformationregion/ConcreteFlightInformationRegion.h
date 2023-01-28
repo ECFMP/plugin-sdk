@@ -1,5 +1,5 @@
 #pragma once
-#include "FlightInformationRegion.h"
+#include "flow-sdk/FlightInformationRegion.h"
 
 namespace FlowSdk::FlightInformationRegion {
     class ConcreteFlightInformationRegion : public FlightInformationRegion

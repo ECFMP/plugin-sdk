@@ -1,4 +1,4 @@
-#include "Event.h"
+#include "flow-sdk/Event.h"
 
 namespace FlowSdk::Event {
     auto Event::operator==(const class Event& event) const -> bool

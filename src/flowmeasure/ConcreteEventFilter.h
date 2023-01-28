@@ -1,5 +1,5 @@
 #pragma once
-#include "EventFilter.h"
+#include "flow-sdk/EventFilter.h"
 
 namespace FlowSdk::Event {
     class Event;

@@ -1,5 +1,5 @@
 #pragma once
-#include "EventParticipant.h"
+#include "flow-sdk/EventParticipant.h"
 
 namespace FlowSdk::Event {
     class ConcreteEventParticipant : public EventParticipant
