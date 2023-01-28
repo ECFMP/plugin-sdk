@@ -9,8 +9,8 @@ namespace FlowSdkTest::Event {
     {
         public:
         ConcreteEventTest()
-            : start(std::chrono::time_point<std::chrono::system_clock>() + std::chrono::seconds(1666803606)),
-              end(std::chrono::time_point<std::chrono::system_clock>() + std::chrono::seconds(1666803626)),
+            : start(std::chrono::system_clock::now()),
+              end(std::chrono::system_clock::now() + std::chrono::minutes(123)),
               fir(std::make_shared<ConcreteFlightInformationRegion>(1, "EGTT", "London")),
               event(1, "Some event", start, end, fir, "VATCAN")
         {}
@@ -29,17 +29,17 @@ namespace FlowSdkTest::Event {
 
     TEST_F(ConcreteEventTest, ItHasAName)
     {
-        EXPECT_EQ(0, strcmp("Some event", event.Name()));
+        EXPECT_EQ("Some event", event.Name());
     }
 
     TEST_F(ConcreteEventTest, ItHasAStart)
     {
-        EXPECT_EQ(1666803606, event.Start());
+        EXPECT_EQ(start, event.Start());
     }
 
     TEST_F(ConcreteEventTest, ItHasAEnd)
     {
-        EXPECT_EQ(1666803626, event.End());
+        EXPECT_EQ(end, event.End());
     }
 
     TEST_F(ConcreteEventTest, ItHasAFir)
@@ -49,7 +49,7 @@ namespace FlowSdkTest::Event {
 
     TEST_F(ConcreteEventTest, ItHasAVatcanCode)
     {
-        EXPECT_EQ(0, strcmp("VATCAN", event.VatcanCode()));
+        EXPECT_EQ("VATCAN", event.VatcanCode());
     }
 
     TEST_F(ConcreteEventTest, ItChecksEquality)
