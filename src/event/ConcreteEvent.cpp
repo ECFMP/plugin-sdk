@@ -2,39 +2,42 @@
 
 namespace FlowSdk::Event {
 
-    ConcreteEvent::ConcreteEvent(int id, const char* name, std::chrono::system_clock::time_point start,
+    ConcreteEvent::ConcreteEvent(int id, std::string name, std::chrono::system_clock::time_point start,
                                  std::chrono::system_clock::time_point end,
                                  std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir,
-                                 const char* vatcanCode)
-        : id(id), name(name), start(start), end(end), fir(std::move(fir)), vatcanCode(vatcanCode)
-    {}
+                                 std::string vatcanCode)
+        : id(id), name(std::move(name)), start(start), end(end), fir(fir), vatcanCode(std::move(vatcanCode))
+    {
+        assert(fir && "flight information region not set in event");
+    }
 
-    auto FlowSdk::Event::ConcreteEvent::Id() const -> int
+    auto FlowSdk::Event::ConcreteEvent::Id() const noexcept -> int
     {
         return id;
     }
 
-    auto FlowSdk::Event::ConcreteEvent::Name() const -> const char*
+    auto FlowSdk::Event::ConcreteEvent::Name() const noexcept -> const std::string&
     {
         return name;
     }
 
-    auto FlowSdk::Event::ConcreteEvent::Start() const -> unsigned int
+    auto FlowSdk::Event::ConcreteEvent::Start() const noexcept -> const std::chrono::system_clock::time_point&
     {
-        return std::chrono::duration_cast<std::chrono::seconds>(start.time_since_epoch()).count();
+        return start;
     }
 
-    auto ConcreteEvent::End() const -> unsigned int
+    auto ConcreteEvent::End() const noexcept -> const std::chrono::system_clock::time_point&
     {
-        return std::chrono::duration_cast<std::chrono::seconds>(end.time_since_epoch()).count();
+        return end;
     }
 
-    auto ConcreteEvent::FlightInformationRegion() const -> const FlightInformationRegion::FlightInformationRegion&
+    auto ConcreteEvent::FlightInformationRegion() const noexcept
+            -> const FlightInformationRegion::FlightInformationRegion&
     {
         return *fir;
     }
 
-    auto ConcreteEvent::VatcanCode() const -> const char*
+    auto ConcreteEvent::VatcanCode() const noexcept -> const std::string&
     {
         return vatcanCode;
     }

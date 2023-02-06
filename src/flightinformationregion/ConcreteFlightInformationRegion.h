@@ -1,15 +1,15 @@
 #pragma once
-#include "FlightInformationRegion.h"
+#include "flow-sdk/FlightInformationRegion.h"
 
 namespace FlowSdk::FlightInformationRegion {
     class ConcreteFlightInformationRegion : public FlightInformationRegion
     {
         public:
-        ConcreteFlightInformationRegion(int id, const char* identifier, const char* name);
+        ConcreteFlightInformationRegion(int id, std::string identifier, std::string name);
 
-        [[nodiscard]] auto Id() const -> int override;
-        [[nodiscard]] auto Identifier() const -> const char* override;
-        [[nodiscard]] auto Name() const -> const char* override;
+        [[nodiscard]] auto Id() const noexcept -> int override;
+        [[nodiscard]] auto Identifier() const noexcept -> const std::string& override;
+        [[nodiscard]] auto Name() const noexcept -> const std::string& override;
 
         private:
         // ID of the FIR
@@ -17,9 +17,9 @@ namespace FlowSdk::FlightInformationRegion {
 
         private:
         // The FIR identifier, e.g. EGTT
-        const char* identifier;
+        const std::string identifier;
 
         // The name, e.g. London
-        const char* name;
+        const std::string name;
     };
 }// namespace FlowSdk::FlightInformationRegion

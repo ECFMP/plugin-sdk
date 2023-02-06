@@ -1,22 +1,22 @@
 #include "ConcreteEventParticipant.h"
 
 namespace FlowSdk::Event {
-    ConcreteEventParticipant::ConcreteEventParticipant(int cid, const char* originAirfield,
-                                                       const char* destinationAirfield)
-        : cid(cid), originAirfield(originAirfield), destinationAirfield(destinationAirfield)
+    ConcreteEventParticipant::ConcreteEventParticipant(int cid, std::string originAirfield,
+                                                       std::string destinationAirfield)
+        : cid(cid), originAirfield(std::move(originAirfield)), destinationAirfield(std::move(destinationAirfield))
     {}
 
-    int FlowSdk::Event::ConcreteEventParticipant::Cid() const
+    auto FlowSdk::Event::ConcreteEventParticipant::Cid() const noexcept -> int
     {
         return cid;
     }
 
-    const char* FlowSdk::Event::ConcreteEventParticipant::OriginAirfield() const
+    auto FlowSdk::Event::ConcreteEventParticipant::OriginAirport() const noexcept -> const std::string&
     {
         return originAirfield;
     }
 
-    const char* FlowSdk::Event::ConcreteEventParticipant::DestinationAirfield() const
+    auto FlowSdk::Event::ConcreteEventParticipant::DestinationAirport() const noexcept -> const std::string&
     {
         return destinationAirfield;
     }
