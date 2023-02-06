@@ -13,6 +13,7 @@ namespace FlowSdkTest {
         testing::NiceMock<FlowSdk::Mock::Event::EventParticipantMock> participant;
         testing::NiceMock<FlowSdk::Mock::FlightInformationRegion::FlightInformationRegionMock> fir;
         testing::NiceMock<FlowSdk::Mock::FlowMeasure::FlowMeasureMock> flowMeasure;
+        testing::NiceMock<FlowSdk::Mock::FlowMeasure::FlowMeasureFiltersMock> filters;
         testing::NiceMock<FlowSdk::Mock::FlowMeasure::LevelFilterMock> levelFilter;
         testing::NiceMock<FlowSdk::Mock::FlowMeasure::MeasureMock> measure;
         testing::NiceMock<FlowSdk::Mock::FlowMeasure::RouteFilterMock> routeFilter;

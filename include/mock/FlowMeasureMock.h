@@ -19,6 +19,7 @@ namespace FlowSdk::Mock::FlowMeasure {
         MOCK_METHOD(const std::set<std::shared_ptr<FlowSdk::FlightInformationRegion::FlightInformationRegion>>,
                     NotifiedFlightInformationRegions, (), (const, noexcept, override));
         MOCK_METHOD(const FlowSdk::FlowMeasure::Measure&, Measure, (), (const, noexcept, override));
+        MOCK_METHOD(const FlowSdk::FlowMeasure::FlowMeasureFilters&, Filters, (), (const, noexcept, override));
     };
 
 }// namespace FlowSdk::Mock::FlowMeasure

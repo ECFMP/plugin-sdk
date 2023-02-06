@@ -10,6 +10,7 @@ namespace FlowSdk {
 }// namespace FlowSdk
 
 namespace FlowSdk::FlowMeasure {
+    class FlowMeasureFilters;
     class Measure;
 
     /**
@@ -95,5 +96,10 @@ namespace FlowSdk::FlowMeasure {
          * The measure itself, type and value.
          */
         [[nodiscard]] virtual auto Measure() const noexcept -> const Measure& = 0;
+
+        /**
+         * Returns a collection of filters that apply to the flow measure.
+         */
+        [[nodiscard]] virtual auto Filters() const noexcept -> const FlowMeasureFilters& = 0;
     };
 }// namespace FlowSdk::FlowMeasure

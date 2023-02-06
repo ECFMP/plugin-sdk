@@ -15,7 +15,7 @@ set(ALL_FILES
         main.cpp
         event/ConcreteEventTest.cpp
         event/ConcreteEventParticipantTest.cpp
-        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp FlowSdkMockHeaderTest.cpp)
+        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp FlowSdkMockHeaderTest.cpp flowmeasure/ConcreteFlowMeasureFiltersTest.cpp)
 
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})

@@ -15,20 +15,21 @@ namespace FlowSdk::FlowMeasure {
                 std::chrono::system_clock::time_point startTime, std::chrono::system_clock::time_point endTime,
                 std::chrono::system_clock::time_point withdrawnTime, MeasureStatus status,
                 const std::set<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>>& notifiedFirs,
-                std::unique_ptr<class Measure> measure);
-        ~ConcreteFlowMeasure();
-        auto Id() const noexcept -> int override;
-        auto Event() const noexcept -> std::shared_ptr<const Event::Event> override;
-        auto Identifier() const noexcept -> const std::string& override;
-        auto Reason() const noexcept -> const std::string& override;
-        auto StartTime() const noexcept -> const std::chrono::system_clock::time_point& override;
-        auto EndTime() const noexcept -> const std::chrono::system_clock::time_point& override;
-        auto WithdrawnAt() const -> const std::chrono::system_clock::time_point& override;
-        auto Status() const noexcept -> MeasureStatus override;
-        auto HasStatus(MeasureStatus checkStatus) const noexcept -> bool override;
-        auto NotifiedFlightInformationRegions() const noexcept
+                std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters);
+        ~ConcreteFlowMeasure() override;
+        [[nodiscard]] auto Id() const noexcept -> int override;
+        [[nodiscard]] auto Event() const noexcept -> std::shared_ptr<const Event::Event> override;
+        [[nodiscard]] auto Identifier() const noexcept -> const std::string& override;
+        [[nodiscard]] auto Reason() const noexcept -> const std::string& override;
+        [[nodiscard]] auto StartTime() const noexcept -> const std::chrono::system_clock::time_point& override;
+        [[nodiscard]] auto EndTime() const noexcept -> const std::chrono::system_clock::time_point& override;
+        [[nodiscard]] auto WithdrawnAt() const -> const std::chrono::system_clock::time_point& override;
+        [[nodiscard]] auto Status() const noexcept -> MeasureStatus override;
+        [[nodiscard]] auto HasStatus(MeasureStatus checkStatus) const noexcept -> bool override;
+        [[nodiscard]] auto NotifiedFlightInformationRegions() const noexcept
                 -> const std::set<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>> override;
-        auto Measure() const noexcept -> const class Measure& override;
+        [[nodiscard]] auto Measure() const noexcept -> const class Measure& override;
+        [[nodiscard]] auto Filters() const noexcept -> const FlowMeasureFilters& override;
 
         private:
         // Id of the measure
@@ -60,6 +61,9 @@ namespace FlowSdk::FlowMeasure {
 
         // The measure itself
         std::unique_ptr<class Measure> measure;
+
+        // The filters
+        std::unique_ptr<FlowMeasureFilters> filters;
     };
 
 }// namespace FlowSdk::FlowMeasure
