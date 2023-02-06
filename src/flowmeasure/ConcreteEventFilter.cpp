@@ -4,7 +4,7 @@
 namespace FlowSdk::FlowMeasure {
 
     ConcreteEventFilter::ConcreteEventFilter(const std::shared_ptr<const FlowSdk::Event::Event>& event,
-                                             bool participatingIn)
+                                             EventParticipation participatingIn)
         : event(event), participatingIn(participatingIn)
     {
         assert(event && "Event not set in event filter");
@@ -20,8 +20,13 @@ namespace FlowSdk::FlowMeasure {
         return *this->event;
     }
 
-    auto ConcreteEventFilter::ParticipatingIn() const noexcept -> bool
+    auto ConcreteEventFilter::Participation() const noexcept -> EventParticipation
     {
         return participatingIn;
+    }
+
+    auto ConcreteEventFilter::IsParticipating() const noexcept -> bool
+    {
+        return Participation() == EventParticipation::Participating;
     }
 }// namespace FlowSdk::FlowMeasure

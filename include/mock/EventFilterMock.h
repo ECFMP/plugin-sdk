@@ -9,7 +9,8 @@ namespace FlowSdk::Mock::FlowMeasure {
         public:
         MOCK_METHOD(bool, ApplicableToEvent, (const FlowSdk::Event::Event&), (const, noexcept, override));
         MOCK_METHOD(const FlowSdk::Event::Event&, Event, (), (const, noexcept, override));
-        MOCK_METHOD(bool, ParticipatingIn, (), (const, noexcept, override));
+        MOCK_METHOD(FlowSdk::FlowMeasure::EventParticipation, Participation, (), (const, noexcept, override));
+        MOCK_METHOD(bool, IsParticipating, (), (const, noexcept, override));
     };
 
 }// namespace FlowSdk::Mock::FlowMeasure

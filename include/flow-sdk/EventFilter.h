@@ -5,6 +5,17 @@ namespace FlowSdk::Event {
 }// namespace FlowSdk::Event
 
 namespace FlowSdk::FlowMeasure {
+
+    /**
+     * A enum for whether a pilot is participating
+     * in an event.
+     */
+    enum class EventParticipation
+    {
+        Participating = 0,
+        NotParticipating = 1,
+    };
+
     /**
      * A filter that pertains to participation in an event.
      */
@@ -25,6 +36,11 @@ namespace FlowSdk::FlowMeasure {
         /**
          * Returns whether the filter is a "participating in" or "not participating in" filter.
          */
-        [[nodiscard]] virtual auto ParticipatingIn() const noexcept -> bool = 0;
+        [[nodiscard]] virtual auto Participation() const noexcept -> EventParticipation = 0;
+
+        /**
+         * Returns true if the event participation is "Participating in"
+         */
+        [[nodiscard]] virtual auto IsParticipating() const noexcept -> bool = 0;
     };
 }// namespace FlowSdk::FlowMeasure

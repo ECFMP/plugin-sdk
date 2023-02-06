@@ -24,7 +24,7 @@ namespace FlowSdkTest::FlowMeasure {
                                                     FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
                                                     1, "EGTT", "London"),
                                             "ABC"),
-                                    true),
+                                    FlowSdk::FlowMeasure::EventParticipation::Participating),
                     },
                     std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{
                             std::make_shared<FlowSdk::FlowMeasure::ConcreteRouteFilter>(
@@ -100,17 +100,18 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsApplicableEventFilter)
     {
-        EXPECT_EQ(true,
+        EXPECT_EQ(FlowSdk::FlowMeasure::EventParticipation::Participating,
                   filters.FirstEventFilter([](const FlowSdk::FlowMeasure::EventFilter& eventFilter) {
-                             return eventFilter.ParticipatingIn();
+                             return eventFilter.Participation()
+                                     == FlowSdk::FlowMeasure::EventParticipation::Participating;
                          })
-                          ->ParticipatingIn());
+                          ->Participation());
     }
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsNullptrIfNoApplicableEventFilter)
     {
         EXPECT_EQ(nullptr, filters.FirstEventFilter([](const FlowSdk::FlowMeasure::EventFilter& eventFilter) {
-            return !eventFilter.ParticipatingIn();
+            return eventFilter.Participation() == FlowSdk::FlowMeasure::EventParticipation::NotParticipating;
         }));
     }
 

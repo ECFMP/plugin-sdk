@@ -12,7 +12,7 @@ namespace FlowSdkTest::FlowMeasure {
                                                                                                       "London")),
               event(std::make_shared<FlowSdk::Event::ConcreteEvent>(1, "TEST", std::chrono::system_clock::now(),
                                                                     std::chrono::system_clock::now(), fir, "ABC")),
-              eventFilter(event, false)
+              eventFilter(event, FlowSdk::FlowMeasure::EventParticipation::NotParticipating)
         {}
 
         std::shared_ptr<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion> fir;
@@ -27,7 +27,14 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteEventFilterTest, ItReturnsParticipation)
     {
-        EXPECT_FALSE(eventFilter.ParticipatingIn());
+        EXPECT_EQ(FlowSdk::FlowMeasure::EventParticipation::NotParticipating, eventFilter.Participation());
+    }
+
+    TEST_F(ConcreteEventFilterTest, ItIsNotParticipatingIn)
+    {
+        FlowSdk::FlowMeasure::ConcreteEventFilter eventFilter2(event,
+                                                               FlowSdk::FlowMeasure::EventParticipation::Participating);
+        EXPECT_TRUE(eventFilter2.IsParticipating());
     }
 
     TEST_F(ConcreteEventFilterTest, ItHasEventApplicability)
