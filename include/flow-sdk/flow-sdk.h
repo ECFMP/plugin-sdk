@@ -8,5 +8,6 @@
 #include "FlowMeasure.h"
 #include "FlowMeasureFilters.h"
 #include "LevelFilter.h"
+#include "Logger.h"
 #include "Measure.h"
 #include "RouteFilter.h"
