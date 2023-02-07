@@ -20,6 +20,7 @@ namespace FlowSdk::Http {
     class HttpClient
     {
         public:
+        virtual ~HttpClient() = default;
         /**
          * Performs a GET request to the provided URL and returns the response.
          *

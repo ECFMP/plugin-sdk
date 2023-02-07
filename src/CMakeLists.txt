@@ -18,12 +18,18 @@ set(src_flowmeasures
 set(src_pch
         pch.h pch.cpp)
 
+set(src_plugin
+        plugin/ConcreteSdk.h
+        plugin/ConcreteSdk.cpp
+        plugin/InternalEventListeners.h
+        plugin/ConcreteEventListeners.cpp plugin/ConcreteEventListeners.h)
+
 set(ALL_FILES
         ${src_events}
         ${src_flowmeasures}
         ${src_flight_information_regions}
         ${src_pch}
-        ../include/mock/FlightInformationRegionMock.h ../include/mock/LevelFilterMock.h)
+        ${src_plugin})
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")

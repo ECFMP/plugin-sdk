@@ -8,6 +8,7 @@ namespace FlowSdk::Log {
     class Logger
     {
         public:
+        virtual ~Logger() = default;
         virtual void Debug(const std::string& message) = 0;
         virtual void Info(const std::string& message) = 0;
         virtual void Warning(const std::string& message) = 0;
