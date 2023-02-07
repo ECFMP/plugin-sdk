@@ -7,6 +7,7 @@
 #include "FlightInformationRegion.h"
 #include "FlowMeasure.h"
 #include "FlowMeasureFilters.h"
+#include "HttpClient.h"
 #include "LevelFilter.h"
 #include "Logger.h"
 #include "Measure.h"
