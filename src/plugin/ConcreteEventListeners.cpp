@@ -5,6 +5,9 @@
 
 namespace FlowSdk::Plugin {
 
+    /**
+     * A filter that always passes.
+     */
     template<typename... Types>
     class AlwaysPassFilter : public EventListenerFilter<Types...>
     {
@@ -52,11 +55,6 @@ namespace FlowSdk::Plugin {
 }// namespace FlowSdk::Plugin
 
 // Explicit class instantiations
-
-// For testing
-template class FlowSdk::Plugin::ConcreteEventListeners<std::string, std::string>;
-template class FlowSdk::Plugin::EventListenerFilter<std::string, std::string>;
-template class FlowSdk::Plugin::EventListener<std::string, std::string>;
 
 // For single-flow measure events
 template class FlowSdk::Plugin::ConcreteEventListeners<FlowSdk::FlowMeasure::FlowMeasure>;

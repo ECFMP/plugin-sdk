@@ -1,169 +1,90 @@
 #include "plugin/ConcreteEventListeners.h"
-#include "flow-sdk/EventListener.h"
-#include "flow-sdk/EventListenerFilter.h"
+#include "mock/FlowMeasureMock.h"
+#include "mock/MockEventListener.h"
+#include "mock/MockEventListenerFilter.h"
 
 namespace FlowSdkTest::Plugin {
 
     class ConcreteEventListenersTest : public testing::Test
     {
         public:
-        FlowSdk::Plugin::ConcreteEventListeners<std::string, std::string> listeners;
-    };
-
-    class ListenerImpl : public FlowSdk::Plugin::EventListener<std::string, std::string>
-    {
-        public:
-        ListenerImpl(std::string expected1, std::string expected2)
-            : expected1(std::move(expected1)), expected2(std::move(expected2))
+        ConcreteEventListenersTest()
+            : mockListener(std::make_shared<testing::NiceMock<MockEventListener<FlowSdk::FlowMeasure::FlowMeasure>>>()),
+              mockFilter(
+                      std::make_shared<testing::NiceMock<MockEventListenerFilter<FlowSdk::FlowMeasure::FlowMeasure>>>())
         {}
 
-        void OnEvent(const std::string& string1, const std::string& string2) override
-        {
-            if (called) {
-                throw std::exception("More than one call");
-            }
-
-            actual1 = string1;
-            actual2 = string2;
-            called = true;
-        }
-
-        void AssertCalled()
-        {
-            ASSERT_TRUE(called);
-            ASSERT_EQ(expected1, actual1);
-            ASSERT_EQ(expected2, actual2);
-        }
-
-        void AssertNotCalled()
-        {
-            ASSERT_FALSE(called);
-        }
-
-        private:
-        std::string expected1;
-        std::string expected2;
-        std::string actual1;
-        std::string actual2;
-        bool called = false;
-    };
-
-    class FilterImpl : public FlowSdk::Plugin::EventListenerFilter<std::string, std::string>
-    {
-        public:
-        FilterImpl(bool shouldPass, std::string expected1, std::string expected2)
-            : shouldPass(shouldPass), expected1(std::move(expected1)), expected2(std::move(expected2))
-        {}
-
-        auto Passes(const std::string& string1, const std::string& string2) -> bool override
-        {
-            if (called) {
-                throw std::exception("More than one call");
-            }
-
-            actual1 = string1;
-            actual2 = string2;
-            called = true;
-
-            return shouldPass;
-        }
-
-        void AssertCalled()
-        {
-            ASSERT_TRUE(called);
-            ASSERT_EQ(expected1, actual1);
-            ASSERT_EQ(expected2, actual2);
-        }
-
-        void AssertNotCalled()
-        {
-            ASSERT_FALSE(called);
-        }
-
-        private:
-        bool shouldPass;
-        std::string expected1;
-        std::string expected2;
-        std::string actual1;
-        std::string actual2;
-        bool called = false;
+        testing::NiceMock<FlowSdk::Mock::FlowMeasure::FlowMeasureMock> measureMock;
+        std::shared_ptr<testing::NiceMock<MockEventListener<FlowSdk::FlowMeasure::FlowMeasure>>> mockListener;
+        std::shared_ptr<testing::NiceMock<MockEventListenerFilter<FlowSdk::FlowMeasure::FlowMeasure>>> mockFilter;
+        FlowSdk::Plugin::ConcreteEventListeners<FlowSdk::FlowMeasure::FlowMeasure> listeners;
     };
 
     TEST_F(ConcreteEventListenersTest, ItAddsListeners)
     {
-        auto listener = std::make_shared<ListenerImpl>("abc", "def");
-        listeners.Add(listener);
-        listeners.OnEvent("abc", "def");
+        EXPECT_CALL(*mockListener, OnEvent(testing::Ref(measureMock))).Times(1);
 
-        listener->AssertCalled();
+        listeners.Add(mockListener);
+        listeners.OnEvent(measureMock);
     }
 
     TEST_F(ConcreteEventListenersTest, ItDoesntAddDuplicateListeners)
     {
-        auto listener = std::make_shared<ListenerImpl>("abc", "def");
-        listeners.Add(listener);
-        listeners.Add(listener);
-        listeners.Add(listener);
-        listeners.OnEvent("abc", "def");
+        EXPECT_CALL(*mockListener, OnEvent(testing::Ref(measureMock))).Times(1);
 
-        listener->AssertCalled();
+        listeners.Add(mockListener);
+        listeners.Add(mockListener);
+        listeners.Add(mockListener);
+        listeners.Add(mockListener);
+        listeners.OnEvent(measureMock);
     }
 
     TEST_F(ConcreteEventListenersTest, ItAddsListenersWithAPassingFilter)
     {
-        auto listener = std::make_shared<ListenerImpl>("abc", "def");
-        auto filter = std::make_shared<FilterImpl>(true, "abc", "def");
-        listeners.Add(listener, filter);
-        listeners.OnEvent("abc", "def");
+        EXPECT_CALL(*mockFilter, Passes(testing::Ref(measureMock))).Times(1).WillOnce(testing::Return(true));
+        EXPECT_CALL(*mockListener, OnEvent(testing::Ref(measureMock))).Times(1);
 
-        listener->AssertCalled();
-        filter->AssertCalled();
+        listeners.Add(mockListener, mockFilter);
+        listeners.OnEvent(measureMock);
     }
 
     TEST_F(ConcreteEventListenersTest, ItDoesntAddDuplicateListenerWithPassingFilter)
     {
-        auto listener = std::make_shared<ListenerImpl>("abc", "def");
-        auto filter = std::make_shared<FilterImpl>(true, "abc", "def");
-        listeners.Add(listener, filter);
-        listeners.Add(listener, filter);
-        listeners.Add(listener, filter);
-        listeners.Add(listener, filter);
-        listeners.OnEvent("abc", "def");
+        EXPECT_CALL(*mockFilter, Passes(testing::Ref(measureMock))).Times(1).WillOnce(testing::Return(true));
+        EXPECT_CALL(*mockListener, OnEvent(testing::Ref(measureMock))).Times(1);
 
-        listener->AssertCalled();
-        filter->AssertCalled();
+        listeners.Add(mockListener, mockFilter);
+        listeners.Add(mockListener, mockFilter);
+        listeners.Add(mockListener, mockFilter);
+        listeners.Add(mockListener, mockFilter);
+        listeners.Add(mockListener, mockFilter);
+        listeners.OnEvent(measureMock);
     }
 
     TEST_F(ConcreteEventListenersTest, ItAddsListenersWithAFailingFilter)
     {
-        auto listener = std::make_shared<ListenerImpl>("abc", "def");
-        auto filter = std::make_shared<FilterImpl>(false, "abc", "def");
-        listeners.Add(listener, filter);
-        listeners.OnEvent("abc", "def");
+        EXPECT_CALL(*mockFilter, Passes(testing::Ref(measureMock))).Times(1).WillOnce(testing::Return(false));
+        EXPECT_CALL(*mockListener, OnEvent(testing::Ref(measureMock))).Times(0);
 
-        listener->AssertNotCalled();
-        filter->AssertCalled();
+        listeners.Add(mockListener, mockFilter);
+        listeners.OnEvent(measureMock);
     }
 
     TEST_F(ConcreteEventListenersTest, ItRemovesAListener)
     {
-        auto listener = std::make_shared<ListenerImpl>("abc", "def");
-        listeners.Add(listener);
-        listeners.Remove(listener);
-        listeners.OnEvent("abc", "def");
+        EXPECT_CALL(*mockListener, OnEvent(testing::Ref(measureMock))).Times(0);
 
-        listener->AssertNotCalled();
+        listeners.Add(mockListener);
+        listeners.Remove(mockListener);
     }
 
     TEST_F(ConcreteEventListenersTest, ItRemovesAListenerAndFilter)
     {
-        auto listener = std::make_shared<ListenerImpl>("abc", "def");
-        auto filter = std::make_shared<FilterImpl>(true, "abc", "def");
-        listeners.Add(listener, filter);
-        listeners.Remove(listener);
-        listeners.OnEvent("abc", "def");
+        EXPECT_CALL(*mockFilter, Passes(testing::Ref(measureMock))).Times(0);
+        EXPECT_CALL(*mockListener, OnEvent(testing::Ref(measureMock))).Times(0);
 
-        listener->AssertNotCalled();
-        filter->AssertNotCalled();
+        listeners.Add(mockListener, mockFilter);
+        listeners.Remove(mockListener);
+        listeners.OnEvent(measureMock);
     }
 }// namespace FlowSdkTest::Plugin
