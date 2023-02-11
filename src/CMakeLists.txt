@@ -4,6 +4,9 @@ SET(PROJECT_NAME flow_plugin_sdk_src)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(src_api
+        api/ApiDataSource.h)
+
 set(src_flight_information_regions
         flightinformationregion/ConcreteFlightInformationRegion.h flightinformationregion/ConcreteFlightInformationRegion.cpp)
 
@@ -15,15 +18,25 @@ set(src_events
 set(src_flowmeasures
         flowmeasure/ConcreteFlowMeasure.cpp flowmeasure/ConcreteFlowMeasure.h flowmeasure/ConcreteAirportFilter.cpp flowmeasure/ConcreteAirportFilter.h flowmeasure/ConcreteEventFilter.cpp flowmeasure/ConcreteEventFilter.h flowmeasure/ConcreteLevelFilter.cpp flowmeasure/ConcreteLevelFilter.h flowmeasure/ConcreteRouteFilter.cpp flowmeasure/ConcreteRouteFilter.h flowmeasure/ConcreteMeasure.cpp flowmeasure/ConcreteMeasure.h flowmeasure/ConcreteMeasureFactory.cpp flowmeasure/ConcreteMeasureFactory.h flowmeasure/ConcreteFlowMeasureFilters.cpp flowmeasure/ConcreteFlowMeasureFilters.h)
 
+set(src_log log/LogDecorator.cpp log/LogDecorator.h log/LogDecorator.h log/NullLogger.cpp log/NullLogger.h)
+
 set(src_pch
         pch.h pch.cpp)
 
+set(src_plugin
+        plugin/ConcreteSdk.h
+        plugin/ConcreteSdk.cpp
+        plugin/InternalEventListeners.h
+        plugin/ConcreteEventListeners.cpp plugin/ConcreteEventListeners.h plugin/ConcreteSdkEventListeners.cpp plugin/ConcreteSdkEventListeners.h plugin/SdkFactory.cpp)
+
 set(ALL_FILES
+        ${src_api}
         ${src_events}
         ${src_flowmeasures}
         ${src_flight_information_regions}
+        ${src_log}
         ${src_pch}
-        ../include/mock/FlightInformationRegionMock.h ../include/mock/LevelFilterMock.h)
+        ${src_plugin})
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
@@ -31,6 +44,7 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "pch.h")
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR};"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
         )
 
