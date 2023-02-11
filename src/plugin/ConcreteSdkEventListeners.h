@@ -12,15 +12,15 @@ namespace FlowSdk::Plugin {
                 std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> withdrawnListeners,
                 std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>> reissuedListeners);
         [[nodiscard]] auto FlowMeasureNotifiedListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure>& override;
+                -> EventListeners<FlowMeasure::FlowMeasure>& override;
         [[nodiscard]] auto FlowMeasureActivatedListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure>& override;
+                -> EventListeners<FlowMeasure::FlowMeasure>& override;
         [[nodiscard]] auto FlowMeasureExpiredListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure>& override;
+                -> EventListeners<FlowMeasure::FlowMeasure>& override;
         [[nodiscard]] auto FlowMeasureWithdrawnListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure>& override;
+                -> EventListeners<FlowMeasure::FlowMeasure>& override;
         [[nodiscard]] auto FlowMeasureReissuedListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>& override;
+                -> EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>& override;
 
         private:
         // The "notified" listeners

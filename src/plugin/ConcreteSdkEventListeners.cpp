@@ -20,31 +20,31 @@ namespace FlowSdk::Plugin {
     }
 
     auto ConcreteSdkEventListeners::FlowMeasureNotifiedListeners() const noexcept
-            -> const EventListeners<FlowMeasure::FlowMeasure>&
+            -> EventListeners<FlowMeasure::FlowMeasure>&
     {
         return *notifiedListeners;
     }
 
     auto ConcreteSdkEventListeners::FlowMeasureActivatedListeners() const noexcept
-            -> const EventListeners<FlowMeasure::FlowMeasure>&
+            -> EventListeners<FlowMeasure::FlowMeasure>&
     {
         return *activatedListeners;
     }
 
     auto ConcreteSdkEventListeners::FlowMeasureExpiredListeners() const noexcept
-            -> const EventListeners<FlowMeasure::FlowMeasure>&
+            -> EventListeners<FlowMeasure::FlowMeasure>&
     {
         return *expiredListeners;
     }
 
     auto ConcreteSdkEventListeners::FlowMeasureWithdrawnListeners() const noexcept
-            -> const EventListeners<FlowMeasure::FlowMeasure>&
+            -> EventListeners<FlowMeasure::FlowMeasure>&
     {
         return *withdrawnListeners;
     }
 
     auto ConcreteSdkEventListeners::FlowMeasureReissuedListeners() const noexcept
-            -> const EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>&
+            -> EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>&
     {
         return *reissuedListeners;
     }
