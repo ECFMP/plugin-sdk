@@ -6,37 +6,13 @@ namespace FlowSdk::Plugin {
     class ConcreteSdk : public Sdk
     {
         public:
-        ConcreteSdk(
-                std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> notifiedListeners,
-                std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> activatedListeners,
-                std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> expiredListeners,
-                std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> withdrawnListeners,
-                std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>> reissuedListeners);
-        [[nodiscard]] auto FlowMeasureNotifiedListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure>& override;
-        [[nodiscard]] auto FlowMeasureActivatedListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure>& override;
-        [[nodiscard]] auto FlowMeasureExpiredListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure>& override;
-        [[nodiscard]] auto FlowMeasureWithdrawnListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure>& override;
-        [[nodiscard]] auto FlowMeasureReissuedListeners() const noexcept
-                -> const EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>& override;
+        ConcreteSdk(std::unique_ptr<SdkEventListeners> eventListeners);
+
+        [[nodiscard]] auto Listeners() const noexcept -> SdkEventListeners& override;
+        void Destroy() override;
 
         private:
-        // The "notified" listeners
-        std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> notifiedListeners;
-
-        // The "activated" listeners
-        std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> activatedListeners;
-
-        // The "expired" listeners
-        std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> expiredListeners;
-
-        // The "withdrawn" listeners
-        std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> withdrawnListeners;
-
-        // The "reissued" listeners
-        std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>> reissuedListeners;
+        // Contains event listeners
+        std::unique_ptr<SdkEventListeners> eventListeners;
     };
 }// namespace FlowSdk::Plugin

@@ -4,6 +4,9 @@ SET(PROJECT_NAME flow_plugin_sdk_src)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(src_api
+        api/ApiDataSource.h)
+
 set(src_flight_information_regions
         flightinformationregion/ConcreteFlightInformationRegion.h flightinformationregion/ConcreteFlightInformationRegion.cpp)
 
@@ -22,9 +25,10 @@ set(src_plugin
         plugin/ConcreteSdk.h
         plugin/ConcreteSdk.cpp
         plugin/InternalEventListeners.h
-        plugin/ConcreteEventListeners.cpp plugin/ConcreteEventListeners.h)
+        plugin/ConcreteEventListeners.cpp plugin/ConcreteEventListeners.h plugin/ConcreteSdkEventListeners.cpp plugin/ConcreteSdkEventListeners.h)
 
 set(ALL_FILES
+        ${src_api}
         ${src_events}
         ${src_flowmeasures}
         ${src_flight_information_regions}
