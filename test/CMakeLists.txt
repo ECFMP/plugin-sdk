@@ -15,7 +15,7 @@ set(ALL_FILES
         main.cpp
         event/ConcreteEventTest.cpp
         event/ConcreteEventParticipantTest.cpp
-        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp FlowSdkMockHeaderTest.cpp flowmeasure/ConcreteFlowMeasureFiltersTest.cpp plugin/ConcreteEventListenersTest.cpp mock/MockEventListener.h log/LogDecoratorTest.cpp mock/MockLogger.h plugin/SdkFactoryTest.cpp mock/MockHttpClient.h)
+        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp FlowSdkMockHeaderTest.cpp flowmeasure/ConcreteFlowMeasureFiltersTest.cpp plugin/ConcreteEventListenersTest.cpp mock/MockEventListener.h log/LogDecoratorTest.cpp mock/MockLogger.h plugin/SdkFactoryTest.cpp mock/MockHttpClient.h api/ApiDataDownloaderTest.cpp)
 
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
@@ -34,6 +34,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/../src;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/googletest/googlemock/include;"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/;"
         )
 
 #### LINKS
@@ -47,7 +48,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         flow_plugin_sdk_src
         )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" JSON_MultipleHeaders "ON")
 
 #### COMPILE OPTIONS
 target_compile_options(${PROJECT_NAME} PRIVATE

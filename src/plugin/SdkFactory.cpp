@@ -2,6 +2,8 @@
 #include "ConcreteEventListeners.h"
 #include "ConcreteSdk.h"
 #include "ConcreteSdkEventListeners.h"
+#include "api/ApiDataDownloader.h"
+#include "api/ApiDataScheduler.h"
 #include "flow-sdk/HttpClient.h"
 #include "flow-sdk/Logger.h"
 #include "log/LogDecorator.h"
@@ -19,6 +21,13 @@ namespace FlowSdk::Plugin {
                     std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>>());
         }
 
+        auto CreateApiDataScheduler() -> std::unique_ptr<Api::ApiDataScheduler>
+        {
+            return std::make_unique<Api::ApiDataScheduler>(std::make_unique<Api::ApiDataDownloader>(
+                    std::move(httpClient), std::make_unique<Plugin::ConcreteEventListeners<const nlohmann::json&>>(),
+                    GetLogger()));
+        }
+
         auto CreateLogger() -> std::shared_ptr<Log::Logger>
         {
             if (logger == nullptr) {
@@ -28,11 +37,23 @@ namespace FlowSdk::Plugin {
             return std::make_shared<Log::LogDecorator>(std::move(logger));
         }
 
+        auto GetLogger() -> std::shared_ptr<Log::Logger>
+        {
+            if (!wrappedLogger) {
+                wrappedLogger = CreateLogger();
+            }
+
+            return wrappedLogger;
+        }
+
         // For performing HTTP requests
         std::unique_ptr<Http::HttpClient> httpClient;
 
         // For logging things that happen
         std::unique_ptr<Log::Logger> logger;
+
+        // A wrapper around the logger
+        std::shared_ptr<Log::Logger> wrappedLogger;
     };
 
     SdkFactory::SdkFactory() : impl(std::make_unique<SdkFactoryImpl>())
@@ -71,6 +92,6 @@ namespace FlowSdk::Plugin {
             throw SdkConfigurationException("No http client provided");
         }
 
-        return std::make_unique<ConcreteSdk>(impl->CreateEventListeners());
+        return std::make_unique<ConcreteSdk>(impl->CreateApiDataScheduler(), impl->CreateEventListeners());
     }
 }// namespace FlowSdk::Plugin

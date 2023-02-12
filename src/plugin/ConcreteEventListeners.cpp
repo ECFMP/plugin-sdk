@@ -2,6 +2,7 @@
 #include "flow-sdk/EventListener.h"
 #include "flow-sdk/EventListenerFilter.h"
 #include "flow-sdk/FlowMeasure.h"
+#include "nlohmann/json_fwd.hpp"
 
 namespace FlowSdk::Plugin {
 
@@ -67,3 +68,8 @@ template class FlowSdk::Plugin::ConcreteEventListeners<FlowSdk::FlowMeasure::Flo
 template class FlowSdk::Plugin::EventListenerFilter<FlowSdk::FlowMeasure::FlowMeasure,
                                                     FlowSdk::FlowMeasure::FlowMeasure>;
 template class FlowSdk::Plugin::EventListener<FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
+
+// For downloading API data
+template class FlowSdk::Plugin::ConcreteEventListeners<const nlohmann::json&>;
+template class FlowSdk::Plugin::EventListenerFilter<const nlohmann::json&>;
+template class FlowSdk::Plugin::EventListener<const nlohmann::json&>;

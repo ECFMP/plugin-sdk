@@ -4,8 +4,7 @@ SET(PROJECT_NAME flow_plugin_sdk_src)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(src_api
-        api/ApiDataSource.h)
+set(src_api api/ApiDataDownloader.cpp api/ApiDataDownloader.h api/ApiDataScheduler.cpp api/ApiDataScheduler.h)
 
 set(src_flight_information_regions
         flightinformationregion/ConcreteFlightInformationRegion.h flightinformationregion/ConcreteFlightInformationRegion.cpp)
@@ -39,13 +38,14 @@ set(ALL_FILES
         ${src_plugin})
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" JSON_MultipleHeaders "ON")
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch.h")
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR};"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party;"
         )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
