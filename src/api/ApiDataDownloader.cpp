@@ -6,12 +6,13 @@
 
 namespace FlowSdk::Api {
 
-    const std::string PLUGIN_API_DATA_URL = "https://ecfmp.vatsim.net/api/v1/plugin";
+    const std::string PLUGIN_API_DATA_URL = "https://ecfmp.vatsim.net/api/v1/plugin?deleted=1";
 
     ApiDataDownloader::ApiDataDownloader(
             std::unique_ptr<Http::HttpClient> httpClient,
             std::unique_ptr<Plugin::InternalEventListeners<const nlohmann::json&>> listeners,
-            std::shared_ptr<Log::Logger> logger)
+            std::shared_ptr<Log::Logger> logger
+    )
         : httpClient(std::move(httpClient)), listeners(std::move(listeners)), logger(std::move(logger))
     {
         assert(this->httpClient && "Http client not set in ApiDataDownloader");
@@ -26,8 +27,9 @@ namespace FlowSdk::Api {
         logger->Info("Downloading data");
         const auto apiResponse = httpClient->Get(PLUGIN_API_DATA_URL);
         if (apiResponse.statusCode != 200L) {
-            logger->Error("Failed to download data from ECFMP, status code was "
-                          + std::to_string(apiResponse.statusCode));
+            logger->Error(
+                    "Failed to download data from ECFMP, status code was " + std::to_string(apiResponse.statusCode)
+            );
             return;
         }
 

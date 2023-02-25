@@ -24,7 +24,7 @@ namespace FlowSdkTest::Api {
             return FlowSdk::Api::ApiDataDownloader(std::move(httpClient), std::move(listeners), logger);
         }
 
-        const std::string API_URL = "https://ecfmp.vatsim.net/api/v1/plugin";
+        const std::string API_URL = "https://ecfmp.vatsim.net/api/v1/plugin?deleted=1";
 
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> logger;
         std::unique_ptr<testing::NiceMock<Http::MockHttpClient>> httpClient;
