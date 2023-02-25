@@ -1,5 +1,5 @@
 #pragma once
-#include "flow-sdk/EventListener.h"
+#include "ApiDataListenerTypes.h"
 #include "nlohmann/json_fwd.hpp"
 
 namespace FlowSdk {
@@ -15,7 +15,7 @@ namespace FlowSdk::Api {
     /**
      * Parses and updates flight information regions.
      */
-    class FlightInformationRegionDataParser : public Plugin::EventListener<const nlohmann::json&>
+    class FlightInformationRegionDataParser : public ApiDataListener
     {
         public:
         FlightInformationRegionDataParser(

@@ -1,4 +1,5 @@
 #pragma once
+#include "SdkEventListenerTypes.h"
 
 namespace FlowSdk::FlowMeasure {
     class FlowMeasure;
@@ -21,30 +22,30 @@ namespace FlowSdk::Plugin {
          * Returns the event listener collection for flow measure activated events.
          */
         [[nodiscard]] virtual auto FlowMeasureNotifiedListeners() const noexcept
-                -> EventListeners<FlowMeasure::FlowMeasure>& = 0;
+                -> FlowMeasureNotifiedEventListeners& = 0;
 
         /**
          * Returns the event listener collection for flow measure activated events.
          */
         [[nodiscard]] virtual auto FlowMeasureActivatedListeners() const noexcept
-                -> EventListeners<FlowMeasure::FlowMeasure>& = 0;
+                -> FlowMeasureActivatedEventListeners& = 0;
 
         /**
          * Returns the event listener collection for flow measure expired events.
          */
         [[nodiscard]] virtual auto FlowMeasureExpiredListeners() const noexcept
-                -> EventListeners<FlowMeasure::FlowMeasure>& = 0;
+                -> FlowMeasureExpiredEventListeners& = 0;
 
         /**
          * Returns the event listener collection for flow measure withdrawn events.
          */
         [[nodiscard]] virtual auto FlowMeasureWithdrawnListeners() const noexcept
-                -> EventListeners<FlowMeasure::FlowMeasure>& = 0;
+                -> FlowMeasureWithdrawnEventListeners& = 0;
 
         /**
          * Returns the event listener collection for flow measure reissued events.
          */
         [[nodiscard]] virtual auto FlowMeasureReissuedListeners() const noexcept
-                -> EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>& = 0;
+                -> FlowMeasureReissuedEventListeners& = 0;
     };
 }// namespace FlowSdk::Plugin
