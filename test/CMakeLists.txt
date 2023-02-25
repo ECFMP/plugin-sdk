@@ -13,9 +13,10 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/
 #### FILES IN THIS PROJECT AND EXECUTABLE
 set(ALL_FILES
         main.cpp
+        pch/pch.cpp pch/pch.h
         event/ConcreteEventTest.cpp
         event/ConcreteEventParticipantTest.cpp
-        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp FlowSdkMockHeaderTest.cpp flowmeasure/ConcreteFlowMeasureFiltersTest.cpp plugin/ConcreteEventListenersTest.cpp mock/MockEventListener.h log/LogDecoratorTest.cpp mock/MockLogger.h plugin/SdkFactoryTest.cpp mock/MockHttpClient.h api/ApiDataDownloaderTest.cpp)
+        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp FlowSdkMockHeaderTest.cpp flowmeasure/ConcreteFlowMeasureFiltersTest.cpp plugin/ConcreteEventListenersTest.cpp mock/MockEventListener.h log/LogDecoratorTest.cpp mock/MockLogger.h plugin/SdkFactoryTest.cpp mock/MockHttpClient.h api/ApiDataDownloaderTest.cpp flightinformationregion/ConcreteFlightInformationRegionCollectionTest.cpp api/FlightInformationRegionDataParserTest.cpp)
 
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
@@ -34,7 +35,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/../src;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/googletest/googlemock/include;"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/;"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/nlohmann;"
         )
 
 #### LINKS

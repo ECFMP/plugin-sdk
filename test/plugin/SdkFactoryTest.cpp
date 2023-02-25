@@ -33,6 +33,8 @@ namespace FlowSdkTest::Plugin {
         instance->Listeners().FlowMeasureNotifiedListeners().Remove(nullptr);
         instance->Listeners().FlowMeasureWithdrawnListeners().Remove(nullptr);
         instance->Listeners().FlowMeasureReissuedListeners().Remove(nullptr);
+
+        instance->Destroy();
     }
 
     TEST_F(SdkFactoryTest, ItBuildsAnSdkWithNoLogger)
@@ -44,6 +46,8 @@ namespace FlowSdkTest::Plugin {
         instance->Listeners().FlowMeasureNotifiedListeners().Remove(nullptr);
         instance->Listeners().FlowMeasureWithdrawnListeners().Remove(nullptr);
         instance->Listeners().FlowMeasureReissuedListeners().Remove(nullptr);
+
+        instance->Destroy();
     }
 
     TEST_F(SdkFactoryTest, ItThrowsAnExceptionIfDuplicateHttpClientProvided)

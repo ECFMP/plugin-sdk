@@ -4,10 +4,15 @@
 #include "ConcreteSdkEventListeners.h"
 #include "api/ApiDataDownloader.h"
 #include "api/ApiDataScheduler.h"
+#include "api/FlightInformationRegionDataParser.h"
+#include "flightinformationregion/ConcreteFlightInformationRegionCollection.h"
+#include "flightinformationregion/InternalFlightInformationRegionCollection.h"
+#include "flow-sdk/FlightInformationRegion.h"
 #include "flow-sdk/HttpClient.h"
 #include "flow-sdk/Logger.h"
 #include "log/LogDecorator.h"
 #include "log/NullLogger.h"
+#include <memory>
 
 namespace FlowSdk::Plugin {
     struct SdkFactory::SdkFactoryImpl {
@@ -18,14 +23,23 @@ namespace FlowSdk::Plugin {
                     std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
                     std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
                     std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
-                    std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>>());
+                    std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>>()
+            );
+        }
+
+        auto CreateDataListeners() -> std::unique_ptr<Plugin::ConcreteEventListeners<const nlohmann::json&>>
+        {
+            auto dataListeners = std::make_unique<Plugin::ConcreteEventListeners<const nlohmann::json&>>();
+            dataListeners->Add(std::make_shared<Api::FlightInformationRegionDataParser>(GetFirs(), GetLogger()));
+
+            return dataListeners;
         }
 
         auto CreateApiDataScheduler() -> std::unique_ptr<Api::ApiDataScheduler>
         {
-            return std::make_unique<Api::ApiDataScheduler>(std::make_unique<Api::ApiDataDownloader>(
-                    std::move(httpClient), std::make_unique<Plugin::ConcreteEventListeners<const nlohmann::json&>>(),
-                    GetLogger()));
+            return std::make_unique<Api::ApiDataScheduler>(
+                    std::make_unique<Api::ApiDataDownloader>(std::move(httpClient), CreateDataListeners(), GetLogger())
+            );
         }
 
         auto CreateLogger() -> std::shared_ptr<Log::Logger>
@@ -46,14 +60,26 @@ namespace FlowSdk::Plugin {
             return wrappedLogger;
         }
 
+        auto GetFirs() -> std::shared_ptr<FlightInformationRegion::InternalFlightInformationRegionCollection>
+        {
+            if (!firs) {
+                firs = std::make_shared<FlightInformationRegion::ConcreteFlightInformationRegionCollection>();
+            }
+
+            return firs;
+        }
+
         // For performing HTTP requests
-        std::unique_ptr<Http::HttpClient> httpClient;
+        std::unique_ptr<Http::HttpClient> httpClient = nullptr;
 
         // For logging things that happen
-        std::unique_ptr<Log::Logger> logger;
+        std::unique_ptr<Log::Logger> logger = nullptr;
 
         // A wrapper around the logger
-        std::shared_ptr<Log::Logger> wrappedLogger;
+        std::shared_ptr<Log::Logger> wrappedLogger = nullptr;
+
+        // All the FIRs
+        std::shared_ptr<FlightInformationRegion::ConcreteFlightInformationRegionCollection> firs;
     };
 
     SdkFactory::SdkFactory() : impl(std::make_unique<SdkFactoryImpl>())

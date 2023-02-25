@@ -4,10 +4,10 @@ SET(PROJECT_NAME flow_plugin_sdk_src)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(src_api api/ApiDataDownloader.cpp api/ApiDataDownloader.h api/ApiDataScheduler.cpp api/ApiDataScheduler.h)
+set(src_api api/ApiDataDownloader.cpp api/ApiDataDownloader.h api/ApiDataScheduler.cpp api/ApiDataScheduler.h api/FlightInformationRegionDataParser.cpp api/FlightInformationRegionDataParser.h)
 
 set(src_flight_information_regions
-        flightinformationregion/ConcreteFlightInformationRegion.h flightinformationregion/ConcreteFlightInformationRegion.cpp)
+        flightinformationregion/ConcreteFlightInformationRegion.h flightinformationregion/ConcreteFlightInformationRegion.cpp flightinformationregion/FlightInformationRegionCollection.h flightinformationregion/ConcreteFlightInformationRegionCollection.cpp flightinformationregion/ConcreteFlightInformationRegionCollection.h flightinformationregion/InternalFlightInformationRegionCollection.h)
 
 set(src_events
         event/ConcreteEvent.cpp event/ConcreteEvent.h
@@ -45,7 +45,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 target_include_directories(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR};"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party;"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/nlohmann;"
         )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
