@@ -11,14 +11,63 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/googletest")
 
 #### FILES IN THIS PROJECT AND EXECUTABLE
-set(ALL_FILES
-        main.cpp
-        pch/pch.cpp pch/pch.h
+set(test__api
+        api/ApiDataDownloaderTest.cpp
+        api/FlightInformationRegionDataParserTest.cpp
+        )
+
+set(test__event
         event/ConcreteEventTest.cpp
         event/ConcreteEventParticipantTest.cpp
-        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp FlowSdkMockHeaderTest.cpp flowmeasure/ConcreteFlowMeasureFiltersTest.cpp plugin/ConcreteEventListenersTest.cpp mock/MockEventListener.h log/LogDecoratorTest.cpp mock/MockLogger.h plugin/SdkFactoryTest.cpp mock/MockHttpClient.h api/ApiDataDownloaderTest.cpp flightinformationregion/ConcreteFlightInformationRegionCollectionTest.cpp api/FlightInformationRegionDataParserTest.cpp)
+        )
 
-add_executable(${PROJECT_NAME} ${ALL_FILES})
+set(test__flightinformationregion
+        flightinformationregion/ConcreteFlightInformationRegionTest.cpp
+        flightinformationregion/ConcreteFlightInformationRegionCollectionTest.cpp
+        )
+
+set(test__flowmeasure
+        flowmeasure/ConcreteAirportFilterTest.cpp
+        flowmeasure/ConcreteEventFilterTest.cpp
+        flowmeasure/ConcreteLevelFilterTest.cpp
+        flowmeasure/ConcreteRouteFilterTest.cpp
+        flowmeasure/ConcreteMeasureTest.cpp
+        flowmeasure/ConcreteFlowMeasureTest.cpp
+        flowmeasure/ConcreteFlowMeasureFiltersTest.cpp
+        )
+
+set(test__log
+        log/LogDecoratorTest.cpp
+        )
+
+set(test__mock
+        mock/MockEventListener.h
+        mock/MockLogger.h
+        mock/MockHttpClient.h
+        )
+
+set(test__plugin
+        plugin/ConcreteEventListenersTest.cpp
+        plugin/SdkFactoryTest.cpp
+        )
+
+set(test__other
+        main.cpp
+        pch/pch.cpp pch/pch.h
+        FlowSdkHeaderTest.cpp
+        FlowSdkMockHeaderTest.cpp
+        )
+
+add_executable(${PROJECT_NAME}
+        ${test__api}
+        ${test__event}
+        ${test__flightinformationregion}
+        ${test__flowmeasure}
+        ${test__log}
+        ${test__mock}
+        ${test__plugin}
+        ${test__other}
+        )
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
