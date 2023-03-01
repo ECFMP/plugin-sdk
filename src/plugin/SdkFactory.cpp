@@ -4,9 +4,8 @@
 #include "ConcreteSdkEventListeners.h"
 #include "api/ApiDataDownloader.h"
 #include "api/ApiDataScheduler.h"
+#include "api/ConcreteStringIdentifiedApiElementCollection.h"
 #include "api/FlightInformationRegionDataParser.h"
-#include "flightinformationregion/ConcreteFlightInformationRegionCollection.h"
-#include "flightinformationregion/InternalFlightInformationRegionCollection.h"
 #include "flow-sdk/FlightInformationRegion.h"
 #include "flow-sdk/HttpClient.h"
 #include "flow-sdk/Logger.h"
@@ -60,10 +59,12 @@ namespace FlowSdk::Plugin {
             return wrappedLogger;
         }
 
-        auto GetFirs() -> std::shared_ptr<FlightInformationRegion::InternalFlightInformationRegionCollection>
+        auto GetFirs() -> std::shared_ptr<
+                Api::ConcreteStringIdentifiedApiElementCollection<FlightInformationRegion::FlightInformationRegion>>
         {
             if (!firs) {
-                firs = std::make_shared<FlightInformationRegion::ConcreteFlightInformationRegionCollection>();
+                firs = std::make_shared<Api::ConcreteStringIdentifiedApiElementCollection<
+                        FlightInformationRegion::FlightInformationRegion>>();
             }
 
             return firs;
@@ -79,7 +80,9 @@ namespace FlowSdk::Plugin {
         std::shared_ptr<Log::Logger> wrappedLogger = nullptr;
 
         // All the FIRs
-        std::shared_ptr<FlightInformationRegion::ConcreteFlightInformationRegionCollection> firs;
+        std::shared_ptr<
+                Api::ConcreteStringIdentifiedApiElementCollection<FlightInformationRegion::FlightInformationRegion>>
+                firs;
     };
 
     SdkFactory::SdkFactory() : impl(std::make_unique<SdkFactoryImpl>())

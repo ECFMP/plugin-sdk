@@ -1,14 +1,14 @@
 #include "FlightInformationRegionDataParser.h"
+#include "api/ConcreteApiElementCollection.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
-#include "flightinformationregion/InternalFlightInformationRegionCollection.h"
 #include "flow-sdk/Logger.h"
 #include "nlohmann/json.hpp"
 
 namespace FlowSdk::Api {
 
     FlightInformationRegionDataParser::FlightInformationRegionDataParser(
-            std::shared_ptr<FlightInformationRegion::InternalFlightInformationRegionCollection> firs,
-            std::shared_ptr<Log::Logger> logger)
+            std::shared_ptr<InternalFlightInformationRegionCollection> firs, std::shared_ptr<Log::Logger> logger
+    )
         : firs(std::move(firs)), logger(std::move(logger))
     {
         assert(this->firs && "firs not set in FlightInformationRegionDataParser");
@@ -17,6 +17,8 @@ namespace FlowSdk::Api {
 
     void FlightInformationRegionDataParser::OnEvent(const nlohmann::json& data)
     {
+        ConcreteApiElementCollection<FlightInformationRegion::FlightInformationRegion> fir2;
+
         logger->Debug("Updating FIRs");
         if (!DataIsValid(data)) {
             logger->Error("Invalid FIR data from API");
@@ -31,8 +33,8 @@ namespace FlowSdk::Api {
             }
 
             firs->Add(std::make_shared<FlightInformationRegion::ConcreteFlightInformationRegion>(
-                    fir.at("id").get<int>(), fir.at("identifier").get<std::string>(),
-                    fir.at("name").get<std::string>()));
+                    fir.at("id").get<int>(), fir.at("identifier").get<std::string>(), fir.at("name").get<std::string>()
+            ));
         }
 
         logger->Debug("Finished updating FIRs");

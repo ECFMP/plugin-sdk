@@ -1,7 +1,9 @@
 #pragma once
 
 #include "AirportFilter.h"
+#include "ApiElementCollection.h"
 #include "Event.h"
+#include "EventCollection.h"
 #include "EventFilter.h"
 #include "EventListener.h"
 #include "EventListenerFilter.h"

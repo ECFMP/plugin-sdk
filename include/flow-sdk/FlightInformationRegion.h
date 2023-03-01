@@ -1,11 +1,13 @@
 #pragma once
+#include "ApiElement.h"
+#include "flow-sdk/ApiElementCollection.h"
 
 namespace FlowSdk::FlightInformationRegion {
 
     /**
      * A flight information region.
      */
-    class FlightInformationRegion
+    class FlightInformationRegion : public Api::StringIdentifiableApiElement
     {
         public:
         virtual ~FlightInformationRegion() = default;
@@ -13,12 +15,12 @@ namespace FlowSdk::FlightInformationRegion {
         /**
          * The id on the API.
          */
-        [[nodiscard]] virtual auto Id() const noexcept -> int = 0;
+        [[nodiscard]] auto Id() const noexcept -> int override = 0;
 
         /**
          * The identifier of the FIR, for example "EGTT".
          */
-        [[nodiscard]] virtual auto Identifier() const noexcept -> const std::string& = 0;
+        [[nodiscard]] auto Identifier() const noexcept -> const std::string& override = 0;
 
         /**
          * The name of the FIR, for example "London"

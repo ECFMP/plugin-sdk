@@ -4,7 +4,7 @@ SET(PROJECT_NAME flow_plugin_sdk_src)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(src_api api/ApiDataDownloader.cpp api/ApiDataDownloader.h api/ApiDataScheduler.cpp api/ApiDataScheduler.h api/FlightInformationRegionDataParser.cpp api/FlightInformationRegionDataParser.h api/ApiDataListenerTypes.h)
+set(src_api api/ApiDataDownloader.cpp api/ApiDataDownloader.h api/ApiDataScheduler.cpp api/ApiDataScheduler.h api/FlightInformationRegionDataParser.cpp api/FlightInformationRegionDataParser.h api/ApiDataListenerTypes.h api/InternalApiElementCollection.h api/InternalStringIdentifiedApiElementCollection.h api/ConcreteApiElementCollection.cpp api/ConcreteApiElementCollection.h api/ApiElementIterator.cpp api/ConcreteStringIdentifiedApiElementCollection.cpp api/ConcreteStringIdentifiedApiElementCollection.h api/InternalElementCollectionTypes.h)
 
 set(src_flight_information_regions
         flightinformationregion/ConcreteFlightInformationRegion.h flightinformationregion/ConcreteFlightInformationRegion.cpp flightinformationregion/FlightInformationRegionCollection.h flightinformationregion/ConcreteFlightInformationRegionCollection.cpp flightinformationregion/ConcreteFlightInformationRegionCollection.h flightinformationregion/InternalFlightInformationRegionCollection.h)

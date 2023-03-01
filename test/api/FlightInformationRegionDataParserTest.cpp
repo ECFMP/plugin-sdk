@@ -1,5 +1,6 @@
 #include "api/FlightInformationRegionDataParser.h"
-#include "flightinformationregion/ConcreteFlightInformationRegionCollection.h"
+#include "api/ConcreteStringIdentifiedApiElementCollection.h"
+#include "api/InternalElementCollectionTypes.h"
 #include "flow-sdk/FlightInformationRegion.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
@@ -10,11 +11,12 @@ namespace FlowSdkTest::Api {
     {
         public:
         FlightInformationRegionDataParserTest()
-            : firs(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegionCollection>()),
+            : firs(std::make_shared<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
+                           FlowSdk ::FlightInformationRegion::FlightInformationRegion>>()),
               mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(firs, mockLogger)
         {}
 
-        std::shared_ptr<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegionCollection> firs;
+        std::shared_ptr<FlowSdk::Api::InternalFlightInformationRegionCollection> firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
         FlowSdk::Api::FlightInformationRegionDataParser parser;
     };
@@ -67,11 +69,14 @@ namespace FlowSdkTest::Api {
     {
         public:
         FlightInformationRegionDataParserBadDataTest()
-            : firs(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegionCollection>()),
+            : firs(std::make_shared<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
+                           FlowSdk ::FlightInformationRegion::FlightInformationRegion>>()),
               mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(firs, mockLogger)
         {}
 
-        std::shared_ptr<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegionCollection> firs;
+        std::shared_ptr<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
+                FlowSdk ::FlightInformationRegion::FlightInformationRegion>>
+                firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
         FlowSdk::Api::FlightInformationRegionDataParser parser;
     };

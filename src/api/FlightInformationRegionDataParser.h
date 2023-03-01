@@ -1,11 +1,9 @@
 #pragma once
 #include "ApiDataListenerTypes.h"
+#include "InternalElementCollectionTypes.h"
 #include "nlohmann/json_fwd.hpp"
 
 namespace FlowSdk {
-    namespace FlightInformationRegion {
-        class InternalFlightInformationRegionCollection;
-    }// namespace FlightInformationRegion
     namespace Log {
         class Logger;
     }// namespace Log
@@ -19,8 +17,7 @@ namespace FlowSdk::Api {
     {
         public:
         FlightInformationRegionDataParser(
-                std::shared_ptr<FlightInformationRegion::InternalFlightInformationRegionCollection> firs,
-                std::shared_ptr<Log::Logger> logger
+                std::shared_ptr<InternalFlightInformationRegionCollection> firs, std::shared_ptr<Log::Logger> logger
         );
         void OnEvent(const nlohmann::json& data) override;
 
@@ -32,6 +29,6 @@ namespace FlowSdk::Api {
         std::shared_ptr<Log::Logger> logger;
 
         // Stores the FIR objects
-        std::shared_ptr<FlightInformationRegion::InternalFlightInformationRegionCollection> firs;
+        std::shared_ptr<InternalFlightInformationRegionCollection> firs;
     };
 }// namespace FlowSdk::Api
