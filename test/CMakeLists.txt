@@ -16,6 +16,10 @@ set(test__api
         api/FlightInformationRegionDataParserTest.cpp
         api/ApiElementIteratorTest.cpp api/ConcreteApiElementCollectionTest.cpp api/ConcreteStringIdentifiedApiElementCollectionTest.cpp)
 
+set(test__date
+        
+        date/ParseDateStringsTest.cpp)
+
 set(test__event
         event/ConcreteEventTest.cpp
         event/ConcreteEventParticipantTest.cpp
@@ -23,7 +27,6 @@ set(test__event
 
 set(test__flightinformationregion
         flightinformationregion/ConcreteFlightInformationRegionTest.cpp
-        flightinformationregion/ConcreteFlightInformationRegionCollectionTest.cpp
         )
 
 set(test__flowmeasure
@@ -60,6 +63,7 @@ set(test__other
 
 add_executable(${PROJECT_NAME}
         ${test__api}
+        ${test__date}
         ${test__event}
         ${test__flightinformationregion}
         ${test__flowmeasure}
