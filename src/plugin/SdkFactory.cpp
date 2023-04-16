@@ -4,14 +4,15 @@
 #include "ConcreteSdkEventListeners.h"
 #include "api/ApiDataDownloader.h"
 #include "api/ApiDataScheduler.h"
+#include "api/ConcreteApiElementCollection.h"
 #include "api/ConcreteStringIdentifiedApiElementCollection.h"
+#include "api/EventDataParser.h"
 #include "api/FlightInformationRegionDataParser.h"
 #include "flow-sdk/FlightInformationRegion.h"
 #include "flow-sdk/HttpClient.h"
 #include "flow-sdk/Logger.h"
 #include "log/LogDecorator.h"
 #include "log/NullLogger.h"
-#include <memory>
 
 namespace FlowSdk::Plugin {
     struct SdkFactory::SdkFactoryImpl {
@@ -30,6 +31,7 @@ namespace FlowSdk::Plugin {
         {
             auto dataListeners = std::make_unique<Plugin::ConcreteEventListeners<const nlohmann::json&>>();
             dataListeners->Add(std::make_shared<Api::FlightInformationRegionDataParser>(GetFirs(), GetLogger()));
+            dataListeners->Add(std::make_shared<Api::EventDataParser>(GetEvents(), GetFirs(), GetLogger()));
 
             return dataListeners;
         }
@@ -70,6 +72,15 @@ namespace FlowSdk::Plugin {
             return firs;
         }
 
+        auto GetEvents() -> std::shared_ptr<Api::ConcreteApiElementCollection<Event::Event>>
+        {
+            if (!events) {
+                events = std::make_shared<Api::ConcreteApiElementCollection<Event::Event>>();
+            }
+
+            return events;
+        }
+
         // For performing HTTP requests
         std::unique_ptr<Http::HttpClient> httpClient = nullptr;
 
@@ -83,6 +94,8 @@ namespace FlowSdk::Plugin {
         std::shared_ptr<
                 Api::ConcreteStringIdentifiedApiElementCollection<FlightInformationRegion::FlightInformationRegion>>
                 firs;
+
+        std::shared_ptr<Api::ConcreteApiElementCollection<Event::Event>> events;
     };
 
     SdkFactory::SdkFactory() : impl(std::make_unique<SdkFactoryImpl>())
