@@ -17,15 +17,13 @@ namespace FlowSdk::Api {
 
     void FlightInformationRegionDataParser::OnEvent(const nlohmann::json& data)
     {
-        ConcreteApiElementCollection<FlightInformationRegion::FlightInformationRegion> fir2;
-
         logger->Debug("Updating FIRs");
         if (!DataIsValid(data)) {
             logger->Error("Invalid FIR data from API");
             return;
         }
 
-        for (const auto& fir: data) {
+        for (const auto& fir: data.at("flight_information_regions")) {
             if (!FirDataIsValid(fir)) {
                 logger->Error("Invalid FIR in FIR data from API");
                 logger->Debug("Failed updating FIR: " + fir.dump());
@@ -42,7 +40,8 @@ namespace FlowSdk::Api {
 
     auto FlightInformationRegionDataParser::DataIsValid(const nlohmann::json& data) -> bool
     {
-        return data.is_array();
+        return data.is_object() && data.contains("flight_information_regions")
+                && data.at("flight_information_regions").is_array();
     }
 
     auto FlightInformationRegionDataParser::FirDataIsValid(const nlohmann::json& data) -> bool

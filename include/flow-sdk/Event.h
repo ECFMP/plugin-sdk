@@ -1,4 +1,5 @@
 #pragma once
+#include "ApiElement.h"
 #include "EventParticipant.h"
 #include "FlightInformationRegion.h"
 
@@ -6,7 +7,7 @@ namespace FlowSdk::Event {
     /**
      * Represents an event on the network.
      */
-    class Event
+    class Event : public Api::ApiElement
     {
         public:
         virtual ~Event() = default;

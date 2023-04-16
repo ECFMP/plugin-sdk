@@ -2,10 +2,11 @@
 
 namespace FlowSdk::Event {
 
-    ConcreteEvent::ConcreteEvent(int id, std::string name, std::chrono::system_clock::time_point start,
-                                 std::chrono::system_clock::time_point end,
-                                 std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir,
-                                 std::string vatcanCode)
+    ConcreteEvent::ConcreteEvent(
+            int id, std::string name, std::chrono::system_clock::time_point start,
+            std::chrono::system_clock::time_point end,
+            std::shared_ptr<const FlightInformationRegion::FlightInformationRegion> fir, std::string vatcanCode
+    )
         : id(id), name(std::move(name)), start(start), end(end), fir(fir), vatcanCode(std::move(vatcanCode))
     {
         assert(fir && "flight information region not set in event");

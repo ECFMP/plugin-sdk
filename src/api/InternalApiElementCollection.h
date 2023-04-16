@@ -8,7 +8,7 @@ namespace FlowSdk::Api {
      * for adding items.
      */
     template<typename T>
-    class InternalApiElementCollection : ApiElementCollection<T>
+    class InternalApiElementCollection : public ApiElementCollection<T>
     {
         public:
         /**

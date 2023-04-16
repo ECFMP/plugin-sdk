@@ -18,13 +18,6 @@ namespace FlowSdk::Api {
         using pointer = T*;  // or also value_type*
         using reference = T&;// or also value_type&
 
-        /*     [[nodiscard]] virtual auto operator*() const -> T& = 0;
-        [[nodiscard]] virtual auto operator->() const -> T* = 0;
-        [[nodiscard]] virtual auto operator++() const -> ApiElementIterator& = 0;
-        [[nodiscard]] virtual auto operator++(int) -> ApiElementIterator<T> = 0;
-        [[nodiscard]] virtual auto operator==(const ApiElementIterator<T>& compare) const -> bool = 0;
-        [[nodiscard]] virtual auto operator!=(const ApiElementIterator<T>& compare) const -> bool = 0;*/
-
         auto operator*() const -> T&;
         auto operator->() const -> T*;
         auto operator++() -> ApiElementIterator<T>&;

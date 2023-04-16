@@ -4,7 +4,6 @@
 #include "flow-sdk/FlightInformationRegion.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
-#include "nlohmann/json_fwd.hpp"
 
 namespace FlowSdkTest::Api {
     class FlightInformationRegionDataParserTest : public testing::Test
@@ -12,7 +11,7 @@ namespace FlowSdkTest::Api {
         public:
         FlightInformationRegionDataParserTest()
             : firs(std::make_shared<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
-                           FlowSdk ::FlightInformationRegion::FlightInformationRegion>>()),
+                           FlowSdk::FlightInformationRegion::FlightInformationRegion>>()),
               mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(firs, mockLogger)
         {}
 
@@ -21,15 +20,27 @@ namespace FlowSdkTest::Api {
         FlowSdk::Api::FlightInformationRegionDataParser parser;
     };
 
-    TEST_F(FlightInformationRegionDataParserTest, ItDoesNothingIfDataNotArray)
+    TEST_F(FlightInformationRegionDataParserTest, ItDoesNothingIfDataNotObject)
     {
-        parser.OnEvent(nlohmann::json::object());
+        parser.OnEvent(nlohmann::json::array());
+        EXPECT_EQ(0, firs->Count());
+    }
+
+    TEST_F(FlightInformationRegionDataParserTest, ItDoesNothingIfDataDoesNotContainFirs)
+    {
+        parser.OnEvent(nlohmann::json{{"not_flight_information_regions", "abc"}});
+        EXPECT_EQ(0, firs->Count());
+    }
+
+    TEST_F(FlightInformationRegionDataParserTest, ItDoesNothingIfFirsNotArray)
+    {
+        parser.OnEvent(nlohmann::json{{"flight_information_regions", "abc"}});
         EXPECT_EQ(0, firs->Count());
     }
 
     TEST_F(FlightInformationRegionDataParserTest, ItParsesFirs)
     {
-        parser.OnEvent(nlohmann::json::array(
+        const auto firData = nlohmann::json::array(
                 {{
                          {"id", 1},
                          {"identifier", "EGTT"},
@@ -40,7 +51,9 @@ namespace FlowSdkTest::Api {
                          {"identifier", "EGPX"},
                          {"name", "Scottish"},
                  }}
-        ));
+        );
+
+        parser.OnEvent(nlohmann::json{{"flight_information_regions", firData}});
         EXPECT_EQ(2, firs->Count());
 
         const auto fir1 = firs->Get(1);
@@ -81,6 +94,49 @@ namespace FlowSdkTest::Api {
         FlowSdk::Api::FlightInformationRegionDataParser parser;
     };
 
+    INSTANTIATE_TEST_SUITE_P(
+            FlightInformationRegionDataParserBadDataTestCases, FlightInformationRegionDataParserBadDataTest,
+            testing::Values(
+                    BadFlightInformationRegionDataCheck{
+                            "no_id",
+                            {
+                                    {"identifier", "EGPX"},
+                                    {"name", "Scottish"},
+                            }},
+                    BadFlightInformationRegionDataCheck{
+                            "id_not_integer",
+                            {
+                                    {"id", "abc"},
+                                    {"identifier", "EGPX"},
+                                    {"name", "Scottish"},
+                            }},
+                    BadFlightInformationRegionDataCheck{
+                            "no_identifier",
+                            {
+                                    {"id", 2},
+                                    {"name", "Scottish"},
+                            }},
+                    BadFlightInformationRegionDataCheck{
+                            "identifier_not_string",
+                            {
+                                    {"id", 2},
+                                    {"identifier", 123},
+                                    {"name", "Scottish"},
+                            }},
+                    BadFlightInformationRegionDataCheck{"no_name", {{"id", 2}, {"identifier", "EGPX"}}},
+                    BadFlightInformationRegionDataCheck{
+                            "name_not_string",
+                            {
+                                    {"id", 2},
+                                    {"identifier", "EGPX"},
+                                    {"name", 123},
+                            }}
+            ),
+            [](const ::testing::TestParamInfo<FlightInformationRegionDataParserBadDataTest::ParamType>& info) {
+                return info.param.name;
+            }
+    );
+
     TEST_P(FlightInformationRegionDataParserBadDataTest, ItRejectsBadData)
     {
         const nlohmann::json validRegion = {
@@ -89,9 +145,9 @@ namespace FlowSdkTest::Api {
                 {"name", "London"},
         };
 
-        auto data = nlohmann::json::array({validRegion});
-        data.push_back(GetParam().data);
-        parser.OnEvent(data);
+        auto data = nlohmann::json::array({GetParam().data});
+        data.push_back(validRegion);
+        parser.OnEvent(nlohmann::json{{"flight_information_regions", data}});
 
         EXPECT_EQ(1, firs->Count());
 
@@ -101,60 +157,4 @@ namespace FlowSdkTest::Api {
         EXPECT_EQ("EGTT", fir1->Identifier());
         EXPECT_EQ("London", fir1->Name());
     }
-
-    INSTANTIATE_TEST_SUITE_P(
-            FlightInformationRegionDataParserBadDataTestCases, FlightInformationRegionDataParserBadDataTest,
-            testing::Values(
-                    BadFlightInformationRegionDataCheck{
-                            "no_id",
-                            {
-                                    {"id", 1},
-                                    {"identifier", "EGTT"},
-                                    {"name", "London"},
-                            }},
-                    BadFlightInformationRegionDataCheck{
-                            "id_not_integer",
-                            {
-                                    {"id", 1.5},
-                                    {"identifier", "EGTT"},
-                                    {"name", "London"},
-                            }},
-                    BadFlightInformationRegionDataCheck{
-                            "id_not_number",
-                            {
-                                    {"id", "abc"},
-                                    {"identifier", "EGTT"},
-                                    {"name", "London"},
-                            }},
-                    BadFlightInformationRegionDataCheck{
-                            "no_identifier",
-                            {
-                                    {"id", 1},
-                                    {"name", "London"},
-                            }},
-                    BadFlightInformationRegionDataCheck{
-                            "identifier_not_string",
-                            {
-                                    {"id", 1},
-                                    {"identifier", 123},
-                                    {"name", "London"},
-                            }},
-                    BadFlightInformationRegionDataCheck{
-                            "no_name",
-                            {
-                                    {"id", 1},
-                                    {"identifier", "EGTT"},
-                            }},
-                    BadFlightInformationRegionDataCheck{
-                            "name_not_string",
-                            {
-                                    {"id", 1},
-                                    {"identifier", "EGTT"},
-                                    {"name", 123},
-                            }}
-            ),
-            [](const ::testing::TestParamInfo<FlightInformationRegionDataParserBadDataTest::ParamType>& info) {
-                return info.param.name;
-            }
-    );
 }// namespace FlowSdkTest::Api

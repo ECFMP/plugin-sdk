@@ -1,4 +1,5 @@
 #include "flow-sdk/ApiElementIterator.h"
+#include "flow-sdk/Event.h"
 #include "flow-sdk/FlightInformationRegion.h"
 
 namespace FlowSdk::Api {
@@ -74,4 +75,5 @@ namespace FlowSdk::Api {
     }
 
     template class ApiElementIterator<FlightInformationRegion::FlightInformationRegion>;
+    template class ApiElementIterator<Event::Event>;
 }// namespace FlowSdk::Api

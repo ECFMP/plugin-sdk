@@ -1,6 +1,7 @@
 #include "ConcreteApiElementCollection.h"
 #include "flow-sdk/ApiElement.h"
 #include "flow-sdk/ApiElementIterator.h"
+#include "flow-sdk/Event.h"
 #include "flow-sdk/FlightInformationRegion.h"
 
 namespace FlowSdk::Api {
@@ -52,4 +53,5 @@ namespace FlowSdk::Api {
 
     template class FlowSdk::Api::ConcreteApiElementCollection<
             FlowSdk::FlightInformationRegion::FlightInformationRegion>;
+    template class FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event>;
 }// namespace FlowSdk::Api

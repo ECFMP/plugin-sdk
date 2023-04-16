@@ -23,7 +23,7 @@ set(test__date
 set(test__event
         event/ConcreteEventTest.cpp
         event/ConcreteEventParticipantTest.cpp
-        )
+        api/EventDataParserTest.cpp)
 
 set(test__flightinformationregion
         flightinformationregion/ConcreteFlightInformationRegionTest.cpp
