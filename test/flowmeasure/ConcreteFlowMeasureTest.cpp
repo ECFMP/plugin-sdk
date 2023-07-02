@@ -1,6 +1,7 @@
 #include "flowmeasure/ConcreteFlowMeasure.h"
 #include "event/ConcreteEvent.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
+#include "flow-sdk/FlightInformationRegion.h"
 #include "flow-sdk/MultipleLevelFilter.h"
 #include "flow-sdk/RangeToDestinationFilter.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
@@ -12,7 +13,13 @@ namespace FlowSdkTest::FlowMeasure {
     {
         public:
         ConcreteFlowMeasureTest()
-            : startTime(std::chrono::system_clock::now() - std::chrono::minutes(15)),
+            : fir1(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+                    1, "EGTT", "London"
+            )),
+              fir2(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+                      2, "EGPX", "Scottish"
+              )),
+              startTime(std::chrono::system_clock::now() - std::chrono::minutes(15)),
               endTime(std::chrono::system_clock::now() + std::chrono::minutes(15)),
               withdrawnTime(std::chrono::system_clock::now()),
               event(std::make_shared<FlowSdk::Event::ConcreteEvent>(
@@ -24,7 +31,7 @@ namespace FlowSdkTest::FlowMeasure {
               )),
               measure1(
                       1, event, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
-                      FlowSdk::FlowMeasure::MeasureStatus::Active, {},
+                      FlowSdk::FlowMeasure::MeasureStatus::Active, {fir1},
                       std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(
                               FlowSdk::FlowMeasure::MeasureType::Prohibit
                       ),
@@ -73,6 +80,8 @@ namespace FlowSdkTest::FlowMeasure {
               )
         {}
 
+        std::shared_ptr<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion> fir1;
+        std::shared_ptr<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion> fir2;
         std::chrono::system_clock::time_point startTime;
         std::chrono::system_clock::time_point endTime;
         std::chrono::system_clock::time_point withdrawnTime;
@@ -149,7 +158,7 @@ namespace FlowSdkTest::FlowMeasure {
     TEST_F(ConcreteFlowMeasureTest, ItHasNotifiedFlightInformationRegions)
     {
         EXPECT_EQ(
-                std::vector<std::shared_ptr<const FlowSdk::FlightInformationRegion::FlightInformationRegion>>(),
+                std::vector<std::shared_ptr<const FlowSdk::FlightInformationRegion::FlightInformationRegion>>({fir1}),
                 measure1.NotifiedFlightInformationRegions()
         );
     }
@@ -163,5 +172,25 @@ namespace FlowSdkTest::FlowMeasure {
     {
         EXPECT_TRUE(measure1.Filters().ApplicableToAirport("EGLL"));
         EXPECT_FALSE(measure1.Filters().ApplicableToAirport("EGKK"));
+    }
+
+    TEST_F(ConcreteFlowMeasureTest, ItIsApplicableToFlightInformationRegionByModel)
+    {
+        EXPECT_TRUE(measure1.IsApplicableToFlightInformationRegion(*fir1));
+    }
+
+    TEST_F(ConcreteFlowMeasureTest, ItIsNotApplicableToFlightInformationRegionByModel)
+    {
+        EXPECT_FALSE(measure1.IsApplicableToFlightInformationRegion(*fir2));
+    }
+
+    TEST_F(ConcreteFlowMeasureTest, ItIsApplicableToFlightInformationRegionByCode)
+    {
+        EXPECT_TRUE(measure1.IsApplicableToFlightInformationRegion("EGTT"));
+    }
+
+    TEST_F(ConcreteFlowMeasureTest, ItIsNotApplicableToFlightInformationRegionByCode)
+    {
+        EXPECT_FALSE(measure1.IsApplicableToFlightInformationRegion("EGPX"));
     }
 }// namespace FlowSdkTest::FlowMeasure

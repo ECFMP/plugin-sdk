@@ -94,7 +94,14 @@ namespace FlowSdk::FlowMeasure {
         [[nodiscard]] virtual auto NotifiedFlightInformationRegions() const noexcept
                 -> const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> = 0;
 
-        // TODO: A true/false for FIR applicability
+        /**
+         *  Checks if the flow measure is applicable to the given flight information region.
+         */
+        virtual auto IsApplicableToFlightInformationRegion(
+                const FlightInformationRegion::FlightInformationRegion& flightInformationRegion
+        ) const noexcept -> bool = 0;
+        virtual auto IsApplicableToFlightInformationRegion(const std::string& flightInformationRegion) const noexcept
+                -> bool = 0;
 
         /**
          * The measure itself, type and value.

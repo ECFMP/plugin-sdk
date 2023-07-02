@@ -1,4 +1,5 @@
 #include "ConcreteFlowMeasure.h"
+#include "flow-sdk/FlightInformationRegion.h"
 #include "flow-sdk/FlowMeasureFilters.h"
 #include "flow-sdk/Measure.h"
 
@@ -83,5 +84,25 @@ namespace FlowSdk::FlowMeasure {
     auto ConcreteFlowMeasure::Filters() const noexcept -> const FlowMeasureFilters&
     {
         return *filters;
+    }
+
+    auto ConcreteFlowMeasure::IsApplicableToFlightInformationRegion(
+            const FlightInformationRegion::FlightInformationRegion& flightInformationRegion
+    ) const noexcept -> bool
+    {
+        return IsApplicableToFlightInformationRegion(flightInformationRegion.Identifier());
+    }
+
+    auto ConcreteFlowMeasure::IsApplicableToFlightInformationRegion(const std::string& flightInformationRegion
+    ) const noexcept -> bool
+    {
+        return std::find_if(
+                       notifiedFirs.begin(), notifiedFirs.end(),
+                       [&flightInformationRegion](
+                               const std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>& fir
+                       ) {
+                           return fir->Identifier() == flightInformationRegion;
+                       }
+               ) != notifiedFirs.end();
     }
 }// namespace FlowSdk::FlowMeasure

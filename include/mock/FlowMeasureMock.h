@@ -22,6 +22,11 @@ namespace FlowSdk::Mock::FlowMeasure {
         );
         MOCK_METHOD(const FlowSdk::FlowMeasure::Measure&, Measure, (), (const, noexcept, override));
         MOCK_METHOD(const FlowSdk::FlowMeasure::FlowMeasureFilters&, Filters, (), (const, noexcept, override));
+        MOCK_METHOD(
+                bool, IsApplicableToFlightInformationRegion,
+                (const FlowSdk::FlightInformationRegion::FlightInformationRegion&), (const, noexcept, override)
+        );
+        MOCK_METHOD(bool, IsApplicableToFlightInformationRegion, (const std::string&), (const, noexcept, override));
     };
 
 }// namespace FlowSdk::Mock::FlowMeasure

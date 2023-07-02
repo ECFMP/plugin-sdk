@@ -32,6 +32,11 @@ namespace FlowSdk::FlowMeasure {
                 -> const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> override;
         [[nodiscard]] auto Measure() const noexcept -> const class Measure& override;
         [[nodiscard]] auto Filters() const noexcept -> const FlowMeasureFilters& override;
+        [[nodiscard]] auto IsApplicableToFlightInformationRegion(
+                const FlightInformationRegion::FlightInformationRegion& flightInformationRegion
+        ) const noexcept -> bool override;
+        [[nodiscard]] auto IsApplicableToFlightInformationRegion(const std::string& flightInformationRegion
+        ) const noexcept -> bool override;
 
         private:
         // Id of the measure
