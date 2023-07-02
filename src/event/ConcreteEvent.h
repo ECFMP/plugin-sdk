@@ -9,9 +9,11 @@ namespace FlowSdk::Event {
     class ConcreteEvent : public Event::Event
     {
         public:
-        ConcreteEvent(int id, std::string name, std::chrono::system_clock::time_point start,
-                      std::chrono::system_clock::time_point end,
-                      std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir, std::string vatcanCode);
+        ConcreteEvent(
+                int id, std::string name, std::chrono::system_clock::time_point start,
+                std::chrono::system_clock::time_point end,
+                std::shared_ptr<const FlightInformationRegion::FlightInformationRegion> fir, std::string vatcanCode
+        );
         [[nodiscard]] auto Id() const noexcept -> int override;
         [[nodiscard]] auto Name() const noexcept -> const std::string& override;
         [[nodiscard]] auto Start() const noexcept -> const std::chrono::system_clock::time_point& override;
@@ -34,7 +36,7 @@ namespace FlowSdk::Event {
         const std::chrono::system_clock::time_point end;
 
         // The FIR for the event
-        std::shared_ptr<FlightInformationRegion::FlightInformationRegion> fir;
+        std::shared_ptr<const FlightInformationRegion::FlightInformationRegion> fir;
 
         // Code for the vatcan code
         std::string vatcanCode;

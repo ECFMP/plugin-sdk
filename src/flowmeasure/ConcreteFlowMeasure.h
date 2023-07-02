@@ -14,8 +14,10 @@ namespace FlowSdk::FlowMeasure {
                 int id, std::shared_ptr<const Event::Event> event, std::string identifier, std::string reason,
                 std::chrono::system_clock::time_point startTime, std::chrono::system_clock::time_point endTime,
                 std::chrono::system_clock::time_point withdrawnTime, MeasureStatus status,
-                const std::set<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>>& notifiedFirs,
-                std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters);
+                const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>&
+                        notifiedFirs,
+                std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters
+        );
         ~ConcreteFlowMeasure() override;
         [[nodiscard]] auto Id() const noexcept -> int override;
         [[nodiscard]] auto Event() const noexcept -> std::shared_ptr<const Event::Event> override;
@@ -27,9 +29,14 @@ namespace FlowSdk::FlowMeasure {
         [[nodiscard]] auto Status() const noexcept -> MeasureStatus override;
         [[nodiscard]] auto HasStatus(MeasureStatus checkStatus) const noexcept -> bool override;
         [[nodiscard]] auto NotifiedFlightInformationRegions() const noexcept
-                -> const std::set<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>> override;
+                -> const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> override;
         [[nodiscard]] auto Measure() const noexcept -> const class Measure& override;
         [[nodiscard]] auto Filters() const noexcept -> const FlowMeasureFilters& override;
+        [[nodiscard]] auto IsApplicableToFlightInformationRegion(
+                const FlightInformationRegion::FlightInformationRegion& flightInformationRegion
+        ) const noexcept -> bool override;
+        [[nodiscard]] auto IsApplicableToFlightInformationRegion(const std::string& flightInformationRegion
+        ) const noexcept -> bool override;
 
         private:
         // Id of the measure
@@ -57,7 +64,7 @@ namespace FlowSdk::FlowMeasure {
         MeasureStatus status;
 
         // FIRs notified about this measure
-        const std::set<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>> notifiedFirs;
+        const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> notifiedFirs;
 
         // The measure itself
         std::unique_ptr<class Measure> measure;

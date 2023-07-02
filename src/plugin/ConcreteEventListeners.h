@@ -11,8 +11,9 @@ namespace FlowSdk::Plugin {
     {
         public:
         void Add(std::shared_ptr<EventListener<Types...>> listener) noexcept override;
-        void Add(std::shared_ptr<EventListener<Types...>> listener,
-                 std::shared_ptr<EventListenerFilter<Types...>> filter) noexcept override;
+        void
+        Add(std::shared_ptr<EventListener<Types...>> listener,
+            std::shared_ptr<EventListenerFilter<Types...>> filter) noexcept override;
         void Remove(std::shared_ptr<EventListener<Types...>> listener) noexcept override;
         void OnEvent(const Types&... types) noexcept override;
 

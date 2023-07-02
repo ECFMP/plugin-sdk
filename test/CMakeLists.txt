@@ -11,13 +11,67 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/googletest")
 
 #### FILES IN THIS PROJECT AND EXECUTABLE
-set(ALL_FILES
-        main.cpp
+set(test__api
+        api/ApiDataDownloaderTest.cpp
+        api/FlightInformationRegionDataParserTest.cpp
+        api/ApiElementIteratorTest.cpp api/ConcreteApiElementCollectionTest.cpp api/ConcreteStringIdentifiedApiElementCollectionTest.cpp api/FlowMeasureMeasureParserTest.cpp api/FlowMeasureFilterParserTest.cpp)
+
+set(test__date
+        
+        date/ParseDateStringsTest.cpp)
+
+set(test__event
         event/ConcreteEventTest.cpp
         event/ConcreteEventParticipantTest.cpp
-        flightinformationregion/ConcreteFlightInformationRegionTest.cpp flowmeasure/ConcreteAirportFilterTest.cpp flowmeasure/ConcreteEventFilterTest.cpp flowmeasure/ConcreteLevelFilterTest.cpp flowmeasure/ConcreteRouteFilterTest.cpp flowmeasure/ConcreteMeasureTest.cpp flowmeasure/ConcreteFlowMeasureTest.cpp FlowSdkHeaderTest.cpp FlowSdkMockHeaderTest.cpp flowmeasure/ConcreteFlowMeasureFiltersTest.cpp plugin/ConcreteEventListenersTest.cpp mock/MockEventListener.h log/LogDecoratorTest.cpp mock/MockLogger.h plugin/SdkFactoryTest.cpp mock/MockHttpClient.h)
+        api/EventDataParserTest.cpp)
 
-add_executable(${PROJECT_NAME} ${ALL_FILES})
+set(test__flightinformationregion
+        flightinformationregion/ConcreteFlightInformationRegionTest.cpp
+        )
+
+set(test__flowmeasure
+        flowmeasure/ConcreteAirportFilterTest.cpp
+        flowmeasure/ConcreteEventFilterTest.cpp
+        flowmeasure/ConcreteLevelRangeFilterTest.cpp
+        flowmeasure/ConcreteRouteFilterTest.cpp
+        flowmeasure/ConcreteMeasureTest.cpp
+        flowmeasure/ConcreteFlowMeasureTest.cpp
+        flowmeasure/ConcreteFlowMeasureFiltersTest.cpp
+        api/FlowMeasureDataParserTest.cpp flowmeasure/ConcreteRangeToDestinationFilterTest.cpp)
+
+set(test__log
+        log/LogDecoratorTest.cpp
+        )
+
+set(test__mock
+        mock/MockEventListener.h
+        mock/MockLogger.h
+        mock/MockHttpClient.h
+        )
+
+set(test__plugin
+        plugin/ConcreteEventListenersTest.cpp
+        plugin/SdkFactoryTest.cpp
+        )
+
+set(test__other
+        main.cpp
+        pch/pch.cpp pch/pch.h
+        FlowSdkHeaderTest.cpp
+        FlowSdkMockHeaderTest.cpp
+        flowmeasure/ConcreteMultipleLevelFilterTest.cpp)
+
+add_executable(${PROJECT_NAME}
+        ${test__api}
+        ${test__date}
+        ${test__event}
+        ${test__flightinformationregion}
+        ${test__flowmeasure}
+        ${test__log}
+        ${test__mock}
+        ${test__plugin}
+        ${test__other}
+        )
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -34,6 +88,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/../src;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/googletest/googlemock/include;"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/nlohmann;"
         )
 
 #### LINKS
@@ -47,7 +102,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         flow_plugin_sdk_src
         )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" JSON_MultipleHeaders "ON")
 
 #### COMPILE OPTIONS
 target_compile_options(${PROJECT_NAME} PRIVATE

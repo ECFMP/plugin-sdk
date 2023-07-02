@@ -2,6 +2,17 @@
 #include "ConcreteEventListeners.h"
 #include "ConcreteSdk.h"
 #include "ConcreteSdkEventListeners.h"
+#include "api/ApiDataDownloader.h"
+#include "api/ApiDataScheduler.h"
+#include "api/ConcreteApiElementCollection.h"
+#include "api/ConcreteStringIdentifiedApiElementCollection.h"
+#include "api/EventDataParser.h"
+#include "api/FlightInformationRegionDataParser.h"
+#include "api/FlowMeasureDataParser.h"
+#include "api/FlowMeasureFilterParser.h"
+#include "api/FlowMeasureMeasureParser.h"
+#include "flow-sdk/FlightInformationRegion.h"
+#include "flow-sdk/FlowMeasure.h"
 #include "flow-sdk/HttpClient.h"
 #include "flow-sdk/Logger.h"
 #include "log/LogDecorator.h"
@@ -16,7 +27,29 @@ namespace FlowSdk::Plugin {
                     std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
                     std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
                     std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
-                    std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>>());
+                    std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>>()
+            );
+        }
+
+        auto CreateDataListeners() -> std::unique_ptr<Plugin::ConcreteEventListeners<const nlohmann::json&>>
+        {
+            auto dataListeners = std::make_unique<Plugin::ConcreteEventListeners<const nlohmann::json&>>();
+            dataListeners->Add(std::make_shared<Api::FlightInformationRegionDataParser>(GetFirs(), GetLogger()));
+            dataListeners->Add(std::make_shared<Api::EventDataParser>(GetEvents(), GetFirs(), GetLogger()));
+            dataListeners->Add(std::make_shared<Api::FlowMeasureDataParser>(
+                    std::make_unique<Api::FlowMeasureFilterParser>(GetLogger()),
+                    std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetFlowMeasures(), GetEvents(),
+                    GetFirs(), GetLogger()
+            ));
+
+            return dataListeners;
+        }
+
+        auto CreateApiDataScheduler() -> std::unique_ptr<Api::ApiDataScheduler>
+        {
+            return std::make_unique<Api::ApiDataScheduler>(
+                    std::make_unique<Api::ApiDataDownloader>(std::move(httpClient), CreateDataListeners(), GetLogger())
+            );
         }
 
         auto CreateLogger() -> std::shared_ptr<Log::Logger>
@@ -28,11 +61,63 @@ namespace FlowSdk::Plugin {
             return std::make_shared<Log::LogDecorator>(std::move(logger));
         }
 
+        auto GetLogger() -> std::shared_ptr<Log::Logger>
+        {
+            if (!wrappedLogger) {
+                wrappedLogger = CreateLogger();
+            }
+
+            return wrappedLogger;
+        }
+
+        auto GetFirs() -> std::shared_ptr<
+                Api::ConcreteStringIdentifiedApiElementCollection<FlightInformationRegion::FlightInformationRegion>>
+        {
+            if (!firs) {
+                firs = std::make_shared<Api::ConcreteStringIdentifiedApiElementCollection<
+                        FlightInformationRegion::FlightInformationRegion>>();
+            }
+
+            return firs;
+        }
+
+        auto GetEvents() -> std::shared_ptr<Api::ConcreteApiElementCollection<Event::Event>>
+        {
+            if (!events) {
+                events = std::make_shared<Api::ConcreteApiElementCollection<Event::Event>>();
+            }
+
+            return events;
+        }
+
+        auto GetFlowMeasures()
+                -> std::shared_ptr<Api::ConcreteStringIdentifiedApiElementCollection<FlowMeasure::FlowMeasure>>
+        {
+            if (!flowMeasures) {
+                flowMeasures =
+                        std::make_shared<Api::ConcreteStringIdentifiedApiElementCollection<FlowMeasure::FlowMeasure>>();
+            }
+
+            return flowMeasures;
+        }
+
         // For performing HTTP requests
-        std::unique_ptr<Http::HttpClient> httpClient;
+        std::unique_ptr<Http::HttpClient> httpClient = nullptr;
 
         // For logging things that happen
-        std::unique_ptr<Log::Logger> logger;
+        std::unique_ptr<Log::Logger> logger = nullptr;
+
+        // A wrapper around the logger
+        std::shared_ptr<Log::Logger> wrappedLogger = nullptr;
+
+        // All the FIRs
+        std::shared_ptr<
+                Api::ConcreteStringIdentifiedApiElementCollection<FlightInformationRegion::FlightInformationRegion>>
+                firs;
+
+        std::shared_ptr<Api::ConcreteApiElementCollection<Event::Event>> events;
+
+        std::shared_ptr<Api::ConcreteStringIdentifiedApiElementCollection<FlowMeasure::FlowMeasure>> flowMeasures;
     };
 
     SdkFactory::SdkFactory() : impl(std::make_unique<SdkFactoryImpl>())
@@ -71,6 +156,6 @@ namespace FlowSdk::Plugin {
             throw SdkConfigurationException("No http client provided");
         }
 
-        return std::make_unique<ConcreteSdk>(impl->CreateEventListeners());
+        return std::make_unique<ConcreteSdk>(impl->CreateApiDataScheduler(), impl->CreateEventListeners());
     }
 }// namespace FlowSdk::Plugin

@@ -7,6 +7,6 @@
 #include "FlightInformationRegionMock.h"
 #include "FlowMeasureFiltersMock.h"
 #include "FlowMeasureMock.h"
-#include "LevelFilterMock.h"
+#include "LevelRangeFilterMock.h"
 #include "MeasureMock.h"
 #include "RouteFilterMock.h"

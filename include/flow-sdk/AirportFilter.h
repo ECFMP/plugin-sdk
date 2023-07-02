@@ -1,6 +1,13 @@
 #pragma once
 
 namespace FlowSdk::FlowMeasure {
+
+    enum class AirportFilterType
+    {
+        Destination,
+        Departure,
+    };
+
     /**
      * A filter that pertains to arrival or departure airports
      */
@@ -17,5 +24,10 @@ namespace FlowSdk::FlowMeasure {
          * Helper method that checks, given an airport string, if the filter applies.
          */
         [[nodiscard]] virtual auto ApplicableToAirport(const std::string& airport) const noexcept -> bool = 0;
+
+        /**
+         * Returns the type of airport filter
+         */
+        [[nodiscard]] virtual auto Type() const noexcept -> AirportFilterType = 0;
     };
 }// namespace FlowSdk::FlowMeasure

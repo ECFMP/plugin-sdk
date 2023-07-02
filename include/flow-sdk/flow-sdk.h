@@ -1,7 +1,9 @@
 #pragma once
 
 #include "AirportFilter.h"
+#include "ApiElementCollection.h"
 #include "Event.h"
+#include "EventCollection.h"
 #include "EventFilter.h"
 #include "EventListener.h"
 #include "EventListenerFilter.h"
@@ -11,8 +13,10 @@
 #include "FlowMeasure.h"
 #include "FlowMeasureFilters.h"
 #include "HttpClient.h"
-#include "LevelFilter.h"
+#include "LevelRangeFilter.h"
 #include "Logger.h"
 #include "Measure.h"
+#include "MultipleLevelFilter.h"
 #include "RouteFilter.h"
 #include "Sdk.h"
+#include "SdkEventListenerTypes.h"

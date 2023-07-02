@@ -3,11 +3,12 @@
 
 namespace FlowSdk::Plugin {
     ConcreteSdkEventListeners::ConcreteSdkEventListeners(
-            std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> notifiedListeners,
-            std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> activatedListeners,
-            std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> expiredListeners,
-            std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure>> withdrawnListeners,
-            std::unique_ptr<EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>> reissuedListeners)
+            std::unique_ptr<FlowMeasureActivatedEventListeners> notifiedListeners,
+            std::unique_ptr<FlowMeasureNotifiedEventListeners> activatedListeners,
+            std::unique_ptr<FlowMeasureExpiredEventListeners> expiredListeners,
+            std::unique_ptr<FlowMeasureWithdrawnEventListeners> withdrawnListeners,
+            std::unique_ptr<FlowMeasureReissuedEventListeners> reissuedListeners
+    )
         : notifiedListeners(std::move(notifiedListeners)), activatedListeners(std::move(activatedListeners)),
           expiredListeners(std::move(expiredListeners)), withdrawnListeners(std::move(withdrawnListeners)),
           reissuedListeners(std::move(reissuedListeners))
@@ -19,32 +20,29 @@ namespace FlowSdk::Plugin {
         assert(this->reissuedListeners && "Reissued listeners not set in ConcreteSdk");
     }
 
-    auto ConcreteSdkEventListeners::FlowMeasureNotifiedListeners() const noexcept
-            -> EventListeners<FlowMeasure::FlowMeasure>&
+    auto ConcreteSdkEventListeners::FlowMeasureNotifiedListeners() const noexcept -> FlowMeasureNotifiedEventListeners&
     {
         return *notifiedListeners;
     }
 
     auto ConcreteSdkEventListeners::FlowMeasureActivatedListeners() const noexcept
-            -> EventListeners<FlowMeasure::FlowMeasure>&
+            -> FlowMeasureActivatedEventListeners&
     {
         return *activatedListeners;
     }
 
-    auto ConcreteSdkEventListeners::FlowMeasureExpiredListeners() const noexcept
-            -> EventListeners<FlowMeasure::FlowMeasure>&
+    auto ConcreteSdkEventListeners::FlowMeasureExpiredListeners() const noexcept -> FlowMeasureExpiredEventListeners&
     {
         return *expiredListeners;
     }
 
     auto ConcreteSdkEventListeners::FlowMeasureWithdrawnListeners() const noexcept
-            -> EventListeners<FlowMeasure::FlowMeasure>&
+            -> FlowMeasureWithdrawnEventListeners&
     {
         return *withdrawnListeners;
     }
 
-    auto ConcreteSdkEventListeners::FlowMeasureReissuedListeners() const noexcept
-            -> EventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>&
+    auto ConcreteSdkEventListeners::FlowMeasureReissuedListeners() const noexcept -> FlowMeasureReissuedEventListeners&
     {
         return *reissuedListeners;
     }

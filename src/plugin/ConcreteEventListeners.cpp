@@ -2,6 +2,7 @@
 #include "flow-sdk/EventListener.h"
 #include "flow-sdk/EventListenerFilter.h"
 #include "flow-sdk/FlowMeasure.h"
+#include "nlohmann/json_fwd.hpp"
 
 namespace FlowSdk::Plugin {
 
@@ -25,8 +26,9 @@ namespace FlowSdk::Plugin {
     }
 
     template<typename... Types>
-    void ConcreteEventListeners<Types...>::Add(std::shared_ptr<EventListener<Types...>> listener,
-                                               std::shared_ptr<EventListenerFilter<Types...>> filter) noexcept
+    void ConcreteEventListeners<Types...>::Add(
+            std::shared_ptr<EventListener<Types...>> listener, std::shared_ptr<EventListenerFilter<Types...>> filter
+    ) noexcept
     {
         if (listeners.contains(listener)) {
             return;
@@ -62,8 +64,13 @@ template class FlowSdk::Plugin::EventListenerFilter<FlowSdk::FlowMeasure::FlowMe
 template class FlowSdk::Plugin::EventListener<FlowSdk::FlowMeasure::FlowMeasure>;
 
 // For double-flow measure events
-template class FlowSdk::Plugin::ConcreteEventListeners<FlowSdk::FlowMeasure::FlowMeasure,
-                                                       FlowSdk::FlowMeasure::FlowMeasure>;
-template class FlowSdk::Plugin::EventListenerFilter<FlowSdk::FlowMeasure::FlowMeasure,
-                                                    FlowSdk::FlowMeasure::FlowMeasure>;
+template class FlowSdk::Plugin::ConcreteEventListeners<
+        FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
+template class FlowSdk::Plugin::EventListenerFilter<
+        FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
 template class FlowSdk::Plugin::EventListener<FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
+
+// For downloading API data
+template class FlowSdk::Plugin::ConcreteEventListeners<const nlohmann::json&>;
+template class FlowSdk::Plugin::EventListenerFilter<const nlohmann::json&>;
+template class FlowSdk::Plugin::EventListener<const nlohmann::json&>;
