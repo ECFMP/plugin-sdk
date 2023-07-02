@@ -1,6 +1,7 @@
 #include "flowmeasure/ConcreteFlowMeasure.h"
 #include "event/ConcreteEvent.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
+#include "flow-sdk/MultipleLevelFilter.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "flowmeasure/ConcreteMeasure.h"
@@ -34,7 +35,8 @@ namespace FlowSdkTest::FlowMeasure {
                                       )},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{}
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>{},
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>{}
                       )
               ),
               measureWithNoEvent(
@@ -47,7 +49,8 @@ namespace FlowSdkTest::FlowMeasure {
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{}
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>{},
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>{}
                       )
               ),
               withdrawnMeasure(
@@ -60,7 +63,8 @@ namespace FlowSdkTest::FlowMeasure {
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{}
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>{},
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>{}
                       )
               )
         {}

@@ -32,7 +32,7 @@ set(test__flightinformationregion
 set(test__flowmeasure
         flowmeasure/ConcreteAirportFilterTest.cpp
         flowmeasure/ConcreteEventFilterTest.cpp
-        flowmeasure/ConcreteLevelFilterTest.cpp
+        flowmeasure/ConcreteLevelRangeFilterTest.cpp
         flowmeasure/ConcreteRouteFilterTest.cpp
         flowmeasure/ConcreteMeasureTest.cpp
         flowmeasure/ConcreteFlowMeasureTest.cpp
@@ -59,7 +59,7 @@ set(test__other
         pch/pch.cpp pch/pch.h
         FlowSdkHeaderTest.cpp
         FlowSdkMockHeaderTest.cpp
-        )
+        flowmeasure/ConcreteMultipleLevelFilterTest.cpp)
 
 add_executable(${PROJECT_NAME}
         ${test__api}

@@ -9,6 +9,7 @@
 #include "flow-sdk/Event.h"
 #include "flow-sdk/FlowMeasure.h"
 #include "flow-sdk/Measure.h"
+#include "flow-sdk/MultipleLevelFilter.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "flowmeasure/ConcreteMeasure.h"
@@ -112,7 +113,8 @@ namespace FlowSdkTest::Api {
                             std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>(),
                             std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>(),
                             std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>()
+                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>(),
+                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>()
                     );
                 }));
 
@@ -321,7 +323,8 @@ namespace FlowSdkTest::Api {
                             std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>(),
                             std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>(),
                             std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>()
+                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>(),
+                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>()
                     );
                 }));
 

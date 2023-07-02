@@ -1,13 +1,13 @@
 #pragma once
-#include "../flow-sdk/LevelFilter.h"
+#include "../flow-sdk/LevelRangeFilter.h"
 #include <gmock/gmock.h>
 
 namespace FlowSdk::Mock::FlowMeasure {
 
-    class LevelFilterMock : public FlowSdk::FlowMeasure::LevelFilter
+    class LevelRangeFilterMock : public FlowSdk::FlowMeasure::LevelRangeFilter
     {
         public:
-        MOCK_METHOD(FlowSdk::FlowMeasure::LevelFilterType, Type, (), (const, noexcept, override));
+        MOCK_METHOD(FlowSdk::FlowMeasure::LevelRangeFilterType, Type, (), (const, noexcept, override));
         MOCK_METHOD(int, Level, (), (const, noexcept, override));
         MOCK_METHOD(int, Altitude, (), (const, noexcept, override));
         MOCK_METHOD(bool, ApplicableToAltitude, (int), (const, noexcept, override));

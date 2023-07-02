@@ -2,12 +2,14 @@
 #include "flow-sdk/EventFilter.h"
 #include "flow-sdk/FlightInformationRegion.h"
 #include "flow-sdk/FlowMeasureFilters.h"
-#include "flow-sdk/LevelFilter.h"
+#include "flow-sdk/LevelRangeFilter.h"
 #include "flow-sdk/Logger.h"
+#include "flow-sdk/MultipleLevelFilter.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteEventFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
-#include "flowmeasure/ConcreteLevelFilter.h"
+#include "flowmeasure/ConcreteLevelRangeFilter.h"
+#include "flowmeasure/ConcreteMultipleLevelFilter.h"
 #include "flowmeasure/ConcreteRouteFilter.h"
 #include "nlohmann/json.hpp"
 
@@ -28,7 +30,8 @@ namespace FlowSdk::Api {
         }
 
         std::list<std::shared_ptr<FlowMeasure::AirportFilter>> airportFilters;
-        std::list<std::shared_ptr<FlowMeasure::LevelFilter>> levelFilters;
+        std::list<std::shared_ptr<FlowMeasure::LevelRangeFilter>> levelRangeFilters;
+        std::list<std::shared_ptr<FlowMeasure::MultipleLevelFilter>> multipleLevelFilters;
         std::list<std::shared_ptr<FlowMeasure::EventFilter>> eventFilters;
         std::list<std::shared_ptr<FlowMeasure::RouteFilter>> routeFilters;
 
@@ -62,35 +65,28 @@ namespace FlowSdk::Api {
 
             // If the filter is type level_above, level_below, then the filter type is a LevelFilter
             else if (filter["type"] == "level_above" || filter["type"] == "level_below") {
-                auto filterType = filter["type"] == "level_above" ? FlowMeasure::LevelFilterType::AtOrAbove
-                                                                  : FlowMeasure::LevelFilterType::AtOrBelow;
-                auto levelFilter = CreateLevelFilter(filter["value"], filterType);
+                auto filterType = filter["type"] == "level_above" ? FlowMeasure::LevelRangeFilterType::AtOrAbove
+                                                                  : FlowMeasure::LevelRangeFilterType::AtOrBelow;
+                auto levelFilter = CreateLevelRangeFilter(filter["value"], filterType);
                 if (!levelFilter) {
                     logger->Warning("FlowMeasureFilterParser::Parse: Could not create level filter");
                     return nullptr;
                 }
 
-                levelFilters.push_back(std::move(levelFilter));
+                levelRangeFilters.push_back(std::move(levelFilter));
                 continue;
             }
 
             // If the filter is type level, then the filter is an array, each item of which makes a LevelFilter
             else if (filter["type"] == "level") {
-                if (!filter["value"].is_array()) {
-                    logger->Warning("FlowMeasureFilterParser::ParseLevel: Json is not an array");
+                auto levelFilter = CreateMultipleLevelFilter(filter["value"]);
+                if (!levelFilter) {
+                    logger->Warning("FlowMeasureFilterParser::Parse: Could not create multiple level filter");
                     return nullptr;
                 }
 
-                // TODO: Make a level filter that accepts a number of levels
-                for (const auto& level: filter["value"]) {
-                    auto levelFilter = CreateLevelFilter(level, FlowMeasure::LevelFilterType::At);
-                    if (!levelFilter) {
-                        logger->Warning("FlowMeasureFilterParser::Parse: Could not create level filter");
-                        return nullptr;
-                    }
-
-                    levelFilters.push_back(std::move(levelFilter));
-                }
+                multipleLevelFilters.push_back(std::move(levelFilter));
+                continue;
             }
 
             // If the filter is type member_event or member_not_event, then the filter type is an EventFilter
@@ -123,7 +119,8 @@ namespace FlowSdk::Api {
         }
 
         return std::make_unique<FlowMeasure::ConcreteFlowMeasureFilters>(
-                std::move(airportFilters), std::move(eventFilters), std::move(routeFilters), std::move(levelFilters)
+                std::move(airportFilters), std::move(eventFilters), std::move(routeFilters),
+                std::move(levelRangeFilters), std::move(multipleLevelFilters)
         );
     }
 
@@ -153,15 +150,37 @@ namespace FlowSdk::Api {
         return std::make_shared<FlowMeasure::ConcreteAirportFilter>(airports, filterType);
     }
 
-    auto FlowMeasureFilterParser::CreateLevelFilter(const nlohmann::json& data, FlowMeasure::LevelFilterType type) const
-            -> std::shared_ptr<FlowMeasure::LevelFilter>
+    auto FlowMeasureFilterParser::CreateLevelRangeFilter(
+            const nlohmann::json& data, FlowMeasure::LevelRangeFilterType type
+    ) const -> std::shared_ptr<FlowMeasure::LevelRangeFilter>
     {
         if (!data.is_number_integer()) {
-            logger->Warning("FlowMeasureFilterParser::CreateLevelFilter: Json value is not an integer");
+            logger->Warning("FlowMeasureFilterParser::CreateLevelRangeFilter: Json value is not an integer");
             return nullptr;
         }
 
-        return std::make_shared<FlowMeasure::ConcreteLevelFilter>(type, data.get<int>());
+        return std::make_shared<FlowMeasure::ConcreteLevelRangeFilter>(type, data.get<int>());
+    }
+
+    auto FlowMeasureFilterParser::CreateMultipleLevelFilter(const nlohmann::json& data) const
+            -> std::shared_ptr<FlowMeasure::MultipleLevelFilter>
+    {
+        if (!data.is_array()) {
+            logger->Warning("FlowMeasureFilterParser::CreateMultipleLevelFilter: Json is not an array");
+            return nullptr;
+        }
+
+        std::vector<int> levels;
+        for (const auto& level: data) {
+            if (!level.is_number_integer()) {
+                logger->Warning("FlowMeasureFilterParser::CreateMultipleLevelFilter: Json value is not an integer");
+                return nullptr;
+            }
+
+            levels.push_back(level.get<int>());
+        }
+
+        return std::make_shared<FlowMeasure::ConcreteMultipleLevelFilter>(levels);
     }
 
     auto

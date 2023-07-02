@@ -2,9 +2,8 @@
 
 namespace FlowSdk::FlowMeasure {
 
-    enum LevelFilterType
+    enum LevelRangeFilterType
     {
-        At = 0,
         AtOrAbove = 1,
         AtOrBelow = 2
     };
@@ -12,15 +11,15 @@ namespace FlowSdk::FlowMeasure {
     /**
      * A filter that pertains to the cruising level of the aircraft.
      */
-    class LevelFilter
+    class LevelRangeFilter
     {
         public:
-        virtual ~LevelFilter() = default;
+        virtual ~LevelRangeFilter() = default;
 
         /**
          * Returns the type of this level filter.
          */
-        [[nodiscard]] virtual auto Type() const noexcept -> LevelFilterType = 0;
+        [[nodiscard]] virtual auto Type() const noexcept -> LevelRangeFilterType = 0;
 
         /**
          * Returns the level (e.g. 350) associated with this filter

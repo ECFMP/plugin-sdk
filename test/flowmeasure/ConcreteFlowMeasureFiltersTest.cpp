@@ -3,7 +3,8 @@
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteEventFilter.h"
-#include "flowmeasure/ConcreteLevelFilter.h"
+#include "flowmeasure/ConcreteLevelRangeFilter.h"
+#include "flowmeasure/ConcreteMultipleLevelFilter.h"
 #include "flowmeasure/ConcreteRouteFilter.h"
 
 namespace FlowSdkTest::FlowMeasure {
@@ -33,10 +34,13 @@ namespace FlowSdkTest::FlowMeasure {
                     std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{
                             std::make_shared<FlowSdk::FlowMeasure::ConcreteRouteFilter>(std::set<std::string>{"XAMAB"}
                             )},
-                    std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{
-                            std::make_shared<FlowSdk::FlowMeasure::ConcreteLevelFilter>(
-                                    FlowSdk::FlowMeasure::LevelFilterType::At, 150
-                            )}
+                    std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>{
+                            std::make_shared<FlowSdk::FlowMeasure::ConcreteLevelRangeFilter>(
+                                    FlowSdk::FlowMeasure::LevelRangeFilterType::AtOrBelow, 150
+                            )},
+                    std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>{
+                            std::make_shared<FlowSdk::FlowMeasure::ConcreteMultipleLevelFilter>(std::vector<int>{
+                                    150, 200})}
             )
         {}
 
@@ -93,8 +97,8 @@ namespace FlowSdkTest::FlowMeasure {
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsApplicableLevelFilter)
     {
         EXPECT_EQ(
-                FlowSdk::FlowMeasure::LevelFilterType::At,
-                filters.FirstLevelFilter([](const FlowSdk::FlowMeasure::LevelFilter& levelFilter) {
+                FlowSdk::FlowMeasure::LevelRangeFilterType::AtOrBelow,
+                filters.FirstLevelFilter([](const FlowSdk::FlowMeasure::LevelRangeFilter& levelFilter) {
                            return levelFilter.Level() == 150;
                        }
                 )->Type()
@@ -103,9 +107,32 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsNullptrIfNoApplicableLevelFilter)
     {
-        EXPECT_EQ(nullptr, filters.FirstLevelFilter([](const FlowSdk::FlowMeasure::LevelFilter& levelFilter) {
+        EXPECT_EQ(nullptr, filters.FirstLevelFilter([](const FlowSdk::FlowMeasure::LevelRangeFilter& levelFilter) {
             return levelFilter.Level() == 160;
         }));
+    }
+
+    TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsApplicableMultipleLevelFilter)
+    {
+        EXPECT_EQ(
+                std::vector<int>({150, 200}),
+                filters.FirstMultipleLevelFilter(
+                               [](const FlowSdk::FlowMeasure::MultipleLevelFilter& multipleLevelFilter) {
+                                   return multipleLevelFilter.Levels() == std::vector<int>({150, 200});
+                               }
+                )->Levels()
+        );
+    }
+
+    TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsNullptrIfNoApplicableMultipleLevelFilter)
+    {
+        EXPECT_EQ(
+                nullptr,
+                filters.FirstMultipleLevelFilter([](const FlowSdk::FlowMeasure::MultipleLevelFilter& multipleLevelFilter
+                                                 ) {
+                    return multipleLevelFilter.Levels() == std::vector<int>({160, 200});
+                })
+        );
     }
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsApplicableRouteFilter)
@@ -159,7 +186,17 @@ namespace FlowSdkTest::FlowMeasure {
     TEST_F(ConcreteFlowMeasureFiltersTest, ItIteratesLevelFilters)
     {
         int filterCount = 0;
-        filters.ForEachLevelFilter([&filterCount](const FlowSdk::FlowMeasure::LevelFilter& filter) {
+        filters.ForEachLevelFilter([&filterCount](const FlowSdk::FlowMeasure::LevelRangeFilter& filter) {
+            filterCount++;
+        });
+
+        EXPECT_EQ(1, filterCount);
+    }
+
+    TEST_F(ConcreteFlowMeasureFiltersTest, ItIteratesMultipleLevelFilters)
+    {
+        int filterCount = 0;
+        filters.ForEachMultipleLevelFilter([&filterCount](const FlowSdk::FlowMeasure::MultipleLevelFilter& filter) {
             filterCount++;
         });
 

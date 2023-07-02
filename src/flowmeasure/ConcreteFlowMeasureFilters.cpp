@@ -7,10 +7,12 @@ namespace FlowSdk::FlowMeasure {
     ConcreteFlowMeasureFilters::ConcreteFlowMeasureFilters(
             std::list<std::shared_ptr<AirportFilter>> airportFilters,
             std::list<std::shared_ptr<EventFilter>> eventFilters, std::list<std::shared_ptr<RouteFilter>> routeFilters,
-            std::list<std::shared_ptr<LevelFilter>> levelFilters
+            std::list<std::shared_ptr<LevelRangeFilter>> levelFilters,
+            std::list<std::shared_ptr<MultipleLevelFilter>> multipleLevelFilters
     )
         : airportFilters(std::move(airportFilters)), eventFilters(std::move(eventFilters)),
-          routeFilters(std::move(routeFilters)), levelFilters(std::move(levelFilters))
+          routeFilters(std::move(routeFilters)), levelFilters(std::move(levelFilters)),
+          multipleLevelFilters(std::move(multipleLevelFilters))
     {}
 
     auto ConcreteFlowMeasureFilters::ApplicableToAirport(const std::string& airport) const noexcept -> bool
@@ -37,10 +39,19 @@ namespace FlowSdk::FlowMeasure {
         }
     }
 
-    void ConcreteFlowMeasureFilters::ForEachLevelFilter(const std::function<void(const LevelFilter&)>& callback
+    void ConcreteFlowMeasureFilters::ForEachLevelFilter(const std::function<void(const LevelRangeFilter&)>& callback
     ) const noexcept
     {
         for (const auto& filter: levelFilters) {
+            callback(*filter);
+        }
+    }
+
+    void ConcreteFlowMeasureFilters::ForEachMultipleLevelFilter(
+            const std::function<void(const MultipleLevelFilter&)>& callback
+    ) const noexcept
+    {
+        for (const auto& filter: multipleLevelFilters) {
             callback(*filter);
         }
     }
@@ -71,13 +82,24 @@ namespace FlowSdk::FlowMeasure {
         return filter == eventFilters.cend() ? nullptr : *filter;
     }
 
-    auto ConcreteFlowMeasureFilters::FirstLevelFilter(const std::function<bool(const LevelFilter&)>& callback
-    ) const noexcept -> std::shared_ptr<LevelFilter>
+    auto ConcreteFlowMeasureFilters::FirstLevelFilter(const std::function<bool(const LevelRangeFilter&)>& callback
+    ) const noexcept -> std::shared_ptr<LevelRangeFilter>
     {
         auto filter = std::find_if(levelFilters.begin(), levelFilters.end(), [&callback](const auto& item) {
             return callback(*item);
         });
         return filter == levelFilters.cend() ? nullptr : *filter;
+    }
+
+    auto
+    ConcreteFlowMeasureFilters::FirstMultipleLevelFilter(const std::function<bool(const MultipleLevelFilter&)>& callback
+    ) const noexcept -> std::shared_ptr<MultipleLevelFilter>
+    {
+        auto filter =
+                std::find_if(multipleLevelFilters.begin(), multipleLevelFilters.end(), [&callback](const auto& item) {
+                    return callback(*item);
+                });
+        return filter == multipleLevelFilters.cend() ? nullptr : *filter;
     }
 
     auto ConcreteFlowMeasureFilters::FirstRouteFilter(const std::function<bool(const RouteFilter&)>& callback
@@ -99,9 +121,16 @@ namespace FlowSdk::FlowMeasure {
         return eventFilters;
     }
 
-    auto ConcreteFlowMeasureFilters::LevelFilters() const noexcept -> const std::list<std::shared_ptr<LevelFilter>>&
+    auto ConcreteFlowMeasureFilters::LevelFilters() const noexcept
+            -> const std::list<std::shared_ptr<LevelRangeFilter>>&
     {
         return levelFilters;
+    }
+
+    auto ConcreteFlowMeasureFilters::MultipleLevelFilters() const noexcept
+            -> const std::list<std::shared_ptr<MultipleLevelFilter>>&
+    {
+        return multipleLevelFilters;
     }
 
     auto ConcreteFlowMeasureFilters::RouteFilters() const noexcept -> const std::list<std::shared_ptr<RouteFilter>>&

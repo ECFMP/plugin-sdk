@@ -1,5 +1,6 @@
 #pragma once
 #include "../flow-sdk/FlowMeasureFilters.h"
+#include "flow-sdk/MultipleLevelFilter.h"
 #include <gmock/gmock.h>
 
 namespace FlowSdk::Mock::FlowMeasure {
@@ -17,7 +18,12 @@ namespace FlowSdk::Mock::FlowMeasure {
                 (const, noexcept, override)
         );
         MOCK_METHOD(
-                void, ForEachLevelFilter, (const std::function<void(const FlowSdk::FlowMeasure::LevelFilter&)>&),
+                void, ForEachLevelFilter, (const std::function<void(const FlowSdk::FlowMeasure::LevelRangeFilter&)>&),
+                (const, noexcept, override)
+        );
+        MOCK_METHOD(
+                void, ForEachMultipleLevelFilter,
+                (const std::function<void(const FlowSdk::FlowMeasure::MultipleLevelFilter&)>&),
                 (const, noexcept, override)
         );
         MOCK_METHOD(
@@ -33,8 +39,13 @@ namespace FlowSdk::Mock::FlowMeasure {
                 (const std::function<bool(const FlowSdk::FlowMeasure::EventFilter&)>&), (const, noexcept, override)
         );
         MOCK_METHOD(
-                std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>, FirstLevelFilter,
-                (const std::function<bool(const FlowSdk::FlowMeasure::LevelFilter&)>&), (const, noexcept, override)
+                std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>, FirstLevelFilter,
+                (const std::function<bool(const FlowSdk::FlowMeasure::LevelRangeFilter&)>&), (const, noexcept, override)
+        );
+        MOCK_METHOD(
+                std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>, FirstMultipleLevelFilter,
+                (const std::function<bool(const FlowSdk::FlowMeasure::MultipleLevelFilter&)>&),
+                (const, noexcept, override)
         );
         MOCK_METHOD(
                 std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>, FirstRouteFilter,

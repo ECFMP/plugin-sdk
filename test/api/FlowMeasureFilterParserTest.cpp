@@ -2,7 +2,7 @@
 #include "api/ConcreteApiElementCollection.h"
 #include "flow-sdk/Event.h"
 #include "flow-sdk/EventFilter.h"
-#include "flow-sdk/LevelFilter.h"
+#include "flow-sdk/LevelRangeFilter.h"
 #include "flow-sdk/RouteFilter.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
@@ -32,6 +32,7 @@ namespace FlowSdkTest::Api {
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
+        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
     }
@@ -64,6 +65,7 @@ namespace FlowSdkTest::Api {
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 1);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
+        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
 
@@ -90,7 +92,7 @@ namespace FlowSdkTest::Api {
         std::string description;
         std::string filterType;
         int jsonLevel;
-        FlowSdk::FlowMeasure::LevelFilterType expectedFilterType;
+        FlowSdk::FlowMeasure::LevelRangeFilterType expectedFilterType;
         int expectedLevel;
     };
 
@@ -116,6 +118,7 @@ namespace FlowSdkTest::Api {
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 1);
+        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
 
@@ -128,9 +131,11 @@ namespace FlowSdkTest::Api {
             FlowMeasureFilterParserLevelRangeFilterTest, FlowMeasureFilterParserLevelRangeFilterTest,
             testing::Values(
                     FlowMeasureFilterParserLevelRangeTestCase{
-                            "level_above", "level_above", 100, FlowSdk::FlowMeasure::LevelFilterType::AtOrAbove, 100},
+                            "level_above", "level_above", 100, FlowSdk::FlowMeasure::LevelRangeFilterType::AtOrAbove,
+                            100},
                     FlowMeasureFilterParserLevelRangeTestCase{
-                            "level_below", "level_below", 100, FlowSdk::FlowMeasure::LevelFilterType::AtOrBelow, 100}
+                            "level_below", "level_below", 100, FlowSdk::FlowMeasure::LevelRangeFilterType::AtOrBelow,
+                            100}
             ),
             [](const testing::TestParamInfo<FlowMeasureFilterParserLevelRangeTestCase>& info) {
                 return info.param.description;
@@ -139,8 +144,8 @@ namespace FlowSdkTest::Api {
 
     struct FlowMeasureFilterParserSpecificLevelTestCase {
         std::string description;
-        std::list<int> jsonLevels;
-        std::list<int> expectedLevels;
+        std::vector<int> jsonLevels;
+        std::vector<int> expectedLevels;
     };
 
     class FlowMeasureFilterParserSpecificLevelFilterTest
@@ -164,23 +169,19 @@ namespace FlowSdkTest::Api {
         auto castedFilters = static_cast<const FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
-        ASSERT_EQ(castedFilters.LevelFilters().size(), 2);
+        ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
+        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 1);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
 
-        const auto& levelFilter1 = castedFilters.LevelFilters().front();
-        ASSERT_EQ(FlowSdk::FlowMeasure::LevelFilterType::At, levelFilter1->Type());
-        ASSERT_EQ(GetParam().expectedLevels.front(), levelFilter1->Level());
-
-        const auto& levelFilter2 = castedFilters.LevelFilters().back();
-        ASSERT_EQ(FlowSdk::FlowMeasure::LevelFilterType::At, levelFilter2->Type());
-        ASSERT_EQ(GetParam().expectedLevels.back(), levelFilter2->Level());
+        const auto& levelFilter = castedFilters.MultipleLevelFilters().front();
+        ASSERT_EQ(GetParam().expectedLevels, levelFilter->Levels());
     }
 
     INSTANTIATE_TEST_SUITE_P(
             FlowMeasureFilterParserSpecificLevelFilterTest, FlowMeasureFilterParserSpecificLevelFilterTest,
             testing::Values(FlowMeasureFilterParserSpecificLevelTestCase{
-                    "at_level", std::list<int>({100, 150}), std::list<int>({100, 150})}),
+                    "at_level", std::vector<int>({100, 150}), std::vector<int>({100, 150})}),
             [](const testing::TestParamInfo<FlowMeasureFilterParserSpecificLevelTestCase>& info) {
                 return info.param.description;
             }
@@ -224,6 +225,7 @@ namespace FlowSdkTest::Api {
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
+        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 1);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
 
@@ -275,6 +277,7 @@ namespace FlowSdkTest::Api {
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
+        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 1);
 
@@ -352,6 +355,12 @@ namespace FlowSdkTest::Api {
                     FlowMeasureFilterParserInvalidDataTestCase{
                             "filter_is_level_below_but_value_is_not_integer",
                             nlohmann::json::array({{{"type", "level_below"}, {"value", "A"}}})},
+                    FlowMeasureFilterParserInvalidDataTestCase{
+                            "filter_is_level_but_value_is_not_array",
+                            nlohmann::json::array({{{"type", "level"}, {"value", "A"}}})},
+                    FlowMeasureFilterParserInvalidDataTestCase{
+                            "filter_is_level_but_values_are_not_integers",
+                            nlohmann::json::array({{{"type", "level"}, {"value", nlohmann::json::array({"A"})}}})},
                     FlowMeasureFilterParserInvalidDataTestCase{
                             "filter_is_member_event_but_value_is_not_integer",
                             nlohmann::json::array({{{"type", "member_event"}, {"value", "A"}}})},

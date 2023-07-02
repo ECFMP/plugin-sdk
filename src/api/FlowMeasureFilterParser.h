@@ -1,7 +1,8 @@
 #pragma once
 #include "FlowMeasureFilterParserInterface.h"
 #include "flow-sdk/FlowMeasureFilters.h"
-#include "flow-sdk/LevelFilter.h"
+#include "flow-sdk/LevelRangeFilter.h"
+#include "flow-sdk/MultipleLevelFilter.h"
 
 namespace FlowSdk {
     namespace FlowMeasure {
@@ -26,8 +27,12 @@ namespace FlowSdk::Api {
         [[nodiscard]] auto CreateAirportFilter(const nlohmann::json& data, const std::string& type) const
                 -> std::shared_ptr<FlowMeasure::AirportFilter>;
 
-        [[nodiscard]] auto CreateLevelFilter(const nlohmann::json& data, FlowMeasure::LevelFilterType type) const
-                -> std::shared_ptr<FlowMeasure::LevelFilter>;
+        [[nodiscard]] auto
+        CreateLevelRangeFilter(const nlohmann::json& data, FlowMeasure::LevelRangeFilterType type) const
+                -> std::shared_ptr<FlowMeasure::LevelRangeFilter>;
+
+        [[nodiscard]] auto CreateMultipleLevelFilter(const nlohmann::json& data) const
+                -> std::shared_ptr<FlowMeasure::MultipleLevelFilter>;
 
         [[nodiscard]] auto CreateEventFilter(const nlohmann::json& data, const InternalEventCollection& events) const
                 -> std::shared_ptr<FlowMeasure::EventFilter>;
