@@ -23,7 +23,7 @@ namespace FlowSdk::Api {
                 -> std::unique_ptr<FlowMeasure::FlowMeasureFilters> override;
 
         private:
-        [[nodiscard]] auto CreateAirportFilter(const nlohmann::json& data) const
+        [[nodiscard]] auto CreateAirportFilter(const nlohmann::json& data, const std::string& type) const
                 -> std::shared_ptr<FlowMeasure::AirportFilter>;
 
         [[nodiscard]] auto CreateLevelFilter(const nlohmann::json& data, FlowMeasure::LevelFilterType type) const

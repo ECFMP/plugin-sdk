@@ -50,7 +50,7 @@ namespace FlowSdk::Api {
 
             // If the filter type is ADEP OR ADES, then the filter type is an AirportFilter
             if (filter["type"] == "ADEP" || filter["type"] == "ADES") {
-                auto airportFilter = CreateAirportFilter(filter["value"]);
+                auto airportFilter = CreateAirportFilter(filter["value"], filter["type"].get<std::string>());
                 if (!airportFilter) {
                     logger->Warning("FlowMeasureFilterParser::Parse: Could not create airport filter");
                     return nullptr;
@@ -127,9 +127,13 @@ namespace FlowSdk::Api {
         );
     }
 
-    auto FlowMeasureFilterParser::CreateAirportFilter(const nlohmann::json& data) const
+    auto FlowMeasureFilterParser::CreateAirportFilter(const nlohmann::json& data, const std::string& type) const
             -> std::shared_ptr<FlowMeasure::AirportFilter>
     {
+        // Convert type to enum
+        auto filterType = type == "ADES" ? FlowMeasure::AirportFilterType::Destination
+                                         : FlowMeasure::AirportFilterType::Departure;
+
         // JSON should be an array, each value must be a string
         if (!data.is_array()) {
             logger->Warning("FlowMeasureFilterParser::CreateAirportFilter: Json is not an array");
@@ -146,7 +150,7 @@ namespace FlowSdk::Api {
             airports.insert(airport);
         }
 
-        return std::make_shared<FlowMeasure::ConcreteAirportFilter>(airports);
+        return std::make_shared<FlowMeasure::ConcreteAirportFilter>(airports, filterType);
     }
 
     auto FlowMeasureFilterParser::CreateLevelFilter(const nlohmann::json& data, FlowMeasure::LevelFilterType type) const

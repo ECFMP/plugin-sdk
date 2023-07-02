@@ -67,7 +67,10 @@ namespace FlowSdkTest::Api {
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
 
+        auto expectedFilterType = GetParam().filterType == "ADES" ? FlowSdk::FlowMeasure::AirportFilterType::Destination
+                                                                  : FlowSdk::FlowMeasure::AirportFilterType::Departure;
         const auto& airportFilter = castedFilters.AirportFilters().front();
+        ASSERT_EQ(airportFilter->Type(), expectedFilterType);
         ASSERT_EQ(airportFilter->AirportStrings().size(), GetParam().airports.size());
         ASSERT_EQ(airportFilter->AirportStrings(), GetParam().airports);
     }

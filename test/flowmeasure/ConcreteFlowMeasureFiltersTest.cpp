@@ -13,7 +13,8 @@ namespace FlowSdkTest::FlowMeasure {
         ConcreteFlowMeasureFiltersTest()
             : filters(
                     std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{
-                            std::make_shared<FlowSdk::FlowMeasure::ConcreteAirportFilter>(std::set<std::string>{"EGLL"}
+                            std::make_shared<FlowSdk::FlowMeasure::ConcreteAirportFilter>(
+                                    std::set<std::string>{"EGLL"}, FlowSdk::FlowMeasure::AirportFilterType::Departure
                             )},
                     std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{
                             std::make_shared<FlowSdk::FlowMeasure::ConcreteEventFilter>(
