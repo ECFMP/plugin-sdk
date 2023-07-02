@@ -10,8 +10,9 @@ namespace FlowSdk::Plugin {
     class ConcreteSdk : public Sdk
     {
         public:
-        ConcreteSdk(std::unique_ptr<Api::ApiDataScheduler> apiScheduler,
-                    std::unique_ptr<SdkEventListeners> eventListeners);
+        ConcreteSdk(
+                std::unique_ptr<Api::ApiDataScheduler> apiScheduler, std::unique_ptr<SdkEventListeners> eventListeners
+        );
 
         [[nodiscard]] auto Listeners() const noexcept -> SdkEventListeners& override;
         void Destroy() override;
