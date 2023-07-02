@@ -3,6 +3,7 @@
 #include "flow-sdk/FlowMeasureFilters.h"
 #include "flow-sdk/LevelRangeFilter.h"
 #include "flow-sdk/MultipleLevelFilter.h"
+#include "flow-sdk/RangeToDestinationFilter.h"
 
 namespace FlowSdk {
     namespace FlowMeasure {
@@ -39,6 +40,9 @@ namespace FlowSdk::Api {
 
         [[nodiscard]] auto CreateRouteFilter(const nlohmann::json& data) const
                 -> std::shared_ptr<FlowMeasure::RouteFilter>;
+
+        [[nodiscard]] auto CreateRangeToDestinationFilter(const nlohmann::json& data) const
+                -> std::shared_ptr<FlowMeasure::RangeToDestinationFilter>;
 
         // Logger
         std::shared_ptr<FlowSdk::Log::Logger> logger;

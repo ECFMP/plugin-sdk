@@ -35,6 +35,7 @@ namespace FlowSdkTest::Api {
         ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
+        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
     }
 
     struct FlowMeasureFilterParserAirportFilterTestCase {
@@ -68,6 +69,7 @@ namespace FlowSdkTest::Api {
         ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
+        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         auto expectedFilterType = GetParam().filterType == "ADES" ? FlowSdk::FlowMeasure::AirportFilterType::Destination
                                                                   : FlowSdk::FlowMeasure::AirportFilterType::Departure;
@@ -121,6 +123,7 @@ namespace FlowSdkTest::Api {
         ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
+        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         const auto& levelFilter = castedFilters.LevelFilters().front();
         ASSERT_EQ(GetParam().expectedFilterType, levelFilter->Type());
@@ -173,6 +176,7 @@ namespace FlowSdkTest::Api {
         ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 1);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
+        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         const auto& levelFilter = castedFilters.MultipleLevelFilters().front();
         ASSERT_EQ(GetParam().expectedLevels, levelFilter->Levels());
@@ -228,6 +232,7 @@ namespace FlowSdkTest::Api {
         ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 1);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
+        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         const auto& eventFilter = castedFilters.EventFilters().front();
         ASSERT_EQ(GetParam().expectedFilterType, eventFilter->Participation());
@@ -280,6 +285,7 @@ namespace FlowSdkTest::Api {
         ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
         ASSERT_EQ(castedFilters.EventFilters().size(), 0);
         ASSERT_EQ(castedFilters.RouteFilters().size(), 1);
+        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         const auto& routeFilter = castedFilters.RouteFilters().front();
         ASSERT_EQ(GetParam().expectedWaypoints, routeFilter->RouteStrings());
@@ -292,6 +298,58 @@ namespace FlowSdkTest::Api {
                     FlowMeasureFilterParserRouteFilterTestCase{"multiple_waypoints", {"A", "B"}, {"A", "B"}}
             ),
             [](const testing::TestParamInfo<FlowMeasureFilterParserRouteFilterTestCase>& info) {
+                return info.param.description;
+            }
+    );
+
+    struct FlowMeasureFilterParserRangeToDestinationTestCase {
+        std::string description;
+        int range;
+    };
+
+    class FlowMeasureFilterParserRangeToDestinationTest
+        : public ::testing::TestWithParam<FlowMeasureFilterParserRangeToDestinationTestCase>
+    {
+        public:
+        FlowMeasureFilterParserRangeToDestinationTest() : parser(std::make_shared<Log::MockLogger>())
+        {
+            auto event1 = std::make_shared<FlowSdk::Mock::Event::EventMock>();
+            ON_CALL(*event1, Id).WillByDefault(testing::Return(100));
+            auto event2 = std::make_shared<FlowSdk::Mock::Event::EventMock>();
+            ON_CALL(*event2, Id).WillByDefault(testing::Return(150));
+
+            events.Add(event1);
+            events.Add(event2);
+        }
+
+        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event> events;
+        testing::NiceMock<Log::MockLogger> logger;
+        FlowSdk::Api::FlowMeasureFilterParser parser;
+    };
+
+    TEST_P(FlowMeasureFilterParserRangeToDestinationTest, ItParsesARangeToDestinationFilter)
+    {
+        auto filter = nlohmann::json{{"type", "range_to_destination"}, {"value", GetParam().range}};
+        auto filters = parser.Parse(nlohmann::json::array({filter}), events);
+        EXPECT_NE(nullptr, filters);
+
+        auto castedFilters = static_cast<const FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
+
+        ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
+        ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
+        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
+        ASSERT_EQ(castedFilters.EventFilters().size(), 0);
+        ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
+        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 1);
+
+        const auto& rangeFilter = castedFilters.RangeToDestinationFilters().front();
+        ASSERT_EQ(GetParam().range, rangeFilter->Range());
+    }
+
+    INSTANTIATE_TEST_SUITE_P(
+            FlowMeasureFilterParserRangeToDestinationTest, FlowMeasureFilterParserRangeToDestinationTest,
+            testing::Values(FlowMeasureFilterParserRangeToDestinationTestCase{"range_to_destination", 100}),
+            [](const testing::TestParamInfo<FlowMeasureFilterParserRangeToDestinationTestCase>& info) {
                 return info.param.description;
             }
     );
@@ -378,7 +436,10 @@ namespace FlowSdkTest::Api {
                             nlohmann::json::array({{{"type", "waypoint"}, {"value", 1}}})},
                     FlowMeasureFilterParserInvalidDataTestCase{
                             "filter_is_waypoint_but_value_array_has_non_string_item",
-                            nlohmann::json::array({{{"type", "waypoint"}, {"value", {1}}}})}
+                            nlohmann::json::array({{{"type", "waypoint"}, {"value", {1}}}})},
+                    FlowMeasureFilterParserInvalidDataTestCase{
+                            "filter_is_range_to_destination_but_value_is_not_integer",
+                            nlohmann::json::array({{{"type", "range_to_destination"}, {"value", "abc"}}})}
 
             ),
             [](const testing::TestParamInfo<FlowMeasureFilterParserInvalidDataTestCase>& info) {

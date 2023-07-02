@@ -31,6 +31,11 @@ namespace FlowSdk::Mock::FlowMeasure {
                 (const, noexcept, override)
         );
         MOCK_METHOD(
+                void, ForEachRangeToDestinationFilter,
+                (const std::function<void(const FlowSdk::FlowMeasure::RangeToDestinationFilter&)>&),
+                (const, noexcept, override)
+        );
+        MOCK_METHOD(
                 std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>, FirstAirportFilter,
                 (const std::function<bool(const FlowSdk::FlowMeasure::AirportFilter&)>&), (const, noexcept, override)
         );
@@ -50,6 +55,11 @@ namespace FlowSdk::Mock::FlowMeasure {
         MOCK_METHOD(
                 std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>, FirstRouteFilter,
                 (const std::function<bool(const FlowSdk::FlowMeasure::RouteFilter&)>&), (const, noexcept, override)
+        );
+        MOCK_METHOD(
+                std::shared_ptr<FlowSdk::FlowMeasure::RangeToDestinationFilter>, FirstRangeToDestinationFilter,
+                (const std::function<bool(const FlowSdk::FlowMeasure::RangeToDestinationFilter&)>&),
+                (const, noexcept, override)
         );
     };
 

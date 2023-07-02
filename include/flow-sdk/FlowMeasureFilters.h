@@ -10,6 +10,7 @@ namespace FlowSdk::FlowMeasure {
     class EventFilter;
     class LevelRangeFilter;
     class MultipleLevelFilter;
+    class RangeToDestinationFilter;
     class RouteFilter;
 
     /**
@@ -36,6 +37,9 @@ namespace FlowSdk::FlowMeasure {
         virtual void ForEachMultipleLevelFilter(const std::function<void(const MultipleLevelFilter&)>& callback
         ) const noexcept = 0;
         virtual void ForEachRouteFilter(const std::function<void(const RouteFilter&)>& callback) const noexcept = 0;
+        virtual void
+        ForEachRangeToDestinationFilter(const std::function<void(const RangeToDestinationFilter&)>& callback
+        ) const noexcept = 0;
 
         /**
          * Returns the first filter where a condition is met.
@@ -51,5 +55,8 @@ namespace FlowSdk::FlowMeasure {
                 -> std::shared_ptr<MultipleLevelFilter> = 0;
         [[nodiscard]] virtual auto FirstRouteFilter(const std::function<bool(const RouteFilter&)>& callback
         ) const noexcept -> std::shared_ptr<RouteFilter> = 0;
+        [[nodiscard]] virtual auto
+        FirstRangeToDestinationFilter(const std::function<bool(const RangeToDestinationFilter&)>& callback
+        ) const noexcept -> std::shared_ptr<RangeToDestinationFilter> = 0;
     };
 }// namespace FlowSdk::FlowMeasure

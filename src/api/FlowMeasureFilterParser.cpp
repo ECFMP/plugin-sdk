@@ -5,11 +5,13 @@
 #include "flow-sdk/LevelRangeFilter.h"
 #include "flow-sdk/Logger.h"
 #include "flow-sdk/MultipleLevelFilter.h"
+#include "flow-sdk/RangeToDestinationFilter.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteEventFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "flowmeasure/ConcreteLevelRangeFilter.h"
 #include "flowmeasure/ConcreteMultipleLevelFilter.h"
+#include "flowmeasure/ConcreteRangeToDestinationFilter.h"
 #include "flowmeasure/ConcreteRouteFilter.h"
 #include "nlohmann/json.hpp"
 
@@ -34,6 +36,7 @@ namespace FlowSdk::Api {
         std::list<std::shared_ptr<FlowMeasure::MultipleLevelFilter>> multipleLevelFilters;
         std::list<std::shared_ptr<FlowMeasure::EventFilter>> eventFilters;
         std::list<std::shared_ptr<FlowMeasure::RouteFilter>> routeFilters;
+        std::list<std::shared_ptr<FlowMeasure::RangeToDestinationFilter>> rangeFilters;
 
         for (const auto& filter: data) {
             // Json must contain a value field otherwise return nullptr
@@ -113,14 +116,22 @@ namespace FlowSdk::Api {
                 continue;
             }
 
-            // TODO: Distance from destination filter
+            else if (filter["type"] == "range_to_destination") {
+                auto rangeFilter = CreateRangeToDestinationFilter(filter.at("value"));
+                if (!rangeFilter) {
+                    logger->Warning("FlowMeasureFilterParser::Parse: Could not create range to destination filter");
+                    return nullptr;
+                }
+
+                rangeFilters.push_back(std::move(rangeFilter));
+            }
 
             logger->Warning("FlowMeasureFilterParser::Parse: Unknown filter type");
         }
 
         return std::make_unique<FlowMeasure::ConcreteFlowMeasureFilters>(
                 std::move(airportFilters), std::move(eventFilters), std::move(routeFilters),
-                std::move(levelRangeFilters), std::move(multipleLevelFilters)
+                std::move(levelRangeFilters), std::move(multipleLevelFilters), std::move(rangeFilters)
         );
     }
 
@@ -227,5 +238,16 @@ namespace FlowSdk::Api {
         }
 
         return std::make_shared<FlowMeasure::ConcreteRouteFilter>(routes);
+    }
+
+    auto FlowMeasureFilterParser::CreateRangeToDestinationFilter(const nlohmann::json& data) const
+            -> std::shared_ptr<FlowMeasure::RangeToDestinationFilter>
+    {
+        if (!data.is_number_integer()) {
+            logger->Warning("FlowMeasureFilterParser::CreateRangeToDestinationFilter: Json value is not an integer");
+            return nullptr;
+        }
+
+        return std::make_shared<FlowMeasure::ConcreteRangeToDestinationFilter>(data.get<int>());
     }
 }// namespace FlowSdk::Api

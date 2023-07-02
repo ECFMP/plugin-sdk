@@ -5,6 +5,7 @@
 #include "flowmeasure/ConcreteEventFilter.h"
 #include "flowmeasure/ConcreteLevelRangeFilter.h"
 #include "flowmeasure/ConcreteMultipleLevelFilter.h"
+#include "flowmeasure/ConcreteRangeToDestinationFilter.h"
 #include "flowmeasure/ConcreteRouteFilter.h"
 
 namespace FlowSdkTest::FlowMeasure {
@@ -40,7 +41,9 @@ namespace FlowSdkTest::FlowMeasure {
                             )},
                     std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>{
                             std::make_shared<FlowSdk::FlowMeasure::ConcreteMultipleLevelFilter>(std::vector<int>{
-                                    150, 200})}
+                                    150, 200})},
+                    std::list<std::shared_ptr<FlowSdk::FlowMeasure::RangeToDestinationFilter>>{
+                            std::make_shared<FlowSdk::FlowMeasure::ConcreteRangeToDestinationFilter>(1)}
             )
         {}
 
@@ -153,6 +156,30 @@ namespace FlowSdkTest::FlowMeasure {
         }));
     }
 
+    TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsApplicableRangeToDestinationFilter)
+    {
+        EXPECT_EQ(
+                1,
+                filters.FirstRangeToDestinationFilter(
+                               [](const FlowSdk::FlowMeasure::RangeToDestinationFilter& rangeToDestinationFilter) {
+                                   return rangeToDestinationFilter.Range() == 1;
+                               }
+                )->Range()
+        );
+    }
+
+    TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsNullptrIfNoApplicableRangeToDestinationFilter)
+    {
+        EXPECT_EQ(
+                nullptr,
+                filters.FirstRangeToDestinationFilter(
+                        [](const FlowSdk::FlowMeasure::RangeToDestinationFilter& rangeToDestinationFilter) {
+                            return rangeToDestinationFilter.Range() == 2;
+                        }
+                )
+        );
+    }
+
     TEST_F(ConcreteFlowMeasureFiltersTest, ItIteratesAirportFilters)
     {
         int filterCount = 0;
@@ -199,6 +226,18 @@ namespace FlowSdkTest::FlowMeasure {
         filters.ForEachMultipleLevelFilter([&filterCount](const FlowSdk::FlowMeasure::MultipleLevelFilter& filter) {
             filterCount++;
         });
+
+        EXPECT_EQ(1, filterCount);
+    }
+
+    TEST_F(ConcreteFlowMeasureFiltersTest, ItIteratesRangeToDestinationFilters)
+    {
+        int filterCount = 0;
+        filters.ForEachRangeToDestinationFilter(
+                [&filterCount](const FlowSdk::FlowMeasure::RangeToDestinationFilter& filter) {
+                    filterCount++;
+                }
+        );
 
         EXPECT_EQ(1, filterCount);
     }

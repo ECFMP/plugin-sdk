@@ -18,7 +18,8 @@ namespace FlowSdk::FlowMeasure {
                 std::list<std::shared_ptr<EventFilter>> eventFilters,
                 std::list<std::shared_ptr<RouteFilter>> routeFilters,
                 std::list<std::shared_ptr<LevelRangeFilter>> levelFilters,
-                std::list<std::shared_ptr<MultipleLevelFilter>> multipleLevelFilters
+                std::list<std::shared_ptr<MultipleLevelFilter>> multipleLevelFilters,
+                std::list<std::shared_ptr<RangeToDestinationFilter>> rangeToDestinationFilters
         );
         [[nodiscard]] auto AirportFilters() const noexcept -> const std::list<std::shared_ptr<AirportFilter>>&;
         [[nodiscard]] auto EventFilters() const noexcept -> const std::list<std::shared_ptr<EventFilter>>&;
@@ -26,6 +27,8 @@ namespace FlowSdk::FlowMeasure {
         [[nodiscard]] auto LevelFilters() const noexcept -> const std::list<std::shared_ptr<LevelRangeFilter>>&;
         [[nodiscard]] auto MultipleLevelFilters() const noexcept
                 -> const std::list<std::shared_ptr<MultipleLevelFilter>>&;
+        [[nodiscard]] auto RangeToDestinationFilters() const noexcept
+                -> const std::list<std::shared_ptr<RangeToDestinationFilter>>&;
         [[nodiscard]] auto ApplicableToAirport(const std::string& airfield) const noexcept -> bool override;
         void ForEachAirportFilter(const std::function<void(const AirportFilter&)>& callback) const noexcept override;
         void ForEachEventFilter(const std::function<void(const EventFilter&)>& callback) const noexcept override;
@@ -33,6 +36,8 @@ namespace FlowSdk::FlowMeasure {
         void ForEachMultipleLevelFilter(const std::function<void(const MultipleLevelFilter&)>& callback
         ) const noexcept override;
         void ForEachRouteFilter(const std::function<void(const RouteFilter&)>& callback) const noexcept override;
+        void ForEachRangeToDestinationFilter(const std::function<void(const RangeToDestinationFilter&)>& callback
+        ) const noexcept override;
         [[nodiscard]] auto FirstAirportFilter(const std::function<bool(const AirportFilter&)>& callback) const noexcept
                 -> std::shared_ptr<AirportFilter> override;
         [[nodiscard]] auto FirstEventFilter(const std::function<bool(const EventFilter&)>& callback) const noexcept
@@ -43,6 +48,9 @@ namespace FlowSdk::FlowMeasure {
         ) const noexcept -> std::shared_ptr<MultipleLevelFilter> override;
         [[nodiscard]] auto FirstRouteFilter(const std::function<bool(const RouteFilter&)>& callback) const noexcept
                 -> std::shared_ptr<RouteFilter> override;
+        [[nodiscard]] auto
+        FirstRangeToDestinationFilter(const std::function<bool(const RangeToDestinationFilter&)>& callback
+        ) const noexcept -> std::shared_ptr<RangeToDestinationFilter> override;
 
         private:
         // All the airport filters
@@ -59,5 +67,8 @@ namespace FlowSdk::FlowMeasure {
 
         // All the multiple level filters
         std::list<std::shared_ptr<MultipleLevelFilter>> multipleLevelFilters;
+
+        // All the range to destination filters
+        std::list<std::shared_ptr<RangeToDestinationFilter>> rangeToDestinationFilters;
     };
 }// namespace FlowSdk::FlowMeasure

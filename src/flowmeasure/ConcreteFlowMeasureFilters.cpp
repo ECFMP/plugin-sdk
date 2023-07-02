@@ -8,11 +8,13 @@ namespace FlowSdk::FlowMeasure {
             std::list<std::shared_ptr<AirportFilter>> airportFilters,
             std::list<std::shared_ptr<EventFilter>> eventFilters, std::list<std::shared_ptr<RouteFilter>> routeFilters,
             std::list<std::shared_ptr<LevelRangeFilter>> levelFilters,
-            std::list<std::shared_ptr<MultipleLevelFilter>> multipleLevelFilters
+            std::list<std::shared_ptr<MultipleLevelFilter>> multipleLevelFilters,
+            std::list<std::shared_ptr<RangeToDestinationFilter>> rangeToDestinationFilters
     )
         : airportFilters(std::move(airportFilters)), eventFilters(std::move(eventFilters)),
           routeFilters(std::move(routeFilters)), levelFilters(std::move(levelFilters)),
-          multipleLevelFilters(std::move(multipleLevelFilters))
+          multipleLevelFilters(std::move(multipleLevelFilters)),
+          rangeToDestinationFilters(std::move(rangeToDestinationFilters))
     {}
 
     auto ConcreteFlowMeasureFilters::ApplicableToAirport(const std::string& airport) const noexcept -> bool
@@ -64,6 +66,15 @@ namespace FlowSdk::FlowMeasure {
         }
     }
 
+    void ConcreteFlowMeasureFilters::ForEachRangeToDestinationFilter(
+            const std::function<void(const RangeToDestinationFilter&)>& callback
+    ) const noexcept
+    {
+        for (const auto& filter: rangeToDestinationFilters) {
+            callback(*filter);
+        }
+    }
+
     auto ConcreteFlowMeasureFilters::FirstAirportFilter(const std::function<bool(const AirportFilter&)>& callback
     ) const noexcept -> std::shared_ptr<AirportFilter>
     {
@@ -111,6 +122,19 @@ namespace FlowSdk::FlowMeasure {
         return filter == routeFilters.cend() ? nullptr : *filter;
     }
 
+    auto ConcreteFlowMeasureFilters::FirstRangeToDestinationFilter(
+            const std::function<bool(const RangeToDestinationFilter&)>& callback
+    ) const noexcept -> std::shared_ptr<RangeToDestinationFilter>
+    {
+        auto filter = std::find_if(
+                rangeToDestinationFilters.begin(), rangeToDestinationFilters.end(),
+                [&callback](const auto& item) {
+                    return callback(*item);
+                }
+        );
+        return filter == rangeToDestinationFilters.cend() ? nullptr : *filter;
+    }
+
     auto ConcreteFlowMeasureFilters::AirportFilters() const noexcept -> const std::list<std::shared_ptr<AirportFilter>>&
     {
         return airportFilters;
@@ -136,5 +160,11 @@ namespace FlowSdk::FlowMeasure {
     auto ConcreteFlowMeasureFilters::RouteFilters() const noexcept -> const std::list<std::shared_ptr<RouteFilter>>&
     {
         return routeFilters;
+    }
+
+    auto ConcreteFlowMeasureFilters::RangeToDestinationFilters() const noexcept
+            -> const std::list<std::shared_ptr<RangeToDestinationFilter>>&
+    {
+        return rangeToDestinationFilters;
     }
 }// namespace FlowSdk::FlowMeasure
