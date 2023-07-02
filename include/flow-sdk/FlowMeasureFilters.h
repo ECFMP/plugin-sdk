@@ -26,17 +26,6 @@ namespace FlowSdk::FlowMeasure {
         [[nodiscard]] virtual auto ApplicableToAirport(const std::string& airfield) const noexcept -> bool = 0;
 
         /**
-         * Returns true if any of the flight information regions make the flow measure applicable to
-         * the given region.
-         */
-        [[nodiscard]] virtual auto ApplicableToFlightInformationRegion(int firId) const noexcept -> bool = 0;
-        [[nodiscard]] virtual auto ApplicableToFlightInformationRegion(const std::string& fir) const noexcept
-                -> bool = 0;
-        [[nodiscard]] virtual auto
-        ApplicableToFlightInformationRegion(const FlightInformationRegion::FlightInformationRegion& fir) const noexcept
-                -> bool = 0;
-
-        /**
          * Methods that allow for iteration of the filters.
          */
         virtual void ForEachAirportFilter(const std::function<void(const AirportFilter&)>& callback) const noexcept = 0;
@@ -47,17 +36,13 @@ namespace FlowSdk::FlowMeasure {
         /**
          * Returns the first filter where a condition is met.
          */
-        [[nodiscard]] virtual auto
-        FirstAirportFilter(const std::function<bool(const AirportFilter&)>& callback) const noexcept
-                -> std::shared_ptr<AirportFilter> = 0;
-        [[nodiscard]] virtual auto
-        FirstEventFilter(const std::function<bool(const EventFilter&)>& callback) const noexcept
-                -> std::shared_ptr<EventFilter> = 0;
-        [[nodiscard]] virtual auto
-        FirstLevelFilter(const std::function<bool(const LevelFilter&)>& callback) const noexcept
-                -> std::shared_ptr<LevelFilter> = 0;
-        [[nodiscard]] virtual auto
-        FirstRouteFilter(const std::function<bool(const RouteFilter&)>& callback) const noexcept
-                -> std::shared_ptr<RouteFilter> = 0;
+        [[nodiscard]] virtual auto FirstAirportFilter(const std::function<bool(const AirportFilter&)>& callback
+        ) const noexcept -> std::shared_ptr<AirportFilter> = 0;
+        [[nodiscard]] virtual auto FirstEventFilter(const std::function<bool(const EventFilter&)>& callback
+        ) const noexcept -> std::shared_ptr<EventFilter> = 0;
+        [[nodiscard]] virtual auto FirstLevelFilter(const std::function<bool(const LevelFilter&)>& callback
+        ) const noexcept -> std::shared_ptr<LevelFilter> = 0;
+        [[nodiscard]] virtual auto FirstRouteFilter(const std::function<bool(const RouteFilter&)>& callback
+        ) const noexcept -> std::shared_ptr<RouteFilter> = 0;
     };
 }// namespace FlowSdk::FlowMeasure

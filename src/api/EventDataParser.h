@@ -3,11 +3,9 @@
 #include "InternalElementCollectionTypes.h"
 #include "nlohmann/json_fwd.hpp"
 
-namespace FlowSdk {
-    namespace Log {
-        class Logger;
-    }// namespace Log
-}// namespace FlowSdk
+namespace FlowSdk::Log {
+    class Logger;
+}// namespace FlowSdk::Log
 
 namespace FlowSdk::Api {
     class EventDataParser : public ApiDataListener

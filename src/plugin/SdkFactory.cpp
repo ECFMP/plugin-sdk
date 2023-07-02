@@ -8,7 +8,11 @@
 #include "api/ConcreteStringIdentifiedApiElementCollection.h"
 #include "api/EventDataParser.h"
 #include "api/FlightInformationRegionDataParser.h"
+#include "api/FlowMeasureDataParser.h"
+#include "api/FlowMeasureFilterParser.h"
+#include "api/FlowMeasureMeasureParser.h"
 #include "flow-sdk/FlightInformationRegion.h"
+#include "flow-sdk/FlowMeasure.h"
 #include "flow-sdk/HttpClient.h"
 #include "flow-sdk/Logger.h"
 #include "log/LogDecorator.h"
@@ -32,6 +36,11 @@ namespace FlowSdk::Plugin {
             auto dataListeners = std::make_unique<Plugin::ConcreteEventListeners<const nlohmann::json&>>();
             dataListeners->Add(std::make_shared<Api::FlightInformationRegionDataParser>(GetFirs(), GetLogger()));
             dataListeners->Add(std::make_shared<Api::EventDataParser>(GetEvents(), GetFirs(), GetLogger()));
+            dataListeners->Add(std::make_shared<Api::FlowMeasureDataParser>(
+                    std::make_unique<Api::FlowMeasureFilterParser>(GetLogger()),
+                    std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetFlowMeasures(), GetEvents(),
+                    GetFirs(), GetLogger()
+            ));
 
             return dataListeners;
         }
@@ -81,6 +90,17 @@ namespace FlowSdk::Plugin {
             return events;
         }
 
+        auto GetFlowMeasures()
+                -> std::shared_ptr<Api::ConcreteStringIdentifiedApiElementCollection<FlowMeasure::FlowMeasure>>
+        {
+            if (!flowMeasures) {
+                flowMeasures =
+                        std::make_shared<Api::ConcreteStringIdentifiedApiElementCollection<FlowMeasure::FlowMeasure>>();
+            }
+
+            return flowMeasures;
+        }
+
         // For performing HTTP requests
         std::unique_ptr<Http::HttpClient> httpClient = nullptr;
 
@@ -96,6 +116,8 @@ namespace FlowSdk::Plugin {
                 firs;
 
         std::shared_ptr<Api::ConcreteApiElementCollection<Event::Event>> events;
+
+        std::shared_ptr<Api::ConcreteStringIdentifiedApiElementCollection<FlowMeasure::FlowMeasure>> flowMeasures;
     };
 
     SdkFactory::SdkFactory() : impl(std::make_unique<SdkFactoryImpl>())

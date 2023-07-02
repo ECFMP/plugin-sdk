@@ -12,17 +12,17 @@ namespace FlowSdk::FlowMeasure {
     class ConcreteFlowMeasureFilters : public FlowMeasureFilters
     {
         public:
-        ConcreteFlowMeasureFilters(std::list<std::shared_ptr<AirportFilter>> airportFilters,
-                                   std::list<std::shared_ptr<EventFilter>> eventFilters,
-                                   std::list<std::shared_ptr<RouteFilter>> routeFilters,
-                                   std::list<std::shared_ptr<LevelFilter>> levelFilters,
-                                   std::list<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>> firs);
+        ConcreteFlowMeasureFilters(
+                std::list<std::shared_ptr<AirportFilter>> airportFilters,
+                std::list<std::shared_ptr<EventFilter>> eventFilters,
+                std::list<std::shared_ptr<RouteFilter>> routeFilters,
+                std::list<std::shared_ptr<LevelFilter>> levelFilters
+        );
+        [[nodiscard]] auto AirportFilters() const noexcept -> const std::list<std::shared_ptr<AirportFilter>>&;
+        [[nodiscard]] auto EventFilters() const noexcept -> const std::list<std::shared_ptr<EventFilter>>&;
+        [[nodiscard]] auto RouteFilters() const noexcept -> const std::list<std::shared_ptr<RouteFilter>>&;
+        [[nodiscard]] auto LevelFilters() const noexcept -> const std::list<std::shared_ptr<LevelFilter>>&;
         [[nodiscard]] auto ApplicableToAirport(const std::string& airfield) const noexcept -> bool override;
-        [[nodiscard]] auto ApplicableToFlightInformationRegion(int firId) const noexcept -> bool override;
-        [[nodiscard]] auto ApplicableToFlightInformationRegion(const std::string& fir) const noexcept -> bool override;
-        [[nodiscard]] auto
-        ApplicableToFlightInformationRegion(const FlightInformationRegion::FlightInformationRegion& fir) const noexcept
-                -> bool override;
         void ForEachAirportFilter(const std::function<void(const AirportFilter&)>& callback) const noexcept override;
         void ForEachEventFilter(const std::function<void(const EventFilter&)>& callback) const noexcept override;
         void ForEachLevelFilter(const std::function<void(const LevelFilter&)>& callback) const noexcept override;
@@ -48,8 +48,5 @@ namespace FlowSdk::FlowMeasure {
 
         // All the level filters
         std::list<std::shared_ptr<LevelFilter>> levelFilters;
-
-        // All the FIRs
-        std::list<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>> firs;
     };
 }// namespace FlowSdk::FlowMeasure

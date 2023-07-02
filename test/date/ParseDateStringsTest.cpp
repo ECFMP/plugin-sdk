@@ -1,4 +1,5 @@
 #include "date/ParseDateStrings.h"
+#include <chrono>
 
 namespace FlowSdkTest::Date {
 
@@ -34,6 +35,43 @@ namespace FlowSdkTest::Date {
         bool expected;
     };
 
+    using ToTimeStringTestParam = struct ToTimeStringTestParam {
+        // Test case name
+        std::string name;
+
+        // The input
+        int year;
+
+        int month;
+
+        int day;
+
+        int hours;
+
+        int minutes;
+
+        int seconds;
+
+        // The expected output
+        std::string expected;
+    };
+
+    template<typename T>
+    auto TestParamToTimePoint(const typename testing::WithParamInterface<T>::ParamType& testParam)
+            -> std::chrono::system_clock::time_point
+    {
+        tm timeInfo;
+        timeInfo.tm_year = testParam.year - 1900;// Years since 1900
+        timeInfo.tm_mon = testParam.month - 1;   // Months since January (0-11)
+        timeInfo.tm_mday = testParam.day;
+        timeInfo.tm_hour = testParam.hours;
+        timeInfo.tm_min = testParam.minutes;
+        timeInfo.tm_sec = testParam.seconds;
+        timeInfo.tm_isdst = 0;
+
+        return std::chrono::system_clock::from_time_t(mktime(&timeInfo));
+    }
+
     class ValidateValidTimeStringsTest : public testing::TestWithParam<TimeStringValidityTestParam>
     {
     };
@@ -67,19 +105,8 @@ namespace FlowSdkTest::Date {
 
     TEST_P(ParseTimeStringsTest, ItParsesTimeStrings)
     {
-        tm timeInfo;
-        timeInfo.tm_year = GetParam().year - 1900;// Years since 1900
-        timeInfo.tm_mon = GetParam().month - 1;   // Months since January (0-11)
-        timeInfo.tm_mday = GetParam().day;
-        timeInfo.tm_hour = GetParam().hours;
-        timeInfo.tm_min = GetParam().minutes;
-        timeInfo.tm_sec = GetParam().seconds;
-        timeInfo.tm_isdst = 0;
-
-        EXPECT_EQ(
-                std::chrono::system_clock::from_time_t(mktime(&timeInfo)),
-                FlowSdk::Date::TimePointFromDateString(GetParam().input)
-        );
+        const auto expected = TestParamToTimePoint<TimeStringTestParam>(GetParam());
+        EXPECT_EQ(expected, FlowSdk::Date::TimePointFromDateString(GetParam().input));
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -92,6 +119,31 @@ namespace FlowSdkTest::Date {
                     TimeStringTestParam{"2023-03-01T01:26:23.000000Z", "with_6_fractions", 2023, 3, 1, 1, 26, 23}
             ),
             [](const ::testing::TestParamInfo<ParseTimeStringsTest::ParamType>& info) {
+                return info.param.name;
+            }
+    );
+
+    class DateStringFromTimePointTest : public testing::TestWithParam<ToTimeStringTestParam>
+    {
+    };
+
+    TEST_P(DateStringFromTimePointTest, ItConvertsTimePointsToDateStrings)
+    {
+        const auto timePoint = TestParamToTimePoint<ToTimeStringTestParam>(GetParam());
+        EXPECT_EQ(GetParam().expected, FlowSdk::Date::DateStringFromTimePoint(timePoint));
+    }
+
+    INSTANTIATE_TEST_SUITE_P(
+            DateStringFromTimePointTestCases, DateStringFromTimePointTest,
+            testing::Values(
+
+                    ToTimeStringTestParam{"standard_time", 2023, 3, 1, 20, 24, 0, "2023-03-01T20:24:00Z"},
+                    ToTimeStringTestParam{"double_digit_date", 2023, 10, 11, 20, 24, 0, "2023-10-11T20:24:00Z"},
+                    ToTimeStringTestParam{"with_seconds", 2023, 3, 1, 1, 26, 23, "2023-03-01T01:26:23Z"},
+                    ToTimeStringTestParam{"midnight", 2023, 3, 1, 0, 0, 0, "2023-03-01T00:00:00Z"},
+                    ToTimeStringTestParam{"1_second_to_midnight", 2023, 3, 1, 23, 59, 59, "2023-03-01T23:59:59Z"}
+            ),
+            [](const ::testing::TestParamInfo<DateStringFromTimePointTest::ParamType>& info) {
                 return info.param.name;
             }
     );

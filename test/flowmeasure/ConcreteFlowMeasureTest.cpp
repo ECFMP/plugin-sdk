@@ -1,6 +1,7 @@
 #include "flowmeasure/ConcreteFlowMeasure.h"
 #include "event/ConcreteEvent.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
+#include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "flowmeasure/ConcreteMeasure.h"
 
@@ -14,50 +15,53 @@ namespace FlowSdkTest::FlowMeasure {
               withdrawnTime(std::chrono::system_clock::now()),
               event(std::make_shared<FlowSdk::Event::ConcreteEvent>(
                       1, "Test", std::chrono::system_clock::now(), std::chrono::system_clock::now(),
-                      std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(1, "EGTT",
-                                                                                                          "London"),
-                      "ABC")),
-              measure1(1, event, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
-                       FlowSdk::FlowMeasure::MeasureStatus::Active, {},
-                       std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(
-                               FlowSdk::FlowMeasure::MeasureType::Prohibit),
-                       std::make_unique<FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters>(
-                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{},
-                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
-                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
-                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{},
-                               std::list<std::shared_ptr<FlowSdk::FlightInformationRegion::FlightInformationRegion>>{
-                                       std::make_shared<
-                                               FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
-                                               1, "EGTT", "London")})),
+                      std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+                              1, "EGTT", "London"
+                      ),
+                      "ABC"
+              )),
+              measure1(
+                      1, event, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
+                      FlowSdk::FlowMeasure::MeasureStatus::Active, {},
+                      std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(
+                              FlowSdk::FlowMeasure::MeasureType::Prohibit
+                      ),
+                      std::make_unique<FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters>(
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{
+                                      std::make_shared<FlowSdk::FlowMeasure::ConcreteAirportFilter>(
+                                              std::set<std::string>{"EGLL"}
+                                      )},
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{}
+                      )
+              ),
               measureWithNoEvent(
                       2, nullptr, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
                       FlowSdk::FlowMeasure::MeasureStatus::Active, {},
                       std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(
-                              FlowSdk::FlowMeasure::MeasureType::Prohibit),
+                              FlowSdk::FlowMeasure::MeasureType::Prohibit
+                      ),
                       std::make_unique<FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters>(
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlightInformationRegion::FlightInformationRegion>>{
-                                      std::make_shared<
-                                              FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
-                                              1, "EGTT", "London")})),
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{}
+                      )
+              ),
               withdrawnMeasure(
                       3, nullptr, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
                       FlowSdk::FlowMeasure::MeasureStatus::Withdrawn, {},
                       std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(
-                              FlowSdk::FlowMeasure::MeasureType::Prohibit),
+                              FlowSdk::FlowMeasure::MeasureType::Prohibit
+                      ),
                       std::make_unique<FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters>(
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
                               std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlightInformationRegion::FlightInformationRegion>>{
-                                      std::make_shared<
-                                              FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
-                                              1, "EGTT", "London")}))
+                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{}
+                      )
+              )
         {}
 
         std::chrono::system_clock::time_point startTime;
@@ -112,8 +116,10 @@ namespace FlowSdkTest::FlowMeasure {
     TEST_F(ConcreteFlowMeasureTest, ItThrowsAnExceptionIfNotWithdrawn)
     {
         EXPECT_THROW(static_cast<void>(measure1.WithdrawnAt()), FlowSdk::FlowMeasure::FlowMeasureNotWithdrawnException);
-        EXPECT_THROW(static_cast<void>(measureWithNoEvent.WithdrawnAt()),
-                     FlowSdk::FlowMeasure::FlowMeasureNotWithdrawnException);
+        EXPECT_THROW(
+                static_cast<void>(measureWithNoEvent.WithdrawnAt()),
+                FlowSdk::FlowMeasure::FlowMeasureNotWithdrawnException
+        );
     }
 
     TEST_F(ConcreteFlowMeasureTest, ItHasAStatus)
@@ -133,8 +139,10 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteFlowMeasureTest, ItHasNotifiedFlightInformationRegions)
     {
-        EXPECT_EQ(std::set<std::shared_ptr<FlowSdk::FlightInformationRegion::FlightInformationRegion>>(),
-                  measure1.NotifiedFlightInformationRegions());
+        EXPECT_EQ(
+                std::vector<std::shared_ptr<const FlowSdk::FlightInformationRegion::FlightInformationRegion>>(),
+                measure1.NotifiedFlightInformationRegions()
+        );
     }
 
     TEST_F(ConcreteFlowMeasureTest, ItHasAMeasure)
@@ -144,7 +152,7 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteFlowMeasureTest, ItHasFilters)
     {
-        EXPECT_TRUE(measure1.Filters().ApplicableToFlightInformationRegion("EGTT"));
-        EXPECT_FALSE(measure1.Filters().ApplicableToFlightInformationRegion("EGPX"));
+        EXPECT_TRUE(measure1.Filters().ApplicableToAirport("EGLL"));
+        EXPECT_FALSE(measure1.Filters().ApplicableToAirport("EGKK"));
     }
 }// namespace FlowSdkTest::FlowMeasure

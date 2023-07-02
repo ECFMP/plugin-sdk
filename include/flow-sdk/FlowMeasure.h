@@ -1,4 +1,6 @@
 #pragma once
+#include "ApiElement.h"
+#include "flow-sdk/ApiElement.h"
 
 namespace FlowSdk {
     namespace Event {
@@ -34,7 +36,7 @@ namespace FlowSdk::FlowMeasure {
     /**
      * Represents an individual flow measure in the API.
      */
-    class FlowMeasure
+    class FlowMeasure : public Api::StringIdentifiableApiElement
     {
         public:
         virtual ~FlowMeasure() = default;
@@ -90,7 +92,9 @@ namespace FlowSdk::FlowMeasure {
          * The flight information region(s) associated with the measure.
          */
         [[nodiscard]] virtual auto NotifiedFlightInformationRegions() const noexcept
-                -> const std::set<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>> = 0;
+                -> const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> = 0;
+
+        // TODO: A true/false for FIR applicability
 
         /**
          * The measure itself, type and value.

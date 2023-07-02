@@ -13,8 +13,8 @@ namespace FlowSdkTest::FlowMeasure {
         ConcreteFlowMeasureFiltersTest()
             : filters(
                     std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{
-                            std::make_shared<FlowSdk::FlowMeasure::ConcreteAirportFilter>(
-                                    std::set<std::string>{"EGLL"})},
+                            std::make_shared<FlowSdk::FlowMeasure::ConcreteAirportFilter>(std::set<std::string>{"EGLL"}
+                            )},
                     std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{
                             std::make_shared<FlowSdk::FlowMeasure::ConcreteEventFilter>(
                                     std::make_shared<FlowSdk::Event::ConcreteEvent>(
@@ -22,19 +22,21 @@ namespace FlowSdkTest::FlowMeasure {
                                             std::chrono::system_clock::now(),
                                             std::make_shared<
                                                     FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
-                                                    1, "EGTT", "London"),
-                                            "ABC"),
-                                    FlowSdk::FlowMeasure::EventParticipation::Participating),
+                                                    1, "EGTT", "London"
+                                            ),
+                                            "ABC"
+                                    ),
+                                    FlowSdk::FlowMeasure::EventParticipation::Participating
+                            ),
                     },
                     std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{
-                            std::make_shared<FlowSdk::FlowMeasure::ConcreteRouteFilter>(
-                                    std::set<std::string>{"XAMAB"})},
+                            std::make_shared<FlowSdk::FlowMeasure::ConcreteRouteFilter>(std::set<std::string>{"XAMAB"}
+                            )},
                     std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelFilter>>{
                             std::make_shared<FlowSdk::FlowMeasure::ConcreteLevelFilter>(
-                                    FlowSdk::FlowMeasure::LevelFilterType::At, 150)},
-                    std::list<std::shared_ptr<FlowSdk::FlightInformationRegion::FlightInformationRegion>>{
-                            std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
-                                    1, "EGTT", "London")})
+                                    FlowSdk::FlowMeasure::LevelFilterType::At, 150
+                            )}
+            )
         {}
 
         FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters filters;
@@ -50,45 +52,15 @@ namespace FlowSdkTest::FlowMeasure {
         EXPECT_FALSE(filters.ApplicableToAirport("EGKK"));
     }
 
-    TEST_F(ConcreteFlowMeasureFiltersTest, ItIsApplicableToFlightInformationRegionById)
-    {
-        EXPECT_TRUE(filters.ApplicableToFlightInformationRegion(1));
-    }
-
-    TEST_F(ConcreteFlowMeasureFiltersTest, ItIsNotApplicableToFlightInformationRegionById)
-    {
-        EXPECT_FALSE(filters.ApplicableToFlightInformationRegion(2));
-    }
-
-    TEST_F(ConcreteFlowMeasureFiltersTest, ItIsApplicableToFlightInformationRegionByIdentifier)
-    {
-        EXPECT_TRUE(filters.ApplicableToFlightInformationRegion("EGTT"));
-    }
-
-    TEST_F(ConcreteFlowMeasureFiltersTest, ItIsNotApplicableToFlightInformationRegionByIdentifier)
-    {
-        EXPECT_FALSE(filters.ApplicableToFlightInformationRegion("EGLL"));
-    }
-
-    TEST_F(ConcreteFlowMeasureFiltersTest, ItIsApplicableToFlightInformationRegionByInstance)
-    {
-        FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion region(1, "EGTT", "London");
-        EXPECT_TRUE(filters.ApplicableToFlightInformationRegion(region));
-    }
-
-    TEST_F(ConcreteFlowMeasureFiltersTest, ItIsNotApplicableToFlightInformationRegionByInstance)
-    {
-        FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion region(2, "EGTT", "London");
-        EXPECT_FALSE(filters.ApplicableToFlightInformationRegion(region));
-    }
-
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsApplicableAirportFilter)
     {
-        EXPECT_EQ(std::set<std::string>({"EGLL"}),
-                  filters.FirstAirportFilter([](const FlowSdk::FlowMeasure::AirportFilter& airportFilter) {
-                             return airportFilter.ApplicableToAirport("EGLL");
-                         })
-                          ->AirportStrings());
+        EXPECT_EQ(
+                std::set<std::string>({"EGLL"}),
+                filters.FirstAirportFilter([](const FlowSdk::FlowMeasure::AirportFilter& airportFilter) {
+                           return airportFilter.ApplicableToAirport("EGLL");
+                       }
+                )->AirportStrings()
+        );
     }
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsNullptrIfNoApplicableAirportFilter)
@@ -100,12 +72,14 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsApplicableEventFilter)
     {
-        EXPECT_EQ(FlowSdk::FlowMeasure::EventParticipation::Participating,
-                  filters.FirstEventFilter([](const FlowSdk::FlowMeasure::EventFilter& eventFilter) {
-                             return eventFilter.Participation()
-                                     == FlowSdk::FlowMeasure::EventParticipation::Participating;
-                         })
-                          ->Participation());
+        EXPECT_EQ(
+                FlowSdk::FlowMeasure::EventParticipation::Participating,
+                filters.FirstEventFilter([](const FlowSdk::FlowMeasure::EventFilter& eventFilter) {
+                           return eventFilter.Participation()
+                                   == FlowSdk::FlowMeasure::EventParticipation::Participating;
+                       }
+                )->Participation()
+        );
     }
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsNullptrIfNoApplicableEventFilter)
@@ -117,11 +91,13 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsApplicableLevelFilter)
     {
-        EXPECT_EQ(FlowSdk::FlowMeasure::LevelFilterType::At,
-                  filters.FirstLevelFilter([](const FlowSdk::FlowMeasure::LevelFilter& levelFilter) {
-                             return levelFilter.Level() == 150;
-                         })
-                          ->Type());
+        EXPECT_EQ(
+                FlowSdk::FlowMeasure::LevelFilterType::At,
+                filters.FirstLevelFilter([](const FlowSdk::FlowMeasure::LevelFilter& levelFilter) {
+                           return levelFilter.Level() == 150;
+                       }
+                )->Type()
+        );
     }
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsNullptrIfNoApplicableLevelFilter)
@@ -133,11 +109,13 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsApplicableRouteFilter)
     {
-        EXPECT_EQ(std::set<std::string>({"XAMAB"}),
-                  filters.FirstRouteFilter([](const FlowSdk::FlowMeasure::RouteFilter& routeFilter) {
-                             return routeFilter.RouteStrings() == std::set<std::string>({"XAMAB"});
-                         })
-                          ->RouteStrings());
+        EXPECT_EQ(
+                std::set<std::string>({"XAMAB"}),
+                filters.FirstRouteFilter([](const FlowSdk::FlowMeasure::RouteFilter& routeFilter) {
+                           return routeFilter.RouteStrings() == std::set<std::string>({"XAMAB"});
+                       }
+                )->RouteStrings()
+        );
     }
 
     TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsNullptrIfNoApplicableRouteFilter)

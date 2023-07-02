@@ -8,8 +8,9 @@ namespace FlowSdk::FlowMeasure {
             int id, std::shared_ptr<const Event::Event> event, std::string identifier, std::string reason,
             std::chrono::system_clock::time_point startTime, std::chrono::system_clock::time_point endTime,
             std::chrono::system_clock::time_point withdrawnTime, MeasureStatus status,
-            const std::set<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>>& notifiedFirs,
-            std::unique_ptr<struct Measure> measure, std::unique_ptr<FlowMeasureFilters> filters)
+            const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>& notifiedFirs,
+            std::unique_ptr<struct Measure> measure, std::unique_ptr<FlowMeasureFilters> filters
+    )
         : id(id), event(std::move(event)), identifier(std::move(identifier)), reason(std::move(reason)),
           startTime(startTime), endTime(endTime), withdrawnTime(withdrawnTime), status(status),
           notifiedFirs(notifiedFirs), measure(std::move(measure)), filters(std::move(filters))
@@ -68,7 +69,7 @@ namespace FlowSdk::FlowMeasure {
         return checkStatus == status;
     }
 
-    const std::set<std::shared_ptr<FlightInformationRegion::FlightInformationRegion>>
+    const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>
     ConcreteFlowMeasure::NotifiedFlightInformationRegions() const noexcept
     {
         return notifiedFirs;

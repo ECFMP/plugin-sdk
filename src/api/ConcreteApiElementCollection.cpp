@@ -3,6 +3,7 @@
 #include "flow-sdk/ApiElementIterator.h"
 #include "flow-sdk/Event.h"
 #include "flow-sdk/FlightInformationRegion.h"
+#include "flow-sdk/FlowMeasure.h"
 
 namespace FlowSdk::Api {
 
@@ -54,4 +55,5 @@ namespace FlowSdk::Api {
     template class FlowSdk::Api::ConcreteApiElementCollection<
             FlowSdk::FlightInformationRegion::FlightInformationRegion>;
     template class FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event>;
+    template class FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::FlowMeasure::FlowMeasure>;
 }// namespace FlowSdk::Api
