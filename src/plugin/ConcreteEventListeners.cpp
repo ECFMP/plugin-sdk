@@ -26,8 +26,9 @@ namespace FlowSdk::Plugin {
     }
 
     template<typename... Types>
-    void ConcreteEventListeners<Types...>::Add(std::shared_ptr<EventListener<Types...>> listener,
-                                               std::shared_ptr<EventListenerFilter<Types...>> filter) noexcept
+    void ConcreteEventListeners<Types...>::Add(
+            std::shared_ptr<EventListener<Types...>> listener, std::shared_ptr<EventListenerFilter<Types...>> filter
+    ) noexcept
     {
         if (listeners.contains(listener)) {
             return;
@@ -63,10 +64,10 @@ template class FlowSdk::Plugin::EventListenerFilter<FlowSdk::FlowMeasure::FlowMe
 template class FlowSdk::Plugin::EventListener<FlowSdk::FlowMeasure::FlowMeasure>;
 
 // For double-flow measure events
-template class FlowSdk::Plugin::ConcreteEventListeners<FlowSdk::FlowMeasure::FlowMeasure,
-                                                       FlowSdk::FlowMeasure::FlowMeasure>;
-template class FlowSdk::Plugin::EventListenerFilter<FlowSdk::FlowMeasure::FlowMeasure,
-                                                    FlowSdk::FlowMeasure::FlowMeasure>;
+template class FlowSdk::Plugin::ConcreteEventListeners<
+        FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
+template class FlowSdk::Plugin::EventListenerFilter<
+        FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
 template class FlowSdk::Plugin::EventListener<FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
 
 // For downloading API data

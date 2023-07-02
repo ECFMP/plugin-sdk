@@ -52,23 +52,29 @@ namespace FlowSdkTest::Plugin {
 
     TEST_F(SdkFactoryTest, ItThrowsAnExceptionIfDuplicateHttpClientProvided)
     {
-        EXPECT_THROW(static_cast<void>(FlowSdk::Plugin::SdkFactory::Build()
-                                               .WithHttpClient(std::move(http))
-                                               .WithHttpClient(std::move(http2))),
-                     FlowSdk::Plugin::SdkConfigurationException);
+        EXPECT_THROW(
+                static_cast<void>(FlowSdk::Plugin::SdkFactory::Build()
+                                          .WithHttpClient(std::move(http))
+                                          .WithHttpClient(std::move(http2))),
+                FlowSdk::Plugin::SdkConfigurationException
+        );
     }
 
     TEST_F(SdkFactoryTest, ItThrowsAnExceptionIfDuplicateLoggerProvided)
     {
-        EXPECT_THROW(static_cast<void>(FlowSdk::Plugin::SdkFactory::Build()
-                                               .WithLogger(std::move(logger))
-                                               .WithLogger(std::move(logger2))),
-                     FlowSdk::Plugin::SdkConfigurationException);
+        EXPECT_THROW(
+                static_cast<void>(FlowSdk::Plugin::SdkFactory::Build()
+                                          .WithLogger(std::move(logger))
+                                          .WithLogger(std::move(logger2))),
+                FlowSdk::Plugin::SdkConfigurationException
+        );
     }
 
     TEST_F(SdkFactoryTest, ItThrowsAnExceptionIfNoHttpClientProvided)
     {
-        EXPECT_THROW(static_cast<void>(FlowSdk::Plugin::SdkFactory::Build().WithLogger(std::move(logger)).Instance()),
-                     FlowSdk::Plugin::SdkConfigurationException);
+        EXPECT_THROW(
+                static_cast<void>(FlowSdk::Plugin::SdkFactory::Build().WithLogger(std::move(logger)).Instance()),
+                FlowSdk::Plugin::SdkConfigurationException
+        );
     }
 }// namespace FlowSdkTest::Plugin

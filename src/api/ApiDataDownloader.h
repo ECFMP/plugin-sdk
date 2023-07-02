@@ -22,9 +22,11 @@ namespace FlowSdk::Api {
     class ApiDataDownloader
     {
         public:
-        explicit ApiDataDownloader(std::unique_ptr<Http::HttpClient> httpClient,
-                                   std::unique_ptr<Plugin::InternalEventListeners<const nlohmann::json&>> listeners,
-                                   std::shared_ptr<Log::Logger> logger);
+        explicit ApiDataDownloader(
+                std::unique_ptr<Http::HttpClient> httpClient,
+                std::unique_ptr<Plugin::InternalEventListeners<const nlohmann::json&>> listeners,
+                std::shared_ptr<Log::Logger> logger
+        );
 
         ~ApiDataDownloader();
         void DownloadData();
