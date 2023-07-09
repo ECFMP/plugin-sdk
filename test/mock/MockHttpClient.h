@@ -1,5 +1,5 @@
 #pragma once
-#include "ECFMP/HttpClient.h"
+#include "ECFMP/http/HttpClient.h"
 #include <gmock/gmock.h>
 
 namespace ECFMPTest::Http {

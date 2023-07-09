@@ -1,7 +1,7 @@
 #include "ConcreteEventListeners.h"
 #include "ECFMP/EventListener.h"
 #include "ECFMP/EventListenerFilter.h"
-#include "ECFMP/FlowMeasure.h"
+#include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "nlohmann/json_fwd.hpp"
 
 namespace ECFMP::Plugin {

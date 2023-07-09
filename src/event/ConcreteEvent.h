@@ -1,5 +1,5 @@
 #pragma once
-#include "ECFMP/Event.h"
+#include "ECFMP/event/Event.h"
 
 namespace ECFMP::FlightInformationRegion {
     class FlightInformationRegion;

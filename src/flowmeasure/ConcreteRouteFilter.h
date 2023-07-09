@@ -1,5 +1,5 @@
 #pragma once
-#include "ECFMP/RouteFilter.h"
+#include "ECFMP/flowmeasure/RouteFilter.h"
 
 namespace ECFMP::FlowMeasure {
     class ConcreteRouteFilter : public RouteFilter

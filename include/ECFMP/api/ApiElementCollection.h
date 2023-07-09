@@ -1,6 +1,6 @@
 #pragma once
-#include "ECFMP/ApiElementIterator.h"
-#include "ECFMP/Iterable.h"
+#include "ApiElementIterator.h"
+#include "Iterable.h"
 
 namespace ECFMP::Api {
 

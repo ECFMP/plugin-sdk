@@ -1,7 +1,7 @@
 #include "ConcreteFlowMeasure.h"
-#include "ECFMP/FlightInformationRegion.h"
-#include "ECFMP/FlowMeasureFilters.h"
-#include "ECFMP/Measure.h"
+#include "ECFMP/flightinformationregion/FlightInformationRegion.h"
+#include "ECFMP/flowmeasure/FlowMeasureFilters.h"
+#include "ECFMP/flowmeasure/Measure.h"
 
 namespace ECFMP::FlowMeasure {
 

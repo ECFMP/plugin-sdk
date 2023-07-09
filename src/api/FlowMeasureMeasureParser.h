@@ -1,6 +1,6 @@
 #pragma once
+#include "ECFMP/flowmeasure/Measure.h"
 #include "FlowMeasureMeasureParserInterface.h"
-#include "ECFMP/Measure.h"
 #include "nlohmann/json_fwd.hpp"
 
 namespace ECFMP::Log {

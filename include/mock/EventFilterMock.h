@@ -1,5 +1,5 @@
 #pragma once
-#include "../ECFMP/EventFilter.h"
+#include "ECFMP/flowmeasure/EventFilter.h"
 #include <gmock/gmock.h>
 
 namespace ECFMP::Mock::FlowMeasure {

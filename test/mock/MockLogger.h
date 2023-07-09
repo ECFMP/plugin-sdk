@@ -1,5 +1,5 @@
 #pragma once
-#include "ECFMP/Logger.h"
+#include "ECFMP/log/Logger.h"
 
 namespace ECFMPTest::Log {
     class MockLogger : public ECFMP::Log::Logger

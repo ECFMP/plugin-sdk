@@ -1,5 +1,5 @@
 #pragma once
-#include "ECFMP/FlightInformationRegion.h"
+#include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 
 namespace ECFMP::FlightInformationRegion {
     class ConcreteFlightInformationRegion : public FlightInformationRegion

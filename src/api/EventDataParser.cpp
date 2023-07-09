@@ -1,7 +1,7 @@
 #include "EventDataParser.h"
+#include "ECFMP/log/Logger.h"
 #include "date/ParseDateStrings.h"
 #include "event/ConcreteEvent.h"
-#include "ECFMP/Logger.h"
 #include "nlohmann/json.hpp"
 
 namespace ECFMP::Api {

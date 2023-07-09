@@ -1,5 +1,5 @@
 #pragma once
-#include "../src/eventbus/InternalEventStream.h"
+#include "eventbus/InternalEventStream.h"
 #include <any>
 #include <mutex>
 #include <typeindex>

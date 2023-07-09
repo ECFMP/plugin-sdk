@@ -1,6 +1,6 @@
 #include "eventbus/InternalEventBus.h"
-#include "ECFMP/NewEventFilter.h"
-#include "ECFMP/NewEventListener.h"
+#include "ECFMP/eventbus/NewEventFilter.h"
+#include "ECFMP/eventbus/NewEventListener.h"
 
 namespace ECFMPTest::EvenBus {
 

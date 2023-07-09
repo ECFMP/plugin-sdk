@@ -1,5 +1,5 @@
 #include "FlowMeasureMeasureParser.h"
-#include "ECFMP/Logger.h"
+#include "ECFMP/log/Logger.h"
 #include "flowmeasure/ConcreteMeasure.h"
 #include "nlohmann/json.hpp"
 

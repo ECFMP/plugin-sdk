@@ -1,7 +1,7 @@
 #pragma once
-#include "ApiElement.h"
+#include "ECFMP/api/ApiElement.h"
+#include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "EventParticipant.h"
-#include "FlightInformationRegion.h"
 
 namespace ECFMP::Event {
     /**

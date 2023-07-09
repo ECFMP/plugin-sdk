@@ -1,5 +1,5 @@
 #pragma once
-#include "../ECFMP/AirportFilter.h"
+#include "ECFMP/flowmeasure/AirportFilter.h"
 #include <gmock/gmock.h>
 
 namespace ECFMP::Mock::FlowMeasure {

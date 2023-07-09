@@ -1,6 +1,6 @@
 #pragma once
-#include "ApiElement.h"
-#include "ECFMP/ApiElementCollection.h"
+#include "ECFMP/api/ApiElement.h"
+#include "ECFMP/api/ApiElementCollection.h"
 
 namespace ECFMP::FlightInformationRegion {
 

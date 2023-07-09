@@ -1,5 +1,5 @@
 #pragma once
-#include "FlowMeasure.h"
+#include "ECFMP/flowmeasure/FlowMeasure.h"
 
 namespace ECFMP::Plugin {
     template<typename... Types>

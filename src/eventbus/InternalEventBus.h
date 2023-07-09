@@ -1,5 +1,5 @@
 #pragma once
-#include "ECFMP/EventBus.h"
+#include "ECFMP/eventbus/EventBus.h"
 
 namespace ECFMP::EventBus {
     class InternalEventBus : public EventBus

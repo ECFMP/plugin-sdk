@@ -1,5 +1,5 @@
 #pragma once
-#include "ECFMP/FlowMeasure.h"
+#include "ECFMP/flowmeasure/FlowMeasure.h"
 
 namespace ECFMP::FlightInformationRegion {
     class FlightInformationRegion;

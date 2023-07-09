@@ -1,5 +1,5 @@
 #pragma once
-#include "../ECFMP/EventParticipant.h"
+#include "ECFMP/event/EventParticipant.h"
 #include <gmock/gmock.h>
 
 namespace ECFMP::Mock::Event {

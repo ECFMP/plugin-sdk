@@ -1,5 +1,5 @@
 #include "api/FlowMeasureMeasureParser.h"
-#include "ECFMP/Measure.h"
+#include "ECFMP/flowmeasure/Measure.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
 

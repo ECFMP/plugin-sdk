@@ -1,5 +1,5 @@
 #include "api/ApiDataDownloader.h"
-#include "ECFMP/HttpClient.h"
+#include "ECFMP/http/HttpClient.h"
 #include "mock/MockEventListener.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"

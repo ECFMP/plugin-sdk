@@ -1,8 +1,8 @@
 #include "ConcreteStringIdentifiedApiElementCollection.h"
-#include "ECFMP/ApiElement.h"
-#include "ECFMP/ApiElementIterator.h"
-#include "ECFMP/FlightInformationRegion.h"
-#include "ECFMP/FlowMeasure.h"
+#include "ECFMP/api/ApiElement.h"
+#include "ECFMP/api/ApiElementIterator.h"
+#include "ECFMP/flightinformationregion/FlightInformationRegion.h"
+#include "ECFMP/flowmeasure/FlowMeasure.h"
 
 namespace ECFMP::Api {
 

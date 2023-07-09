@@ -1,6 +1,6 @@
 #pragma once
-#include "../ECFMP/FlowMeasureFilters.h"
-#include "ECFMP/MultipleLevelFilter.h"
+#include "ECFMP/flowmeasure/FlowMeasureFilters.h"
+#include "ECFMP/flowmeasure/MultipleLevelFilter.h"
 #include <gmock/gmock.h>
 
 namespace ECFMP::Mock::FlowMeasure {

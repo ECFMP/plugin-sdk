@@ -1,5 +1,5 @@
 #pragma once
-#include "../ECFMP/RouteFilter.h"
+#include "ECFMP/flowmeasure/RouteFilter.h"
 #include <gmock/gmock.h>
 
 namespace ECFMP::Mock::FlowMeasure {

@@ -1,5 +1,5 @@
 #pragma once
-#include "ECFMP/EventParticipant.h"
+#include "ECFMP/event/EventParticipant.h"
 
 namespace ECFMP::Event {
     class ConcreteEventParticipant : public EventParticipant

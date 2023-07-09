@@ -1,6 +1,6 @@
 #pragma once
+#include "ECFMP/api/ElementCollectionTypes.h"
 #include "InternalElementCollectionTypes.h"
-#include "ECFMP/ElementCollectionTypes.h"
 #include "nlohmann/json_fwd.hpp"
 
 namespace ECFMP {

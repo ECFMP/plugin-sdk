@@ -1,7 +1,7 @@
 #pragma once
 #include "ApiDataListenerTypes.h"
+#include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "InternalElementCollectionTypes.h"
-#include "ECFMP/FlowMeasure.h"
 #include "nlohmann/json_fwd.hpp"
 #include <memory>
 
