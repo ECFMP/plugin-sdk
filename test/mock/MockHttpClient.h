@@ -1,11 +1,11 @@
 #pragma once
-#include "flow-sdk/HttpClient.h"
+#include "ECFMP/http/HttpClient.h"
 #include <gmock/gmock.h>
 
-namespace FlowSdkTest::Http {
-    class MockHttpClient : public FlowSdk::Http::HttpClient
+namespace ECFMPTest::Http {
+    class MockHttpClient : public ECFMP::Http::HttpClient
     {
         public:
-        MOCK_METHOD(FlowSdk::Http::HttpResponse, Get, (const std::string&), (override));
+        MOCK_METHOD(ECFMP::Http::HttpResponse, Get, (const std::string&), (override));
     };
-}// namespace FlowSdkTest::Http
+}// namespace ECFMPTest::Http

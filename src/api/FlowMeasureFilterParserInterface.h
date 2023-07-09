@@ -1,18 +1,18 @@
 #pragma once
+#include "ECFMP/api/ElementCollectionTypes.h"
 #include "InternalElementCollectionTypes.h"
-#include "flow-sdk/ElementCollectionTypes.h"
 #include "nlohmann/json_fwd.hpp"
 
-namespace FlowSdk {
+namespace ECFMP {
     namespace FlowMeasure {
         class FlowMeasureFilters;
     }// namespace FlowMeasure
     namespace Log {
         class Logger;
     }// namespace Log
-}// namespace FlowSdk
+}// namespace ECFMP
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     class FlowMeasureFilterParserInterface
     {
         public:
@@ -20,4 +20,4 @@ namespace FlowSdk::Api {
         [[nodiscard]] virtual auto Parse(const nlohmann::json& data, const InternalEventCollection& events) const
                 -> std::unique_ptr<FlowMeasure::FlowMeasureFilters> = 0;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

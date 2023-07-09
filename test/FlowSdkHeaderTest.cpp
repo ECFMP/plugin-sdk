@@ -1,6 +1,6 @@
-#include "flow-sdk/flow-sdk.h"
+#include "ECFMP/ECFMP.h"
 
-namespace FlowSdkTest {
+namespace ECFMPTest {
     class FlowSdkHeaderTest : public testing::Test
     {
     };
@@ -10,4 +10,4 @@ namespace FlowSdkTest {
         // Dummy expectation, the purpose of this test is to make sure the header compiles properly.
         EXPECT_TRUE(true);
     }
-}// namespace FlowSdkTest
+}// namespace ECFMPTest

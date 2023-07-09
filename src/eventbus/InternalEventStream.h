@@ -1,9 +1,9 @@
 #pragma once
-#include "flow-sdk/EventStream.h"
-#include "flow-sdk/NewEventFilter.h"
-#include "flow-sdk/NewEventListener.h"
+#include "ECFMP/eventbus/EventStream.h"
+#include "ECFMP/eventbus/NewEventFilter.h"
+#include "ECFMP/eventbus/NewEventListener.h"
 
-namespace FlowSdk::EventBus {
+namespace ECFMP::EventBus {
 
     template<typename EventType>
     class InternalEventStream : public EventStream<EventType>
@@ -35,4 +35,4 @@ namespace FlowSdk::EventBus {
             );
         };
     };
-}// namespace FlowSdk::EventBus
+}// namespace ECFMP::EventBus

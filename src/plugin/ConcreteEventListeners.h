@@ -1,7 +1,7 @@
 #pragma once
 #include "InternalEventListeners.h"
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
 
     /**
      * Implements the event listeners
@@ -21,4 +21,4 @@ namespace FlowSdk::Plugin {
         // All the listeners, with their filters
         std::map<std::shared_ptr<EventListener<Types...>>, std::shared_ptr<EventListenerFilter<Types...>>> listeners;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

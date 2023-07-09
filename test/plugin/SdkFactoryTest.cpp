@@ -1,9 +1,9 @@
-#include "flow-sdk/SdkFactory.h"
-#include "flow-sdk/EventListeners.h"
+#include "ECFMP/SdkFactory.h"
+#include "ECFMP/EventListeners.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 
-namespace FlowSdkTest::Plugin {
+namespace ECFMPTest::Plugin {
     class SdkFactoryTest : public testing::Test
     {
         public:
@@ -22,7 +22,7 @@ namespace FlowSdkTest::Plugin {
 
     TEST_F(SdkFactoryTest, ItBuildsAnSdk)
     {
-        const auto instance = FlowSdk::Plugin::SdkFactory::Build()
+        const auto instance = ECFMP::Plugin::SdkFactory::Build()
                                       .WithLogger(std::move(logger))
                                       .WithHttpClient(std::move(http))
                                       .Instance();
@@ -32,7 +32,7 @@ namespace FlowSdkTest::Plugin {
 
     TEST_F(SdkFactoryTest, ItBuildsAnSdkWithNoLogger)
     {
-        const auto instance = FlowSdk::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
+        const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
 
         instance->Destroy();
     }
@@ -40,28 +40,28 @@ namespace FlowSdkTest::Plugin {
     TEST_F(SdkFactoryTest, ItThrowsAnExceptionIfDuplicateHttpClientProvided)
     {
         EXPECT_THROW(
-                static_cast<void>(FlowSdk::Plugin::SdkFactory::Build()
+                static_cast<void>(ECFMP::Plugin::SdkFactory::Build()
                                           .WithHttpClient(std::move(http))
                                           .WithHttpClient(std::move(http2))),
-                FlowSdk::Plugin::SdkConfigurationException
+                ECFMP::Plugin::SdkConfigurationException
         );
     }
 
     TEST_F(SdkFactoryTest, ItThrowsAnExceptionIfDuplicateLoggerProvided)
     {
         EXPECT_THROW(
-                static_cast<void>(FlowSdk::Plugin::SdkFactory::Build()
-                                          .WithLogger(std::move(logger))
-                                          .WithLogger(std::move(logger2))),
-                FlowSdk::Plugin::SdkConfigurationException
+                static_cast<void>(
+                        ECFMP::Plugin::SdkFactory::Build().WithLogger(std::move(logger)).WithLogger(std::move(logger2))
+                ),
+                ECFMP::Plugin::SdkConfigurationException
         );
     }
 
     TEST_F(SdkFactoryTest, ItThrowsAnExceptionIfNoHttpClientProvided)
     {
         EXPECT_THROW(
-                static_cast<void>(FlowSdk::Plugin::SdkFactory::Build().WithLogger(std::move(logger)).Instance()),
-                FlowSdk::Plugin::SdkConfigurationException
+                static_cast<void>(ECFMP::Plugin::SdkFactory::Build().WithLogger(std::move(logger)).Instance()),
+                ECFMP::Plugin::SdkConfigurationException
         );
     }
-}// namespace FlowSdkTest::Plugin
+}// namespace ECFMPTest::Plugin

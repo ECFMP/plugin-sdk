@@ -1,6 +1,6 @@
 #include "flowmeasure/ConcreteRouteFilter.h"
 
-namespace FlowSdkTest::FlowMeasure {
+namespace ECFMPTest::FlowMeasure {
 
     class ConcreteRouteFilterTest : public testing::Test
     {
@@ -8,11 +8,11 @@ namespace FlowSdkTest::FlowMeasure {
         ConcreteRouteFilterTest() : routeFilter(std::set<std::string>{"ABC", "DEF", "GHI"})
         {}
 
-        FlowSdk::FlowMeasure::ConcreteRouteFilter routeFilter;
+        ECFMP::FlowMeasure::ConcreteRouteFilter routeFilter;
     };
 
     TEST_F(ConcreteRouteFilterTest, ItReturnsRoutes)
     {
         EXPECT_EQ(std::set<std::string>({"ABC", "DEF", "GHI"}), routeFilter.RouteStrings());
     }
-}// namespace FlowSdkTest::FlowMeasure
+}// namespace ECFMPTest::FlowMeasure

@@ -3,20 +3,20 @@
 #include "InternalElementCollectionTypes.h"
 #include "nlohmann/json_fwd.hpp"
 
-namespace FlowSdk {
+namespace ECFMP {
     namespace FlowMeasure {
         class Measure;
     }// namespace FlowMeasure
     namespace Log {
         class Logger;
     }// namespace Log
-}// namespace FlowSdk
+}// namespace ECFMP
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     class FlowMeasureMeasureParserInterface
     {
         public:
         virtual ~FlowMeasureMeasureParserInterface() = default;
         [[nodiscard]] virtual auto Parse(const nlohmann::json& data) const -> std::unique_ptr<FlowMeasure::Measure> = 0;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

@@ -1,9 +1,9 @@
 #include "ConcreteFlowMeasure.h"
-#include "flow-sdk/FlightInformationRegion.h"
-#include "flow-sdk/FlowMeasureFilters.h"
-#include "flow-sdk/Measure.h"
+#include "ECFMP/flightinformationregion/FlightInformationRegion.h"
+#include "ECFMP/flowmeasure/FlowMeasureFilters.h"
+#include "ECFMP/flowmeasure/Measure.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     ConcreteFlowMeasure::ConcreteFlowMeasure(
             int id, std::shared_ptr<const Event::Event> event, std::string identifier, std::string reason,
@@ -105,4 +105,4 @@ namespace FlowSdk::FlowMeasure {
                        }
                ) != notifiedFirs.end();
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

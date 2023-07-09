@@ -1,12 +1,12 @@
 #include "plugin/ConcreteSdk.h"
+#include "ECFMP/eventbus/NewEventListener.h"
 #include "api/ApiDataDownloader.h"
 #include "eventbus/InternalEventBus.h"
-#include "flow-sdk/NewEventListener.h"
 #include "mock/MockHttpClient.h"
 
-namespace FlowSdkTest::Plugin {
+namespace ECFMPTest::Plugin {
 
-    class MockEventListener : public FlowSdk::EventBus::NewEventListener<int>
+    class MockEventListener : public ECFMP::EventBus::NewEventListener<int>
     {
         public:
         void OnEvent(const int&) override
@@ -21,13 +21,13 @@ namespace FlowSdkTest::Plugin {
     {
         public:
         ConcreteSdkTest()
-            : eventBus(std::make_shared<FlowSdk::EventBus::InternalEventBus>()), testPtr(std::make_shared<int>(5)),
+            : eventBus(std::make_shared<ECFMP::EventBus::InternalEventBus>()), testPtr(std::make_shared<int>(5)),
               instance(std::shared_ptr<void>(testPtr), eventBus)
         {}
 
-        std::shared_ptr<FlowSdk::EventBus::InternalEventBus> eventBus;
+        std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
         std::shared_ptr<int> testPtr;
-        FlowSdk::Plugin::ConcreteSdk instance;
+        ECFMP::Plugin::ConcreteSdk instance;
     };
 
     TEST_F(ConcreteSdkTest, OnEuroscopeTimerTickProcessesEvents)
@@ -48,4 +48,4 @@ namespace FlowSdkTest::Plugin {
         instance.OnEuroscopeTimerTick();
         EXPECT_EQ(1, mockEventListener->callCount);
     }
-}// namespace FlowSdkTest::Plugin
+}// namespace ECFMPTest::Plugin

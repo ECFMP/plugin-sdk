@@ -2,7 +2,7 @@
 
 #include <utility>
 
-namespace FlowSdk::FlightInformationRegion {
+namespace ECFMP::FlightInformationRegion {
     ConcreteFlightInformationRegion::ConcreteFlightInformationRegion(int id, std::string identifier, std::string name)
         : id(id), identifier(std::move(identifier)), name(std::move(name))
     {}
@@ -19,4 +19,4 @@ namespace FlowSdk::FlightInformationRegion {
     {
         return name;
     }
-}// namespace FlowSdk::FlightInformationRegion
+}// namespace ECFMP::FlightInformationRegion

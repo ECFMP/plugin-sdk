@@ -1,6 +1,6 @@
 #include "ConcreteRouteFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     ConcreteRouteFilter::ConcreteRouteFilter(std::set<std::string> routes) : routes(std::move(routes))
     {}
 
@@ -8,4 +8,4 @@ namespace FlowSdk::FlowMeasure {
     {
         return routes;
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

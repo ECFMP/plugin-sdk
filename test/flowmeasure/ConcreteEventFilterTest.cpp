@@ -2,22 +2,23 @@
 #include "event/ConcreteEvent.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 
-namespace FlowSdkTest::FlowMeasure {
+namespace ECFMPTest::FlowMeasure {
 
     class ConcreteEventFilterTest : public testing::Test
     {
         public:
         ConcreteEventFilterTest()
-            : fir(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(1, "EGTT",
-                                                                                                      "London")),
-              event(std::make_shared<FlowSdk::Event::ConcreteEvent>(1, "TEST", std::chrono::system_clock::now(),
-                                                                    std::chrono::system_clock::now(), fir, "ABC")),
-              eventFilter(event, FlowSdk::FlowMeasure::EventParticipation::NotParticipating)
+            : fir(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(1, "EGTT", "London")
+            ),
+              event(std::make_shared<ECFMP::Event::ConcreteEvent>(
+                      1, "TEST", std::chrono::system_clock::now(), std::chrono::system_clock::now(), fir, "ABC"
+              )),
+              eventFilter(event, ECFMP::FlowMeasure::EventParticipation::NotParticipating)
         {}
 
-        std::shared_ptr<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion> fir;
-        std::shared_ptr<const FlowSdk::Event::ConcreteEvent> event;
-        FlowSdk::FlowMeasure::ConcreteEventFilter eventFilter;
+        std::shared_ptr<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion> fir;
+        std::shared_ptr<const ECFMP::Event::ConcreteEvent> event;
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter;
     };
 
     TEST_F(ConcreteEventFilterTest, ItReturnsEvents)
@@ -27,21 +28,23 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteEventFilterTest, ItReturnsParticipation)
     {
-        EXPECT_EQ(FlowSdk::FlowMeasure::EventParticipation::NotParticipating, eventFilter.Participation());
+        EXPECT_EQ(ECFMP::FlowMeasure::EventParticipation::NotParticipating, eventFilter.Participation());
     }
 
     TEST_F(ConcreteEventFilterTest, ItIsNotParticipatingIn)
     {
-        FlowSdk::FlowMeasure::ConcreteEventFilter eventFilter2(event,
-                                                               FlowSdk::FlowMeasure::EventParticipation::Participating);
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter2(
+                event, ECFMP::FlowMeasure::EventParticipation::Participating
+        );
         EXPECT_TRUE(eventFilter2.IsParticipating());
     }
 
     TEST_F(ConcreteEventFilterTest, ItHasEventApplicability)
     {
-        FlowSdk::Event::ConcreteEvent event2(2, "TEST", std::chrono::system_clock::now(),
-                                             std::chrono::system_clock::now(), fir, "ABC");
+        ECFMP::Event::ConcreteEvent event2(
+                2, "TEST", std::chrono::system_clock::now(), std::chrono::system_clock::now(), fir, "ABC"
+        );
         EXPECT_TRUE(eventFilter.ApplicableToEvent(*event));
         EXPECT_FALSE(eventFilter.ApplicableToEvent(event2));
     }
-}// namespace FlowSdkTest::FlowMeasure
+}// namespace ECFMPTest::FlowMeasure

@@ -1,16 +1,16 @@
 #include "api/FlowMeasureFilterParser.h"
+#include "ECFMP/event/Event.h"
+#include "ECFMP/flowmeasure/EventFilter.h"
+#include "ECFMP/flowmeasure/LevelRangeFilter.h"
+#include "ECFMP/flowmeasure/RouteFilter.h"
 #include "api/ConcreteApiElementCollection.h"
-#include "flow-sdk/Event.h"
-#include "flow-sdk/EventFilter.h"
-#include "flow-sdk/LevelRangeFilter.h"
-#include "flow-sdk/RouteFilter.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "mock/EventMock.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
 
-namespace FlowSdkTest::Api {
+namespace ECFMPTest::Api {
 
     class FlowMeasureFilterParserNoDataTest : public ::testing::Test
     {
@@ -18,9 +18,9 @@ namespace FlowSdkTest::Api {
         FlowMeasureFilterParserNoDataTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event> events;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
-        FlowSdk::Api::FlowMeasureFilterParser parser;
+        ECFMP::Api::FlowMeasureFilterParser parser;
     };
 
     TEST_F(FlowMeasureFilterParserNoDataTest, ItParsesNoData)
@@ -28,7 +28,7 @@ namespace FlowSdkTest::Api {
         auto filters = parser.Parse(nlohmann::json::array(), events);
         EXPECT_NE(nullptr, filters);
 
-        auto castedFilters = static_cast<const FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
+        auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
@@ -51,9 +51,9 @@ namespace FlowSdkTest::Api {
         FlowMeasureFilterParserAirportFilterTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event> events;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
-        FlowSdk::Api::FlowMeasureFilterParser parser;
+        ECFMP::Api::FlowMeasureFilterParser parser;
     };
 
     TEST_P(FlowMeasureFilterParserAirportFilterTest, ItParsesAnAirportFilter)
@@ -62,7 +62,7 @@ namespace FlowSdkTest::Api {
         auto filters = parser.Parse(nlohmann::json::array({filter}), events);
         EXPECT_NE(nullptr, filters);
 
-        auto castedFilters = static_cast<const FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
+        auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 1);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
@@ -71,8 +71,8 @@ namespace FlowSdkTest::Api {
         ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
         ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
-        auto expectedFilterType = GetParam().filterType == "ADES" ? FlowSdk::FlowMeasure::AirportFilterType::Destination
-                                                                  : FlowSdk::FlowMeasure::AirportFilterType::Departure;
+        auto expectedFilterType = GetParam().filterType == "ADES" ? ECFMP::FlowMeasure::AirportFilterType::Destination
+                                                                  : ECFMP::FlowMeasure::AirportFilterType::Departure;
         const auto& airportFilter = castedFilters.AirportFilters().front();
         ASSERT_EQ(airportFilter->Type(), expectedFilterType);
         ASSERT_EQ(airportFilter->AirportStrings().size(), GetParam().airports.size());
@@ -94,7 +94,7 @@ namespace FlowSdkTest::Api {
         std::string description;
         std::string filterType;
         int jsonLevel;
-        FlowSdk::FlowMeasure::LevelRangeFilterType expectedFilterType;
+        ECFMP::FlowMeasure::LevelRangeFilterType expectedFilterType;
         int expectedLevel;
     };
 
@@ -105,9 +105,9 @@ namespace FlowSdkTest::Api {
         FlowMeasureFilterParserLevelRangeFilterTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event> events;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
-        FlowSdk::Api::FlowMeasureFilterParser parser;
+        ECFMP::Api::FlowMeasureFilterParser parser;
     };
 
     TEST_P(FlowMeasureFilterParserLevelRangeFilterTest, ItParsesALevelRangeFilter)
@@ -116,7 +116,7 @@ namespace FlowSdkTest::Api {
         auto filters = parser.Parse(nlohmann::json::array({filter}), events);
         EXPECT_NE(nullptr, filters);
 
-        auto castedFilters = static_cast<const FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
+        auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 1);
@@ -134,11 +134,10 @@ namespace FlowSdkTest::Api {
             FlowMeasureFilterParserLevelRangeFilterTest, FlowMeasureFilterParserLevelRangeFilterTest,
             testing::Values(
                     FlowMeasureFilterParserLevelRangeTestCase{
-                            "level_above", "level_above", 100, FlowSdk::FlowMeasure::LevelRangeFilterType::AtOrAbove,
+                            "level_above", "level_above", 100, ECFMP::FlowMeasure::LevelRangeFilterType::AtOrAbove,
                             100},
                     FlowMeasureFilterParserLevelRangeTestCase{
-                            "level_below", "level_below", 100, FlowSdk::FlowMeasure::LevelRangeFilterType::AtOrBelow,
-                            100}
+                            "level_below", "level_below", 100, ECFMP::FlowMeasure::LevelRangeFilterType::AtOrBelow, 100}
             ),
             [](const testing::TestParamInfo<FlowMeasureFilterParserLevelRangeTestCase>& info) {
                 return info.param.description;
@@ -158,9 +157,9 @@ namespace FlowSdkTest::Api {
         FlowMeasureFilterParserSpecificLevelFilterTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event> events;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
-        FlowSdk::Api::FlowMeasureFilterParser parser;
+        ECFMP::Api::FlowMeasureFilterParser parser;
     };
 
     TEST_P(FlowMeasureFilterParserSpecificLevelFilterTest, ItParsesASpecificLevelFilter)
@@ -169,7 +168,7 @@ namespace FlowSdkTest::Api {
         auto filters = parser.Parse(nlohmann::json::array({filter}), events);
         EXPECT_NE(nullptr, filters);
 
-        auto castedFilters = static_cast<const FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
+        auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
@@ -195,7 +194,7 @@ namespace FlowSdkTest::Api {
         std::string description;
         std::string jsonFilterType;
         int jsonEventId;
-        FlowSdk::FlowMeasure::EventParticipation expectedFilterType;
+        ECFMP::FlowMeasure::EventParticipation expectedFilterType;
         int expectedEventId;
     };
 
@@ -205,18 +204,18 @@ namespace FlowSdkTest::Api {
         public:
         FlowMeasureFilterParserEventParticipationFilterTest() : parser(std::make_shared<Log::MockLogger>())
         {
-            auto event1 = std::make_shared<FlowSdk::Mock::Event::EventMock>();
+            auto event1 = std::make_shared<ECFMP::Mock::Event::EventMock>();
             ON_CALL(*event1, Id).WillByDefault(testing::Return(100));
-            auto event2 = std::make_shared<FlowSdk::Mock::Event::EventMock>();
+            auto event2 = std::make_shared<ECFMP::Mock::Event::EventMock>();
             ON_CALL(*event2, Id).WillByDefault(testing::Return(150));
 
             events.Add(event1);
             events.Add(event2);
         }
 
-        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event> events;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
-        FlowSdk::Api::FlowMeasureFilterParser parser;
+        ECFMP::Api::FlowMeasureFilterParser parser;
     };
 
     TEST_P(FlowMeasureFilterParserEventParticipationFilterTest, ItParsesAnEventFilter)
@@ -225,7 +224,7 @@ namespace FlowSdkTest::Api {
         auto filters = parser.Parse(nlohmann::json::array({filter}), events);
         EXPECT_NE(nullptr, filters);
 
-        auto castedFilters = static_cast<const FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
+        auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
@@ -243,11 +242,11 @@ namespace FlowSdkTest::Api {
             FlowMeasureFilterParserEventParticipationFilterTest, FlowMeasureFilterParserEventParticipationFilterTest,
             testing::Values(
                     FlowMeasureFilterParserEventParticipationTestCase{
-                            "member_event", "member_event", 100,
-                            FlowSdk::FlowMeasure::EventParticipation::Participating, 100},
+                            "member_event", "member_event", 100, ECFMP::FlowMeasure::EventParticipation::Participating,
+                            100},
                     FlowMeasureFilterParserEventParticipationTestCase{
                             "member_not_event", "member_not_event", 100,
-                            FlowSdk::FlowMeasure::EventParticipation::NotParticipating, 100}
+                            ECFMP::FlowMeasure::EventParticipation::NotParticipating, 100}
             ),
             [](const testing::TestParamInfo<FlowMeasureFilterParserEventParticipationTestCase>& info) {
                 return info.param.description;
@@ -267,9 +266,9 @@ namespace FlowSdkTest::Api {
         FlowMeasureFilterParserRouteFilterTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event> events;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
-        FlowSdk::Api::FlowMeasureFilterParser parser;
+        ECFMP::Api::FlowMeasureFilterParser parser;
     };
 
     TEST_P(FlowMeasureFilterParserRouteFilterTest, ItParsesARouteFilter)
@@ -278,7 +277,7 @@ namespace FlowSdkTest::Api {
         auto filters = parser.Parse(nlohmann::json::array({filter}), events);
         EXPECT_NE(nullptr, filters);
 
-        auto castedFilters = static_cast<const FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
+        auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
@@ -313,18 +312,18 @@ namespace FlowSdkTest::Api {
         public:
         FlowMeasureFilterParserRangeToDestinationTest() : parser(std::make_shared<Log::MockLogger>())
         {
-            auto event1 = std::make_shared<FlowSdk::Mock::Event::EventMock>();
+            auto event1 = std::make_shared<ECFMP::Mock::Event::EventMock>();
             ON_CALL(*event1, Id).WillByDefault(testing::Return(100));
-            auto event2 = std::make_shared<FlowSdk::Mock::Event::EventMock>();
+            auto event2 = std::make_shared<ECFMP::Mock::Event::EventMock>();
             ON_CALL(*event2, Id).WillByDefault(testing::Return(150));
 
             events.Add(event1);
             events.Add(event2);
         }
 
-        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event> events;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
-        FlowSdk::Api::FlowMeasureFilterParser parser;
+        ECFMP::Api::FlowMeasureFilterParser parser;
     };
 
     TEST_P(FlowMeasureFilterParserRangeToDestinationTest, ItParsesARangeToDestinationFilter)
@@ -333,7 +332,7 @@ namespace FlowSdkTest::Api {
         auto filters = parser.Parse(nlohmann::json::array({filter}), events);
         EXPECT_NE(nullptr, filters);
 
-        auto castedFilters = static_cast<const FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
+        auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
         ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
         ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
@@ -365,18 +364,18 @@ namespace FlowSdkTest::Api {
         public:
         FlowMeasureFilterParserInvalidDataTest() : parser(std::make_shared<Log::MockLogger>())
         {
-            auto event1 = std::make_shared<FlowSdk::Mock::Event::EventMock>();
+            auto event1 = std::make_shared<ECFMP::Mock::Event::EventMock>();
             ON_CALL(*event1, Id()).WillByDefault(testing::Return(100));
-            auto event2 = std::make_shared<FlowSdk::Mock::Event::EventMock>();
+            auto event2 = std::make_shared<ECFMP::Mock::Event::EventMock>();
             ON_CALL(*event2, Id()).WillByDefault(testing::Return(150));
 
             events.Add(event1);
             events.Add(event2);
         }
 
-        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event> events;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
-        FlowSdk::Api::FlowMeasureFilterParser parser;
+        ECFMP::Api::FlowMeasureFilterParser parser;
     };
 
     TEST_P(FlowMeasureFilterParserInvalidDataTest, ItReturnsNullptrOnBadData)
@@ -446,4 +445,4 @@ namespace FlowSdkTest::Api {
                 return info.param.description;
             }
     );
-}// namespace FlowSdkTest::Api
+}// namespace ECFMPTest::Api

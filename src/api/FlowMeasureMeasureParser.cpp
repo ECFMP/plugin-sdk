@@ -1,9 +1,9 @@
 #include "FlowMeasureMeasureParser.h"
-#include "flow-sdk/Logger.h"
+#include "ECFMP/log/Logger.h"
 #include "flowmeasure/ConcreteMeasure.h"
 #include "nlohmann/json.hpp"
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
 
     FlowMeasureMeasureParser::FlowMeasureMeasureParser(std::shared_ptr<Log::Logger> logger) : logger(std::move(logger))
     {
@@ -104,4 +104,4 @@ namespace FlowSdk::Api {
 
         throw std::invalid_argument("Unknown measure type: " + type);
     }
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

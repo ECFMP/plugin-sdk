@@ -1,6 +1,6 @@
 #include "NullLogger.h"
 
-namespace FlowSdk::Log {
+namespace ECFMP::Log {
 
     void NullLogger::Debug(const std::string& message)
     {
@@ -21,4 +21,4 @@ namespace FlowSdk::Log {
     {
         // Noop
     }
-}// namespace FlowSdk::Log
+}// namespace ECFMP::Log

@@ -1,26 +1,26 @@
 #include "api/ConcreteApiElementCollection.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 
-namespace FlowSdkTest::Api {
+namespace ECFMPTest::Api {
     class ConcreteApiElementCollectionTest : public testing::Test
     {
         public:
         ConcreteApiElementCollectionTest()
-            : fir1(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            : fir1(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     1, "EGTT", "London"
             )),
-              fir2(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+              fir2(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                       2, "EGPX", "Scottish"
               )),
-              fir3(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+              fir3(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                       3, "EHAA", "Amsterdam"
               ))
         {}
 
-        std::shared_ptr<FlowSdk::FlightInformationRegion::FlightInformationRegion> fir1;
-        std::shared_ptr<FlowSdk::FlightInformationRegion::FlightInformationRegion> fir2;
-        std::shared_ptr<FlowSdk::FlightInformationRegion::FlightInformationRegion> fir3;
-        FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::FlightInformationRegion::FlightInformationRegion> firs;
+        std::shared_ptr<ECFMP::FlightInformationRegion::FlightInformationRegion> fir1;
+        std::shared_ptr<ECFMP::FlightInformationRegion::FlightInformationRegion> fir2;
+        std::shared_ptr<ECFMP::FlightInformationRegion::FlightInformationRegion> fir3;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::FlightInformationRegion::FlightInformationRegion> firs;
     };
 
     TEST_F(ConcreteApiElementCollectionTest, ItAddsElements)
@@ -37,7 +37,7 @@ namespace FlowSdkTest::Api {
 
     TEST_F(ConcreteApiElementCollectionTest, ItReplacesElements)
     {
-        const auto extra = std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+        const auto extra = std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                 3, "EHAA", "Amsterdam 2"
         );
 
@@ -88,4 +88,4 @@ namespace FlowSdkTest::Api {
 
         EXPECT_EQ(std::list<int>({1, 2, 3}), iteratedFirs);
     }
-}// namespace FlowSdkTest::Api
+}// namespace ECFMPTest::Api

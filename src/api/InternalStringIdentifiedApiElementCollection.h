@@ -1,7 +1,7 @@
 #pragma once
-#include "flow-sdk/ApiElementCollection.h"
+#include "ECFMP/api/ApiElementCollection.h"
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     /**
      * An internal version of the element collection, which allows
      * for adding items.
@@ -20,4 +20,4 @@ namespace FlowSdk::Api {
          */
         [[nodiscard]] virtual auto Count() const noexcept -> size_t = 0;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

@@ -1,10 +1,10 @@
 #include "ConcreteEventListeners.h"
-#include "flow-sdk/EventListener.h"
-#include "flow-sdk/EventListenerFilter.h"
-#include "flow-sdk/FlowMeasure.h"
+#include "ECFMP/EventListener.h"
+#include "ECFMP/EventListenerFilter.h"
+#include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "nlohmann/json_fwd.hpp"
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
 
     /**
      * A filter that always passes.
@@ -54,23 +54,21 @@ namespace FlowSdk::Plugin {
             listenerFilterPair.first->OnEvent(types...);
         }
     }
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin
 
 // Explicit class instantiations
 
 // For single-flow measure events
-template class FlowSdk::Plugin::ConcreteEventListeners<FlowSdk::FlowMeasure::FlowMeasure>;
-template class FlowSdk::Plugin::EventListenerFilter<FlowSdk::FlowMeasure::FlowMeasure>;
-template class FlowSdk::Plugin::EventListener<FlowSdk::FlowMeasure::FlowMeasure>;
+template class ECFMP::Plugin::ConcreteEventListeners<ECFMP::FlowMeasure::FlowMeasure>;
+template class ECFMP::Plugin::EventListenerFilter<ECFMP::FlowMeasure::FlowMeasure>;
+template class ECFMP::Plugin::EventListener<ECFMP::FlowMeasure::FlowMeasure>;
 
 // For double-flow measure events
-template class FlowSdk::Plugin::ConcreteEventListeners<
-        FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
-template class FlowSdk::Plugin::EventListenerFilter<
-        FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
-template class FlowSdk::Plugin::EventListener<FlowSdk::FlowMeasure::FlowMeasure, FlowSdk::FlowMeasure::FlowMeasure>;
+template class ECFMP::Plugin::ConcreteEventListeners<ECFMP::FlowMeasure::FlowMeasure, ECFMP::FlowMeasure::FlowMeasure>;
+template class ECFMP::Plugin::EventListenerFilter<ECFMP::FlowMeasure::FlowMeasure, ECFMP::FlowMeasure::FlowMeasure>;
+template class ECFMP::Plugin::EventListener<ECFMP::FlowMeasure::FlowMeasure, ECFMP::FlowMeasure::FlowMeasure>;
 
 // For downloading API data
-template class FlowSdk::Plugin::ConcreteEventListeners<const nlohmann::json&>;
-template class FlowSdk::Plugin::EventListenerFilter<const nlohmann::json&>;
-template class FlowSdk::Plugin::EventListener<const nlohmann::json&>;
+template class ECFMP::Plugin::ConcreteEventListeners<const nlohmann::json&>;
+template class ECFMP::Plugin::EventListenerFilter<const nlohmann::json&>;
+template class ECFMP::Plugin::EventListener<const nlohmann::json&>;

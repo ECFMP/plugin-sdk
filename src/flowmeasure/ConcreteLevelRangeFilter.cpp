@@ -1,6 +1,6 @@
 #include "ConcreteLevelRangeFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     ConcreteLevelRangeFilter::ConcreteLevelRangeFilter(LevelRangeFilterType type, int filterLevel)
         : type(type), filterLevel(filterLevel), filterLevelAsAltitude(filterLevel * 100)
     {}
@@ -30,4 +30,4 @@ namespace FlowSdk::FlowMeasure {
         return type == LevelRangeFilterType::AtOrBelow ? altitude <= filterLevelAsAltitude
                                                        : altitude >= filterLevelAsAltitude;
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

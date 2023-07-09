@@ -1,6 +1,6 @@
 #include "ConcreteMultipleLevelFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     ConcreteMultipleLevelFilter::ConcreteMultipleLevelFilter(std::vector<int> levels) : levels(std::move(levels))
     {
         for (const auto& level: this->levels) {
@@ -27,4 +27,4 @@ namespace FlowSdk::FlowMeasure {
     {
         return std::find(this->altitudes.begin(), this->altitudes.end(), altitude) != this->altitudes.end();
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

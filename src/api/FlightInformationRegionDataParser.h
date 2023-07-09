@@ -3,13 +3,13 @@
 #include "InternalElementCollectionTypes.h"
 #include "nlohmann/json_fwd.hpp"
 
-namespace FlowSdk {
+namespace ECFMP {
     namespace Log {
         class Logger;
     }// namespace Log
-}// namespace FlowSdk
+}// namespace ECFMP
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     /**
      * Parses and updates flight information regions.
      */
@@ -31,4 +31,4 @@ namespace FlowSdk::Api {
         // Stores the FIR objects
         std::shared_ptr<InternalFlightInformationRegionCollection> firs;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

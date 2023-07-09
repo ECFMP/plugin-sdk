@@ -1,8 +1,8 @@
 #pragma once
+#include "ECFMP/api/ApiElement.h"
 #include "InternalStringIdentifiedApiElementCollection.h"
-#include "flow-sdk/ApiElement.h"
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     template<typename T>
     class ConcreteStringIdentifiedApiElementCollection : public InternalStringIdentifiedApiElementCollection<T>
     {
@@ -27,4 +27,4 @@ namespace FlowSdk::Api {
         // Static assertion to make sure that everything is do-able
         static_assert(std::is_base_of<Api::StringIdentifiableApiElement, T>(), "Element must implement API element");
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

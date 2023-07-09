@@ -1,4 +1,9 @@
 #include "api/FlowMeasureDataParser.h"
+#include "ECFMP/event/Event.h"
+#include "ECFMP/flowmeasure/FlowMeasure.h"
+#include "ECFMP/flowmeasure/Measure.h"
+#include "ECFMP/flowmeasure/MultipleLevelFilter.h"
+#include "ECFMP/flowmeasure/RangeToDestinationFilter.h"
 #include "api/ConcreteApiElementCollection.h"
 #include "api/ConcreteStringIdentifiedApiElementCollection.h"
 #include "api/FlowMeasureFilterParserInterface.h"
@@ -6,11 +11,6 @@
 #include "date/ParseDateStrings.h"
 #include "event/ConcreteEvent.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
-#include "flow-sdk/Event.h"
-#include "flow-sdk/FlowMeasure.h"
-#include "flow-sdk/Measure.h"
-#include "flow-sdk/MultipleLevelFilter.h"
-#include "flow-sdk/RangeToDestinationFilter.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "flowmeasure/ConcreteMeasure.h"
@@ -20,7 +20,7 @@
 #include <cmath>
 #include <gtest/gtest.h>
 
-namespace FlowSdkTest::Api {
+namespace ECFMPTest::Api {
 
     // Declared outside the test for constantness
     const std::chrono::system_clock::time_point now =
@@ -30,20 +30,20 @@ namespace FlowSdkTest::Api {
     const std::chrono::system_clock::time_point minusOneHour = now - std::chrono::hours(1);
     const std::chrono::system_clock::time_point minusTwoHours = now - std::chrono::hours(2);
 
-    class MockFlowMeasureFilterParser : public FlowSdk::Api::FlowMeasureFilterParserInterface
+    class MockFlowMeasureFilterParser : public ECFMP::Api::FlowMeasureFilterParserInterface
     {
         public:
         MOCK_METHOD(
-                std::unique_ptr<FlowSdk::FlowMeasure::FlowMeasureFilters>, Parse,
-                (const nlohmann::json& data, const FlowSdk::Api::InternalEventCollection& events), (const, override)
+                std::unique_ptr<ECFMP::FlowMeasure::FlowMeasureFilters>, Parse,
+                (const nlohmann::json& data, const ECFMP::Api::InternalEventCollection& events), (const, override)
         );
     };
 
-    class MockFlowMeasureMeasureParser : public FlowSdk::Api::FlowMeasureMeasureParserInterface
+    class MockFlowMeasureMeasureParser : public ECFMP::Api::FlowMeasureMeasureParserInterface
     {
         public:
         MOCK_METHOD(
-                std::unique_ptr<FlowSdk::FlowMeasure::Measure>, Parse, (const nlohmann::json& data), (const, override)
+                std::unique_ptr<ECFMP::FlowMeasure::Measure>, Parse, (const nlohmann::json& data), (const, override)
         );
     };
 
@@ -57,7 +57,7 @@ namespace FlowSdkTest::Api {
         std::chrono::system_clock::time_point expectedStart;
         std::chrono::system_clock::time_point expectedEnd;
         std::chrono::system_clock::time_point expectedWithdrawnAt;
-        FlowSdk::FlowMeasure::MeasureStatus expectedStatus;
+        ECFMP::FlowMeasure::MeasureStatus expectedStatus;
         std::list<int> expectedNotifiedFirIds;
     };
 
@@ -73,33 +73,33 @@ namespace FlowSdkTest::Api {
             measureParserRaw = measureParser.get();
 
             flowMeasures = std::make_shared<
-                    FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<FlowSdk::FlowMeasure::FlowMeasure>>();
-            events = std::make_shared<FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event>>();
-            firs = std::make_shared<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
-                    FlowSdk::FlightInformationRegion::FlightInformationRegion>>();
-            parser = std::make_unique<FlowSdk::Api::FlowMeasureDataParser>(
+                    ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<ECFMP::FlowMeasure::FlowMeasure>>();
+            events = std::make_shared<ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event>>();
+            firs = std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
+                    ECFMP::FlightInformationRegion::FlightInformationRegion>>();
+            parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
                     std::move(filterParser), std::move(measureParser), flowMeasures, events, firs,
                     std::make_shared<Log::MockLogger>()
             );
 
-            firs->Add(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     1, "EGTT", "London"
             ));
-            firs->Add(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     2, "EGPX", "Scottish"
             ));
 
-            events->Add(std::make_shared<FlowSdk::Event::ConcreteEvent>(
+            events->Add(std::make_shared<ECFMP::Event::ConcreteEvent>(
                     1, "Test event", now, plusOneHour, firs->Get(1), "abc"
             ));
         }
 
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
-        std::shared_ptr<FlowSdk::Api::InternalFlowMeasureCollection> flowMeasures;
-        std::shared_ptr<FlowSdk::Api::InternalEventCollection> events;
-        std::shared_ptr<FlowSdk::Api::InternalFlightInformationRegionCollection> firs;
-        std::unique_ptr<FlowSdk::Api::FlowMeasureDataParser> parser;
+        std::shared_ptr<ECFMP::Api::InternalFlowMeasureCollection> flowMeasures;
+        std::shared_ptr<ECFMP::Api::InternalEventCollection> events;
+        std::shared_ptr<ECFMP::Api::InternalFlightInformationRegionCollection> firs;
+        std::unique_ptr<ECFMP::Api::FlowMeasureDataParser> parser;
     };
 
     TEST_P(FlowMeasureDataParserTest, ItParsesFlowMeasures)
@@ -109,21 +109,21 @@ namespace FlowSdkTest::Api {
         // Mock the measure and filter parser returns
         ON_CALL(*filterParserRaw, Parse(testCase.data.at("filters"), testing::_))
                 .WillByDefault(testing::Invoke([&](const nlohmann::json& data,
-                                                   const FlowSdk::Api::InternalEventCollection& events) {
-                    return std::make_unique<FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters>(
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::RangeToDestinationFilter>>()
+                                                   const ECFMP::Api::InternalEventCollection& events) {
+                    return std::make_unique<ECFMP::FlowMeasure::ConcreteFlowMeasureFilters>(
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::AirportFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::EventFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>()
                     );
                 }));
 
         ON_CALL(*measureParserRaw, Parse(testCase.data.at("measure")))
                 .WillByDefault(testing::Invoke([&](const nlohmann::json& data) {
-                    return std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(
-                            FlowSdk::FlowMeasure::MeasureType::GroundStop
+                    return std::make_unique<ECFMP::FlowMeasure::ConcreteMeasure>(
+                            ECFMP::FlowMeasure::MeasureType::GroundStop
                     );
                 }));
 
@@ -137,10 +137,10 @@ namespace FlowSdkTest::Api {
         EXPECT_EQ(testCase.expectedEnd, flowMeasures->Get(testCase.expectedId)->EndTime());
         EXPECT_EQ(testCase.expectedStatus, flowMeasures->Get(testCase.expectedId)->Status());
         EXPECT_EQ(
-                FlowSdk::FlowMeasure::MeasureType::GroundStop, flowMeasures->Get(testCase.expectedId)->Measure().Type()
+                ECFMP::FlowMeasure::MeasureType::GroundStop, flowMeasures->Get(testCase.expectedId)->Measure().Type()
         );
 
-        if (flowMeasures->Get(testCase.expectedId)->Status() == FlowSdk::FlowMeasure::MeasureStatus::Withdrawn) {
+        if (flowMeasures->Get(testCase.expectedId)->Status() == ECFMP::FlowMeasure::MeasureStatus::Withdrawn) {
             EXPECT_EQ(testCase.expectedWithdrawnAt, flowMeasures->Get(testCase.expectedId)->WithdrawnAt());
         }
 
@@ -148,7 +148,7 @@ namespace FlowSdkTest::Api {
         auto notifiedFirIds = std::list<int>();
         std::transform(
                 notifiedFirs.begin(), notifiedFirs.end(), std::back_inserter(notifiedFirIds),
-                [](const std::shared_ptr<const FlowSdk::FlightInformationRegion::FlightInformationRegion>& fir) {
+                [](const std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>& fir) {
                     return fir->Id();
                 }
         );
@@ -166,16 +166,16 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
                                      {{"foo", "baz"}}},// Filter is mocked and handled elsewhere, so placeholder
                                     {"notified_flight_information_regions", nlohmann::json::array({1, 2})}},
                             1, 1, "EGTT-01A", "reason 1", minusOneHour, plusOneHour, now,
-                            FlowSdk::FlowMeasure::MeasureStatus::Withdrawn, std::list<int>({1, 2})},
+                            ECFMP::FlowMeasure::MeasureStatus::Withdrawn, std::list<int>({1, 2})},
                     FlowMeasureDataParserTestCase{
                             "withdrawn_measure_that_is_notified",
                             nlohmann::json{
@@ -183,16 +183,16 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusTwoHours)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusTwoHours)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
                                      {{"foo", "baz"}}},// Filter is mocked and handled elsewhere, so placeholder
                                     {"notified_flight_information_regions", nlohmann::json::array({1, 2})}},
                             1, 1, "EGTT-01A", "reason 1", plusOneHour, plusTwoHours, now,
-                            FlowSdk::FlowMeasure::MeasureStatus::Withdrawn, std::list<int>({1, 2})},
+                            ECFMP::FlowMeasure::MeasureStatus::Withdrawn, std::list<int>({1, 2})},
                     FlowMeasureDataParserTestCase{
                             "withdrawn_measure_that_is_expired",
                             nlohmann::json{
@@ -200,16 +200,16 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusTwoHours)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusTwoHours)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
                                      {{"foo", "baz"}}},// Filter is mocked and handled elsewhere, so placeholder
                                     {"notified_flight_information_regions", nlohmann::json::array({1, 2})}},
                             1, 1, "EGTT-01A", "reason 1", minusTwoHours, minusOneHour, now,
-                            FlowSdk::FlowMeasure::MeasureStatus::Withdrawn, std::list<int>({1, 2})},
+                            ECFMP::FlowMeasure::MeasureStatus::Withdrawn, std::list<int>({1, 2})},
                     FlowMeasureDataParserTestCase{
                             "active_measure",
                             nlohmann::json{
@@ -217,8 +217,8 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
                                     {"withdrawn_at", nlohmann::json::value_t::null},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
@@ -226,7 +226,7 @@ namespace FlowSdkTest::Api {
                                      {{"foo", "baz"}}},// Filter is mocked and handled elsewhere, so placeholder
                                     {"notified_flight_information_regions", nlohmann::json::array({1, 2})}},
                             1, 1, "EGTT-01A", "reason 1", minusOneHour, plusOneHour, now,
-                            FlowSdk::FlowMeasure::MeasureStatus::Active, std::list<int>({1, 2})},
+                            ECFMP::FlowMeasure::MeasureStatus::Active, std::list<int>({1, 2})},
                     FlowMeasureDataParserTestCase{
                             "notified_measure",
                             nlohmann::json{
@@ -234,8 +234,8 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusTwoHours)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusTwoHours)},
                                     {"withdrawn_at", nlohmann::json::value_t::null},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
@@ -243,7 +243,7 @@ namespace FlowSdkTest::Api {
                                      {{"foo", "baz"}}},// Filter is mocked and handled elsewhere, so placeholder
                                     {"notified_flight_information_regions", nlohmann::json::array({1, 2})}},
                             1, 1, "EGTT-01A", "reason 1", plusOneHour, plusTwoHours, now,
-                            FlowSdk::FlowMeasure::MeasureStatus::Notified, std::list<int>({1, 2})},
+                            ECFMP::FlowMeasure::MeasureStatus::Notified, std::list<int>({1, 2})},
                     FlowMeasureDataParserTestCase{
                             "expired_measure",
                             nlohmann::json{
@@ -251,8 +251,8 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusTwoHours)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusTwoHours)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
                                     {"withdrawn_at", nlohmann::json::value_t::null},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
@@ -260,7 +260,7 @@ namespace FlowSdkTest::Api {
                                      {{"foo", "baz"}}},// Filter is mocked and handled elsewhere, so placeholder
                                     {"notified_flight_information_regions", nlohmann::json::array({1, 2})}},
                             1, 1, "EGTT-01A", "reason 1", minusTwoHours, minusOneHour, now,
-                            FlowSdk::FlowMeasure::MeasureStatus::Expired, std::list<int>({1, 2})}
+                            ECFMP::FlowMeasure::MeasureStatus::Expired, std::list<int>({1, 2})}
             ),
             [](const testing::TestParamInfo<FlowMeasureDataParserTestCase>& info) {
                 return info.param.description;
@@ -284,33 +284,33 @@ namespace FlowSdkTest::Api {
             measureParserRaw = measureParser.get();
 
             flowMeasures = std::make_shared<
-                    FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<FlowSdk::FlowMeasure::FlowMeasure>>();
-            events = std::make_shared<FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event>>();
-            firs = std::make_shared<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
-                    FlowSdk::FlightInformationRegion::FlightInformationRegion>>();
-            parser = std::make_unique<FlowSdk::Api::FlowMeasureDataParser>(
+                    ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<ECFMP::FlowMeasure::FlowMeasure>>();
+            events = std::make_shared<ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event>>();
+            firs = std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
+                    ECFMP::FlightInformationRegion::FlightInformationRegion>>();
+            parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
                     std::move(filterParser), std::move(measureParser), flowMeasures, events, firs,
                     std::make_shared<Log::MockLogger>()
             );
 
-            firs->Add(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     1, "EGTT", "London"
             ));
-            firs->Add(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     2, "EGPX", "Scottish"
             ));
 
-            events->Add(std::make_shared<FlowSdk::Event::ConcreteEvent>(
+            events->Add(std::make_shared<ECFMP::Event::ConcreteEvent>(
                     1, "Test event", now, plusOneHour, firs->Get(1), "abc"
             ));
         }
 
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
-        std::shared_ptr<FlowSdk::Api::InternalFlowMeasureCollection> flowMeasures;
-        std::shared_ptr<FlowSdk::Api::InternalEventCollection> events;
-        std::shared_ptr<FlowSdk::Api::InternalFlightInformationRegionCollection> firs;
-        std::unique_ptr<FlowSdk::Api::FlowMeasureDataParser> parser;
+        std::shared_ptr<ECFMP::Api::InternalFlowMeasureCollection> flowMeasures;
+        std::shared_ptr<ECFMP::Api::InternalEventCollection> events;
+        std::shared_ptr<ECFMP::Api::InternalFlightInformationRegionCollection> firs;
+        std::unique_ptr<ECFMP::Api::FlowMeasureDataParser> parser;
     };
 
     TEST_P(FlowMeasureDataParserBadDataTest, ItHandlesBadData)
@@ -320,20 +320,19 @@ namespace FlowSdkTest::Api {
         // Mock the measure and filter parser returns
         ON_CALL(*filterParserRaw, Parse(testing::_, testing::_))
                 .WillByDefault(testing::Invoke([&](const nlohmann::json& data,
-                                                   const FlowSdk::Api::InternalEventCollection& events) {
-                    return std::make_unique<FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters>(
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>(),
-                            std::list<std::shared_ptr<FlowSdk::FlowMeasure::RangeToDestinationFilter>>()
+                                                   const ECFMP::Api::InternalEventCollection& events) {
+                    return std::make_unique<ECFMP::FlowMeasure::ConcreteFlowMeasureFilters>(
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::AirportFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::EventFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>(),
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>()
                     );
                 }));
 
         ON_CALL(*measureParserRaw, Parse(testing::_)).WillByDefault(testing::Invoke([&](const nlohmann::json& data) {
-            return std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(FlowSdk::FlowMeasure::MeasureType::GroundStop
-            );
+            return std::make_unique<ECFMP::FlowMeasure::ConcreteMeasure>(ECFMP::FlowMeasure::MeasureType::GroundStop);
         }));
 
         // If the data is an object, wrap it in a flow_measures array - otherwise we're testing bad data type.
@@ -355,9 +354,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -370,9 +369,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -384,9 +383,9 @@ namespace FlowSdkTest::Api {
                                     {"id", 1},
                                     {"event_id", 1},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -399,9 +398,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", 123},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -414,9 +413,9 @@ namespace FlowSdkTest::Api {
                                     {"id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -429,9 +428,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", "foo"},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -445,9 +444,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 999},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -460,9 +459,9 @@ namespace FlowSdkTest::Api {
                                     {"id", 1},
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -475,9 +474,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", 123},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -492,8 +491,8 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -508,8 +507,8 @@ namespace FlowSdkTest::Api {
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
                                     {"starttime", 123},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -524,8 +523,8 @@ namespace FlowSdkTest::Api {
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
                                     {"starttime", "foo"},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -539,8 +538,8 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -554,9 +553,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
                                     {"endtime", 123},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -571,9 +570,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
                                     {"endtime", "foo"},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -587,8 +586,8 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -602,8 +601,8 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
                                     {"withdrawn_at", 123},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
@@ -618,8 +617,8 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
                                     {"withdrawn_at", "foo"},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
@@ -634,9 +633,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"filters",
                                      {{"foo", "baz"}}},// Filter is mocked and handled elsewhere, so placeholder
                                     {"notified_flight_information_regions", nlohmann::json::array({1, 2})}}},
@@ -647,9 +646,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"notified_flight_information_regions", nlohmann::json::array({1, 2})}}},
@@ -661,9 +660,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -676,9 +675,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -692,9 +691,9 @@ namespace FlowSdkTest::Api {
                                     {"event_id", 1},
                                     {"ident", "EGTT-01A"},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -707,9 +706,9 @@ namespace FlowSdkTest::Api {
                                     {"id", 1},
                                     {"event_id", 1},
                                     {"reason", "reason 1"},
-                                    {"starttime", FlowSdk::Date::DateStringFromTimePoint(minusOneHour)},
-                                    {"endtime", FlowSdk::Date::DateStringFromTimePoint(plusOneHour)},
-                                    {"withdrawn_at", FlowSdk::Date::DateStringFromTimePoint(now)},
+                                    {"starttime", ECFMP::Date::DateStringFromTimePoint(minusOneHour)},
+                                    {"endtime", ECFMP::Date::DateStringFromTimePoint(plusOneHour)},
+                                    {"withdrawn_at", ECFMP::Date::DateStringFromTimePoint(now)},
                                     {"measure",
                                      {{"foo", "bar"}}},// Measure is mocked and handled elsewhere, so placeholder
                                     {"filters",
@@ -721,4 +720,4 @@ namespace FlowSdkTest::Api {
                 return info.param.description;
             }
     );
-}// namespace FlowSdkTest::Api
+}// namespace ECFMPTest::Api

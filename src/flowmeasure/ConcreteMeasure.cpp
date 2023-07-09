@@ -1,6 +1,6 @@
 #include "ConcreteMeasure.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     ConcreteMeasure::ConcreteMeasure(MeasureType type) : type(type), valueType(MeasureValueType::None)
     {}
@@ -49,4 +49,4 @@ namespace FlowSdk::FlowMeasure {
             throw IllegalFlowMeasureValueException();
         }
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

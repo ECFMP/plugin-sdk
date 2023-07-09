@@ -1,7 +1,7 @@
 #pragma once
-#include "flow-sdk/Measure.h"
+#include "ECFMP/flowmeasure/Measure.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     enum class MeasureValueType
     {
@@ -43,4 +43,4 @@ namespace FlowSdk::FlowMeasure {
         std::set<std::string> setValue;
     };
 
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

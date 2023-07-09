@@ -1,8 +1,8 @@
 #include "ConcreteFlowMeasureFilters.h"
-#include "flow-sdk/AirportFilter.h"
-#include "flow-sdk/FlightInformationRegion.h"
+#include "ECFMP/flightinformationregion/FlightInformationRegion.h"
+#include "ECFMP/flowmeasure/AirportFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     ConcreteFlowMeasureFilters::ConcreteFlowMeasureFilters(
             std::list<std::shared_ptr<AirportFilter>> airportFilters,
@@ -167,4 +167,4 @@ namespace FlowSdk::FlowMeasure {
     {
         return rangeToDestinationFilters;
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

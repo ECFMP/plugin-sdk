@@ -1,12 +1,12 @@
 #include "api/ApiDataDownloader.h"
-#include "flow-sdk/HttpClient.h"
+#include "ECFMP/http/HttpClient.h"
 #include "mock/MockEventListener.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
 #include "plugin/ConcreteEventListeners.h"
 
-namespace FlowSdkTest::Api {
+namespace ECFMPTest::Api {
     class ApiDataDownloaderTest : public testing::Test
     {
         public:
@@ -16,12 +16,12 @@ namespace FlowSdkTest::Api {
               listener(std::make_unique<testing::NiceMock<Plugin::MockEventListener<const nlohmann::json&>>>())
         {}
 
-        [[nodiscard]] auto MakeDownloader() -> FlowSdk::Api::ApiDataDownloader
+        [[nodiscard]] auto MakeDownloader() -> ECFMP::Api::ApiDataDownloader
         {
-            auto listeners = std::make_unique<FlowSdk::Plugin::ConcreteEventListeners<const nlohmann::json&>>();
+            auto listeners = std::make_unique<ECFMP::Plugin::ConcreteEventListeners<const nlohmann::json&>>();
             listeners->Add(listener);
 
-            return FlowSdk::Api::ApiDataDownloader(std::move(httpClient), std::move(listeners), logger);
+            return ECFMP::Api::ApiDataDownloader(std::move(httpClient), std::move(listeners), logger);
         }
 
         const std::string API_URL = "https://ecfmp.vatsim.net/api/v1/plugin?deleted=1";
@@ -35,7 +35,7 @@ namespace FlowSdkTest::Api {
     {
         EXPECT_CALL(*httpClient.get(), Get(API_URL))
                 .Times(1)
-                .WillOnce(testing::Return(FlowSdk::Http::HttpResponse{400L, "abc"}));
+                .WillOnce(testing::Return(ECFMP::Http::HttpResponse{400L, "abc"}));
 
         EXPECT_CALL(*logger, Error).Times(1);
 
@@ -48,7 +48,7 @@ namespace FlowSdkTest::Api {
     {
         EXPECT_CALL(*httpClient.get(), Get(API_URL))
                 .Times(1)
-                .WillOnce(testing::Return(FlowSdk::Http::HttpResponse{200L, "{]"}));
+                .WillOnce(testing::Return(ECFMP::Http::HttpResponse{200L, "{]"}));
 
         EXPECT_CALL(*logger, Error).Times(1);
 
@@ -61,7 +61,7 @@ namespace FlowSdkTest::Api {
     {
         EXPECT_CALL(*httpClient.get(), Get(API_URL))
                 .Times(1)
-                .WillOnce(testing::Return(FlowSdk::Http::HttpResponse{200L, "[]"}));
+                .WillOnce(testing::Return(ECFMP::Http::HttpResponse{200L, "[]"}));
 
         EXPECT_CALL(*logger, Error).Times(1);
 
@@ -76,7 +76,7 @@ namespace FlowSdkTest::Api {
 
         EXPECT_CALL(*httpClient.get(), Get(API_URL))
                 .Times(1)
-                .WillOnce(testing::Return(FlowSdk::Http::HttpResponse{200L, data.dump()}));
+                .WillOnce(testing::Return(ECFMP::Http::HttpResponse{200L, data.dump()}));
 
         EXPECT_CALL(*logger, Error).Times(0);
 
@@ -84,4 +84,4 @@ namespace FlowSdkTest::Api {
 
         MakeDownloader().DownloadData();
     }
-}// namespace FlowSdkTest::Api
+}// namespace ECFMPTest::Api

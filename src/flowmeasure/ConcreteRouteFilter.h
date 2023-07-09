@@ -1,7 +1,7 @@
 #pragma once
-#include "flow-sdk/RouteFilter.h"
+#include "ECFMP/flowmeasure/RouteFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     class ConcreteRouteFilter : public RouteFilter
     {
         public:
@@ -12,4 +12,4 @@ namespace FlowSdk::FlowMeasure {
         // The route strings
         std::set<std::string> routes;
     };
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

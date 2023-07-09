@@ -1,16 +1,16 @@
 #pragma once
-#include "../flow-sdk/EventFilter.h"
+#include "ECFMP/flowmeasure/EventFilter.h"
 #include <gmock/gmock.h>
 
-namespace FlowSdk::Mock::FlowMeasure {
+namespace ECFMP::Mock::FlowMeasure {
 
-    class EventFilterMock : public FlowSdk::FlowMeasure::EventFilter
+    class EventFilterMock : public ECFMP::FlowMeasure::EventFilter
     {
         public:
-        MOCK_METHOD(bool, ApplicableToEvent, (const FlowSdk::Event::Event&), (const, noexcept, override));
-        MOCK_METHOD(const FlowSdk::Event::Event&, Event, (), (const, noexcept, override));
-        MOCK_METHOD(FlowSdk::FlowMeasure::EventParticipation, Participation, (), (const, noexcept, override));
+        MOCK_METHOD(bool, ApplicableToEvent, (const ECFMP::Event::Event&), (const, noexcept, override));
+        MOCK_METHOD(const ECFMP::Event::Event&, Event, (), (const, noexcept, override));
+        MOCK_METHOD(ECFMP::FlowMeasure::EventParticipation, Participation, (), (const, noexcept, override));
         MOCK_METHOD(bool, IsParticipating, (), (const, noexcept, override));
     };
 
-}// namespace FlowSdk::Mock::FlowMeasure
+}// namespace ECFMP::Mock::FlowMeasure

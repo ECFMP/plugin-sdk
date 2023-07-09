@@ -1,21 +1,22 @@
 #include "ConcreteEventFilter.h"
-#include "flow-sdk/Event.h"
+#include "ECFMP/event/Event.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
-    ConcreteEventFilter::ConcreteEventFilter(const std::shared_ptr<const FlowSdk::Event::Event>& event,
-                                             EventParticipation participatingIn)
+    ConcreteEventFilter::ConcreteEventFilter(
+            const std::shared_ptr<const ECFMP::Event::Event>& event, EventParticipation participatingIn
+    )
         : event(event), participatingIn(participatingIn)
     {
         assert(event && "Event not set in event filter");
     }
 
-    auto ConcreteEventFilter::ApplicableToEvent(const FlowSdk::Event::Event& applicableTo) const noexcept -> bool
+    auto ConcreteEventFilter::ApplicableToEvent(const ECFMP::Event::Event& applicableTo) const noexcept -> bool
     {
         return applicableTo == *this->event;
     }
 
-    auto ConcreteEventFilter::Event() const noexcept -> const FlowSdk::Event::Event&
+    auto ConcreteEventFilter::Event() const noexcept -> const ECFMP::Event::Event&
     {
         return *this->event;
     }
@@ -29,4 +30,4 @@ namespace FlowSdk::FlowMeasure {
     {
         return Participation() == EventParticipation::Participating;
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

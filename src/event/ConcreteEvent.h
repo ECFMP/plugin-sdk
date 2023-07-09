@@ -1,11 +1,11 @@
 #pragma once
-#include "flow-sdk/Event.h"
+#include "ECFMP/event/Event.h"
 
-namespace FlowSdk::FlightInformationRegion {
+namespace ECFMP::FlightInformationRegion {
     class FlightInformationRegion;
-}// namespace FlowSdk::FlightInformationRegion
+}// namespace ECFMP::FlightInformationRegion
 
-namespace FlowSdk::Event {
+namespace ECFMP::Event {
     class ConcreteEvent : public Event::Event
     {
         public:
@@ -41,4 +41,4 @@ namespace FlowSdk::Event {
         // Code for the vatcan code
         std::string vatcanCode;
     };
-}// namespace FlowSdk::Event
+}// namespace ECFMP::Event

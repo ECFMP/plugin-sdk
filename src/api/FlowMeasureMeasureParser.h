@@ -1,13 +1,13 @@
 #pragma once
+#include "ECFMP/flowmeasure/Measure.h"
 #include "FlowMeasureMeasureParserInterface.h"
-#include "flow-sdk/Measure.h"
 #include "nlohmann/json_fwd.hpp"
 
-namespace FlowSdk::Log {
+namespace ECFMP::Log {
     class Logger;
-}// namespace FlowSdk::Log
+}// namespace ECFMP::Log
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     class FlowMeasureMeasureParser : public FlowMeasureMeasureParserInterface
     {
         public:
@@ -20,4 +20,4 @@ namespace FlowSdk::Api {
         // Logger
         std::shared_ptr<Log::Logger> logger;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

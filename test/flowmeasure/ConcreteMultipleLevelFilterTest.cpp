@@ -1,6 +1,6 @@
 #include "flowmeasure/ConcreteMultipleLevelFilter.h"
 
-namespace FlowSdkTest::FlowMeasure {
+namespace ECFMPTest::FlowMeasure {
 
     class ConcreteMultipleFlowLevelFilterTest : public testing::Test
     {
@@ -8,7 +8,7 @@ namespace FlowSdkTest::FlowMeasure {
         ConcreteMultipleFlowLevelFilterTest() : filter(std::vector<int>{340, 360, 390})
         {}
 
-        FlowSdk::FlowMeasure::ConcreteMultipleLevelFilter filter;
+        ECFMP::FlowMeasure::ConcreteMultipleLevelFilter filter;
     };
 
     TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsLevels)
@@ -52,4 +52,4 @@ namespace FlowSdkTest::FlowMeasure {
         ASSERT_FALSE(filter.ApplicableToAltitude(37000));
         ASSERT_FALSE(filter.ApplicableToAltitude(38000));
     }
-}// namespace FlowSdkTest::FlowMeasure
+}// namespace ECFMPTest::FlowMeasure

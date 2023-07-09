@@ -1,7 +1,7 @@
 #pragma once
-#include "flow-sdk/RangeToDestinationFilter.h"
+#include "ECFMP/flowmeasure/RangeToDestinationFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     class ConcreteRangeToDestinationFilter : public RangeToDestinationFilter
     {
@@ -13,4 +13,4 @@ namespace FlowSdk::FlowMeasure {
         // The range to destination.
         int range;
     };
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

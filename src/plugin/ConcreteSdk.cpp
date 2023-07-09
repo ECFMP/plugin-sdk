@@ -1,7 +1,7 @@
 #include "ConcreteSdk.h"
 #include "eventbus/InternalEventBus.h"
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
     ConcreteSdk::ConcreteSdk(std::shared_ptr<void> apiScheduler, std::shared_ptr<EventBus::InternalEventBus> eventBus)
         : apiScheduler(std::move(apiScheduler)), eventBus(std::move(eventBus))
     {
@@ -24,4 +24,4 @@ namespace FlowSdk::Plugin {
     {
         eventBus->ProcessPendingEvents();
     }
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

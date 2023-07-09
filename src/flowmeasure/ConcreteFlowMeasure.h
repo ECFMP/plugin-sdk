@@ -1,11 +1,11 @@
 #pragma once
-#include "flow-sdk/FlowMeasure.h"
+#include "ECFMP/flowmeasure/FlowMeasure.h"
 
-namespace FlowSdk::FlightInformationRegion {
+namespace ECFMP::FlightInformationRegion {
     class FlightInformationRegion;
-}// namespace FlowSdk::FlightInformationRegion
+}// namespace ECFMP::FlightInformationRegion
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     class ConcreteFlowMeasure : public FlowMeasure
     {
@@ -73,4 +73,4 @@ namespace FlowSdk::FlowMeasure {
         std::unique_ptr<FlowMeasureFilters> filters;
     };
 
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

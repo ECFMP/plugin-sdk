@@ -1,16 +1,16 @@
 #pragma once
-#include "flow-sdk/Sdk.h"
+#include "ECFMP/Sdk.h"
 
-namespace FlowSdk {
+namespace ECFMP {
     namespace Api {
         class ApiDataScheduler;
     }
     namespace EventBus {
         class InternalEventBus;
     }
-}// namespace FlowSdk
+}// namespace ECFMP
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
 
     class ConcreteSdk : public Sdk
     {
@@ -31,4 +31,4 @@ namespace FlowSdk::Plugin {
         // The event bus for the SDK, which can be used to subscribe to events.
         std::shared_ptr<EventBus::InternalEventBus> eventBus;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

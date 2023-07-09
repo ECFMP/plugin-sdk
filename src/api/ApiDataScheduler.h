@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
 
     class ApiDataDownloader;
 
@@ -18,4 +18,4 @@ namespace FlowSdk::Api {
         std::unique_ptr<Impl> impl;
     };
 
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

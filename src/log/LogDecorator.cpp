@@ -1,6 +1,6 @@
 #include "LogDecorator.h"
 
-namespace FlowSdk ::Log {
+namespace ECFMP ::Log {
 
     /**
      * Non-class method for message decoration.
@@ -36,4 +36,4 @@ namespace FlowSdk ::Log {
     {
         userLogger->Error(DecorateMessage(message));
     }
-}// namespace FlowSdk::Log
+}// namespace ECFMP::Log
