@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     enum class AirportFilterType
     {
@@ -30,4 +30,4 @@ namespace FlowSdk::FlowMeasure {
          */
         [[nodiscard]] virtual auto Type() const noexcept -> AirportFilterType = 0;
     };
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

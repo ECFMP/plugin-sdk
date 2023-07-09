@@ -8,87 +8,81 @@
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "flowmeasure/ConcreteMeasure.h"
 
-namespace FlowSdkTest::FlowMeasure {
+namespace ECFMPTest::FlowMeasure {
     class ConcreteFlowMeasureTest : public testing::Test
     {
         public:
         ConcreteFlowMeasureTest()
-            : fir1(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            : fir1(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     1, "EGTT", "London"
             )),
-              fir2(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+              fir2(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                       2, "EGPX", "Scottish"
               )),
               startTime(std::chrono::system_clock::now() - std::chrono::minutes(15)),
               endTime(std::chrono::system_clock::now() + std::chrono::minutes(15)),
               withdrawnTime(std::chrono::system_clock::now()),
-              event(std::make_shared<FlowSdk::Event::ConcreteEvent>(
+              event(std::make_shared<ECFMP::Event::ConcreteEvent>(
                       1, "Test", std::chrono::system_clock::now(), std::chrono::system_clock::now(),
-                      std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+                      std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                               1, "EGTT", "London"
                       ),
                       "ABC"
               )),
               measure1(
                       1, event, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
-                      FlowSdk::FlowMeasure::MeasureStatus::Active, {fir1},
-                      std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(
-                              FlowSdk::FlowMeasure::MeasureType::Prohibit
-                      ),
-                      std::make_unique<FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters>(
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{
-                                      std::make_shared<FlowSdk::FlowMeasure::ConcreteAirportFilter>(
+                      ECFMP::FlowMeasure::MeasureStatus::Active, {fir1},
+                      std::make_unique<ECFMP::FlowMeasure::ConcreteMeasure>(ECFMP::FlowMeasure::MeasureType::Prohibit),
+                      std::make_unique<ECFMP::FlowMeasure::ConcreteFlowMeasureFilters>(
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::AirportFilter>>{
+                                      std::make_shared<ECFMP::FlowMeasure::ConcreteAirportFilter>(
                                               std::set<std::string>{"EGLL"},
-                                              FlowSdk::FlowMeasure::AirportFilterType::Departure
+                                              ECFMP::FlowMeasure::AirportFilterType::Departure
                                       )},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::RangeToDestinationFilter>>{}
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::EventFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{}
                       )
               ),
               measureWithNoEvent(
                       2, nullptr, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
-                      FlowSdk::FlowMeasure::MeasureStatus::Active, {},
-                      std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(
-                              FlowSdk::FlowMeasure::MeasureType::Prohibit
-                      ),
-                      std::make_unique<FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters>(
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::RangeToDestinationFilter>>{}
+                      ECFMP::FlowMeasure::MeasureStatus::Active, {},
+                      std::make_unique<ECFMP::FlowMeasure::ConcreteMeasure>(ECFMP::FlowMeasure::MeasureType::Prohibit),
+                      std::make_unique<ECFMP::FlowMeasure::ConcreteFlowMeasureFilters>(
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::AirportFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::EventFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{}
                       )
               ),
               withdrawnMeasure(
                       3, nullptr, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
-                      FlowSdk::FlowMeasure::MeasureStatus::Withdrawn, {},
-                      std::make_unique<FlowSdk::FlowMeasure::ConcreteMeasure>(
-                              FlowSdk::FlowMeasure::MeasureType::Prohibit
-                      ),
-                      std::make_unique<FlowSdk::FlowMeasure::ConcreteFlowMeasureFilters>(
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::AirportFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::EventFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::RouteFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::LevelRangeFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::MultipleLevelFilter>>{},
-                              std::list<std::shared_ptr<FlowSdk::FlowMeasure::RangeToDestinationFilter>>{}
+                      ECFMP::FlowMeasure::MeasureStatus::Withdrawn, {},
+                      std::make_unique<ECFMP::FlowMeasure::ConcreteMeasure>(ECFMP::FlowMeasure::MeasureType::Prohibit),
+                      std::make_unique<ECFMP::FlowMeasure::ConcreteFlowMeasureFilters>(
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::AirportFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::EventFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{}
                       )
               )
         {}
 
-        std::shared_ptr<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion> fir1;
-        std::shared_ptr<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion> fir2;
+        std::shared_ptr<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion> fir1;
+        std::shared_ptr<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion> fir2;
         std::chrono::system_clock::time_point startTime;
         std::chrono::system_clock::time_point endTime;
         std::chrono::system_clock::time_point withdrawnTime;
-        std::shared_ptr<FlowSdk::Event::ConcreteEvent> event;
-        FlowSdk::FlowMeasure::ConcreteFlowMeasure measure1;
-        FlowSdk::FlowMeasure::ConcreteFlowMeasure measureWithNoEvent;
-        FlowSdk::FlowMeasure::ConcreteFlowMeasure withdrawnMeasure;
+        std::shared_ptr<ECFMP::Event::ConcreteEvent> event;
+        ECFMP::FlowMeasure::ConcreteFlowMeasure measure1;
+        ECFMP::FlowMeasure::ConcreteFlowMeasure measureWithNoEvent;
+        ECFMP::FlowMeasure::ConcreteFlowMeasure withdrawnMeasure;
     };
 
     TEST_F(ConcreteFlowMeasureTest, ItHasAnId)
@@ -133,39 +127,39 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteFlowMeasureTest, ItThrowsAnExceptionIfNotWithdrawn)
     {
-        EXPECT_THROW(static_cast<void>(measure1.WithdrawnAt()), FlowSdk::FlowMeasure::FlowMeasureNotWithdrawnException);
+        EXPECT_THROW(static_cast<void>(measure1.WithdrawnAt()), ECFMP::FlowMeasure::FlowMeasureNotWithdrawnException);
         EXPECT_THROW(
                 static_cast<void>(measureWithNoEvent.WithdrawnAt()),
-                FlowSdk::FlowMeasure::FlowMeasureNotWithdrawnException
+                ECFMP::FlowMeasure::FlowMeasureNotWithdrawnException
         );
     }
 
     TEST_F(ConcreteFlowMeasureTest, ItHasAStatus)
     {
-        EXPECT_EQ(FlowSdk::FlowMeasure::MeasureStatus::Active, measure1.Status());
+        EXPECT_EQ(ECFMP::FlowMeasure::MeasureStatus::Active, measure1.Status());
     }
 
     TEST_F(ConcreteFlowMeasureTest, ItIsAStatus)
     {
-        EXPECT_TRUE(measure1.HasStatus(FlowSdk::FlowMeasure::MeasureStatus::Active));
+        EXPECT_TRUE(measure1.HasStatus(ECFMP::FlowMeasure::MeasureStatus::Active));
     }
 
     TEST_F(ConcreteFlowMeasureTest, ItIsNotAStatus)
     {
-        EXPECT_FALSE(measure1.HasStatus(FlowSdk::FlowMeasure::MeasureStatus::Withdrawn));
+        EXPECT_FALSE(measure1.HasStatus(ECFMP::FlowMeasure::MeasureStatus::Withdrawn));
     }
 
     TEST_F(ConcreteFlowMeasureTest, ItHasNotifiedFlightInformationRegions)
     {
         EXPECT_EQ(
-                std::vector<std::shared_ptr<const FlowSdk::FlightInformationRegion::FlightInformationRegion>>({fir1}),
+                std::vector<std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>>({fir1}),
                 measure1.NotifiedFlightInformationRegions()
         );
     }
 
     TEST_F(ConcreteFlowMeasureTest, ItHasAMeasure)
     {
-        EXPECT_EQ(FlowSdk::FlowMeasure::MeasureType::Prohibit, measure1.Measure().Type());
+        EXPECT_EQ(ECFMP::FlowMeasure::MeasureType::Prohibit, measure1.Measure().Type());
     }
 
     TEST_F(ConcreteFlowMeasureTest, ItHasFilters)
@@ -193,4 +187,4 @@ namespace FlowSdkTest::FlowMeasure {
     {
         EXPECT_FALSE(measure1.IsApplicableToFlightInformationRegion("EGPX"));
     }
-}// namespace FlowSdkTest::FlowMeasure
+}// namespace ECFMPTest::FlowMeasure

@@ -1,7 +1,7 @@
 #pragma once
 #include "flow-sdk/EventParticipant.h"
 
-namespace FlowSdk::Event {
+namespace ECFMP::Event {
     class ConcreteEventParticipant : public EventParticipant
     {
         public:
@@ -20,4 +20,4 @@ namespace FlowSdk::Event {
         // The destination airfield
         std::string destinationAirfield;
     };
-}// namespace FlowSdk::Event
+}// namespace ECFMP::Event

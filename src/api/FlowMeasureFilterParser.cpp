@@ -15,9 +15,8 @@
 #include "flowmeasure/ConcreteRouteFilter.h"
 #include "nlohmann/json.hpp"
 
-namespace FlowSdk::Api {
-    FlowMeasureFilterParser::FlowMeasureFilterParser(const std::shared_ptr<FlowSdk::Log::Logger>& logger)
-        : logger(logger)
+namespace ECFMP::Api {
+    FlowMeasureFilterParser::FlowMeasureFilterParser(const std::shared_ptr<ECFMP::Log::Logger>& logger) : logger(logger)
     {
         assert(this->logger && "Logger cannot be null");
     }
@@ -250,4 +249,4 @@ namespace FlowSdk::Api {
 
         return std::make_shared<FlowMeasure::ConcreteRangeToDestinationFilter>(data.get<int>());
     }
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

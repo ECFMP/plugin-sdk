@@ -2,7 +2,7 @@
 
 #include <utility>
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     [[nodiscard]] auto IntegerMeasure(MeasureType type, int value) -> ConcreteMeasure
     {
@@ -78,4 +78,4 @@ namespace FlowSdk::FlowMeasure {
     {
         return VoidMeasure(MeasureType::GroundStop);
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

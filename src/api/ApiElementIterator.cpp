@@ -3,7 +3,7 @@
 #include "flow-sdk/FlightInformationRegion.h"
 #include "flow-sdk/FlowMeasure.h"
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
 
     template<typename T>
     struct ApiElementIterator<T>::Impl {
@@ -78,4 +78,4 @@ namespace FlowSdk::Api {
     template class ApiElementIterator<FlightInformationRegion::FlightInformationRegion>;
     template class ApiElementIterator<FlowMeasure::FlowMeasure>;
     template class ApiElementIterator<Event::Event>;
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

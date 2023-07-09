@@ -2,9 +2,9 @@
 #include "../flow-sdk/MultipleLevelFilter.h"
 #include <gmock/gmock.h>
 
-namespace FlowSdk::Mock::FlowMeasure {
+namespace ECFMP::Mock::FlowMeasure {
 
-    class LevelRangeFilterMock : public FlowSdk::FlowMeasure::MultipleLevelFilter
+    class LevelRangeFilterMock : public ECFMP::FlowMeasure::MultipleLevelFilter
     {
         public:
         MOCK_METHOD(std::vector<int>, Levels, (), (const, noexcept, override));
@@ -13,4 +13,4 @@ namespace FlowSdk::Mock::FlowMeasure {
         MOCK_METHOD(bool, ApplicableToLevel, (int), (const, noexcept, override));
     };
 
-}// namespace FlowSdk::Mock::FlowMeasure
+}// namespace ECFMP::Mock::FlowMeasure

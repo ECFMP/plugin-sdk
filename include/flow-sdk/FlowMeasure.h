@@ -2,16 +2,16 @@
 #include "ApiElement.h"
 #include "flow-sdk/ApiElement.h"
 
-namespace FlowSdk {
+namespace ECFMP {
     namespace Event {
         class Event;
     }// namespace Event
     namespace FlightInformationRegion {
         class FlightInformationRegion;
     }// namespace FlightInformationRegion
-}// namespace FlowSdk
+}// namespace ECFMP
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     class FlowMeasureFilters;
     class Measure;
 
@@ -113,4 +113,4 @@ namespace FlowSdk::FlowMeasure {
          */
         [[nodiscard]] virtual auto Filters() const noexcept -> const FlowMeasureFilters& = 0;
     };
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

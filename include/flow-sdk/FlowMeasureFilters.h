@@ -1,10 +1,10 @@
 #pragma once
 
-namespace FlowSdk::FlightInformationRegion {
+namespace ECFMP::FlightInformationRegion {
     class FlightInformationRegion;
-}// namespace FlowSdk::FlightInformationRegion
+}// namespace ECFMP::FlightInformationRegion
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     class AirportFilter;
     class EventFilter;
@@ -59,4 +59,4 @@ namespace FlowSdk::FlowMeasure {
         FirstRangeToDestinationFilter(const std::function<bool(const RangeToDestinationFilter&)>& callback
         ) const noexcept -> std::shared_ptr<RangeToDestinationFilter> = 0;
     };
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

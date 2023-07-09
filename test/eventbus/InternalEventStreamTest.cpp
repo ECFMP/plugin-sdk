@@ -1,7 +1,7 @@
 #include "eventbus/InternalEventStream.h"
 #include "flow-sdk/NewEventListener.h"
 
-namespace FlowSdk::EventBus {
+namespace ECFMP::EventBus {
 
     class MockEventListener : public NewEventListener<int>
     {
@@ -157,4 +157,4 @@ namespace FlowSdk::EventBus {
         EXPECT_EQ(0, listener->callCount);
         EXPECT_EQ(2, filter->callCount);
     }
-}// namespace FlowSdk::EventBus
+}// namespace ECFMP::EventBus

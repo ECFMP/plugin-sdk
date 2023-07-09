@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::EventBus {
+namespace ECFMP::EventBus {
     template<typename EventType>
     class NewEventListener
     {
@@ -8,4 +8,4 @@ namespace FlowSdk::EventBus {
         virtual ~NewEventListener() = default;
         virtual void OnEvent(const EventType&) = 0;
     };
-}// namespace FlowSdk::EventBus
+}// namespace ECFMP::EventBus

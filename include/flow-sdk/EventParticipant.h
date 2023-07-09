@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::Event {
+namespace ECFMP::Event {
     /**
      * Represents a participant in an event
      */
@@ -24,4 +24,4 @@ namespace FlowSdk::Event {
          */
         [[nodiscard]] virtual auto DestinationAirport() const noexcept -> const std::string& = 0;
     };
-}// namespace FlowSdk::Event
+}// namespace ECFMP::Event

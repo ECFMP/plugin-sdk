@@ -1,7 +1,7 @@
 #pragma once
 #include "ConcreteMeasure.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     // Integer valued intervals
     [[nodiscard]] auto MinimumDepartureInterval(int interval) -> ConcreteMeasure;
     [[nodiscard]] auto AverageDepartureInterval(int interval) -> ConcreteMeasure;
@@ -20,4 +20,4 @@ namespace FlowSdk::FlowMeasure {
     // No-valued intervals
     [[nodiscard]] auto Prohibit() -> ConcreteMeasure;
     [[nodiscard]] auto GroundStop() -> ConcreteMeasure;
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     /**
      * An element that comes from the API.
      */
@@ -25,4 +25,4 @@ namespace FlowSdk::Api {
          */
         [[nodiscard]] virtual auto Identifier() const noexcept -> const std::string& = 0;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

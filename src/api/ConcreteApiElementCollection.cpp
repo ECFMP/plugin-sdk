@@ -5,7 +5,7 @@
 #include "flow-sdk/FlightInformationRegion.h"
 #include "flow-sdk/FlowMeasure.h"
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
 
     template<typename T>
     auto ConcreteApiElementCollection<T>::Count() const noexcept -> size_t
@@ -52,8 +52,7 @@ namespace FlowSdk::Api {
         return ApiElementIterator<T>(lock, elements.cend());
     }
 
-    template class FlowSdk::Api::ConcreteApiElementCollection<
-            FlowSdk::FlightInformationRegion::FlightInformationRegion>;
-    template class FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event>;
-    template class FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::FlowMeasure::FlowMeasure>;
-}// namespace FlowSdk::Api
+    template class ECFMP::Api::ConcreteApiElementCollection<ECFMP::FlightInformationRegion::FlightInformationRegion>;
+    template class ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event>;
+    template class ECFMP::Api::ConcreteApiElementCollection<ECFMP::FlowMeasure::FlowMeasure>;
+}// namespace ECFMP::Api

@@ -2,7 +2,7 @@
 #include "flow-sdk/ApiElementIterator.h"
 #include "flow-sdk/Iterable.h"
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
 
     /**
      * A collection of elements from the API.
@@ -34,7 +34,7 @@ namespace FlowSdk::Api {
         /**
          * Gets an item from the collection by its identifier, e.g. for London FIR, "EGTT"
          */
-        [[nodiscard]] virtual auto GetByIdentifier(const std::string& identifier) const noexcept ->
-                std::shared_ptr<const T> = 0;
+        [[nodiscard]] virtual auto GetByIdentifier(const std::string& identifier) const noexcept
+                -> std::shared_ptr<const T> = 0;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

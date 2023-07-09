@@ -5,7 +5,7 @@
 #include <typeindex>
 #include <unordered_map>
 
-namespace FlowSdk::EventBus {
+namespace ECFMP::EventBus {
 
     template<typename EventType>
     class EventStreamFactory;
@@ -68,4 +68,4 @@ namespace FlowSdk::EventBus {
         // All the streams
         std::unordered_map<std::type_index, std::any> streams;
     };
-}// namespace FlowSdk::EventBus
+}// namespace ECFMP::EventBus

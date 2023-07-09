@@ -1,6 +1,6 @@
 #include "ConcreteRangeToDestinationFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     ConcreteRangeToDestinationFilter::ConcreteRangeToDestinationFilter(int range) noexcept : range(range)
     {}
 
@@ -8,4 +8,4 @@ namespace FlowSdk::FlowMeasure {
     {
         return range;
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

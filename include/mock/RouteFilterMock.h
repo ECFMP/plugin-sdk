@@ -2,12 +2,12 @@
 #include "../flow-sdk/RouteFilter.h"
 #include <gmock/gmock.h>
 
-namespace FlowSdk::Mock::FlowMeasure {
+namespace ECFMP::Mock::FlowMeasure {
 
-    class RouteFilterMock : public FlowSdk::FlowMeasure::RouteFilter
+    class RouteFilterMock : public ECFMP::FlowMeasure::RouteFilter
     {
         public:
         MOCK_METHOD(const std::set<std::string>&, RouteStrings, (), (const, noexcept, override));
     };
 
-}// namespace FlowSdk::Mock::FlowMeasure
+}// namespace ECFMP::Mock::FlowMeasure

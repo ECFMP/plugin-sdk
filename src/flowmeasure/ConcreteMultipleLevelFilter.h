@@ -1,7 +1,7 @@
 #pragma once
 #include "flow-sdk/MultipleLevelFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     class ConcreteMultipleLevelFilter : public MultipleLevelFilter
     {
@@ -36,4 +36,4 @@ namespace FlowSdk::FlowMeasure {
         std::vector<int> altitudes;
     };
 
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

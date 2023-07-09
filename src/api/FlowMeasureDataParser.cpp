@@ -9,7 +9,7 @@
 #include "flowmeasure/ConcreteFlowMeasure.h"
 #include "nlohmann/json.hpp"
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     FlowMeasureDataParser::FlowMeasureDataParser(
             std::unique_ptr<FlowMeasureFilterParserInterface> filterParser,
             std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser,
@@ -64,7 +64,7 @@ namespace FlowSdk::Api {
             }
 
             // Get the event
-            std::shared_ptr<const FlowSdk::Event::Event> event;
+            std::shared_ptr<const ECFMP::Event::Event> event;
             if (flowMeasureData.at("event_id").is_number_integer()) {
                 event = events->Get(flowMeasureData.at("event_id").get<int>());
                 if (event == nullptr) {
@@ -117,7 +117,7 @@ namespace FlowSdk::Api {
     }
 
     auto FlowMeasureDataParser::GetNotifiedFirs(const nlohmann::json& data) const
-            -> std::vector<std::shared_ptr<const FlowSdk::FlightInformationRegion::FlightInformationRegion>>
+            -> std::vector<std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>>
     {
         if (!data.contains("notified_flight_information_regions")
             || !data.at("notified_flight_information_regions").is_array()) {
@@ -125,7 +125,7 @@ namespace FlowSdk::Api {
             return {};
         }
 
-        std::vector<std::shared_ptr<const FlowSdk::FlightInformationRegion::FlightInformationRegion>> notifiedFirs;
+        std::vector<std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>> notifiedFirs;
         for (const auto& firId: data.at("notified_flight_information_regions")) {
             if (!firId.is_number_integer()) {
                 logger->Error("FlowMeasureDataParser::GetNotifiedFirs: fir is not an integer");
@@ -165,4 +165,4 @@ namespace FlowSdk::Api {
 
         return FlowMeasure::Active;
     }
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

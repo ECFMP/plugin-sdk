@@ -1,6 +1,6 @@
 #include "ConcreteEvent.h"
 
-namespace FlowSdk::Event {
+namespace ECFMP::Event {
 
     ConcreteEvent::ConcreteEvent(
             int id, std::string name, std::chrono::system_clock::time_point start,
@@ -12,17 +12,17 @@ namespace FlowSdk::Event {
         assert(fir && "flight information region not set in event");
     }
 
-    auto FlowSdk::Event::ConcreteEvent::Id() const noexcept -> int
+    auto ECFMP::Event::ConcreteEvent::Id() const noexcept -> int
     {
         return id;
     }
 
-    auto FlowSdk::Event::ConcreteEvent::Name() const noexcept -> const std::string&
+    auto ECFMP::Event::ConcreteEvent::Name() const noexcept -> const std::string&
     {
         return name;
     }
 
-    auto FlowSdk::Event::ConcreteEvent::Start() const noexcept -> const std::chrono::system_clock::time_point&
+    auto ECFMP::Event::ConcreteEvent::Start() const noexcept -> const std::chrono::system_clock::time_point&
     {
         return start;
     }
@@ -42,4 +42,4 @@ namespace FlowSdk::Event {
     {
         return vatcanCode;
     }
-}// namespace FlowSdk::Event
+}// namespace ECFMP::Event

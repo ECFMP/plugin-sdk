@@ -1,10 +1,10 @@
 #pragma once
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     class FlowMeasure;
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
     using FlowMeasureNotifiedEvent = struct FlowMeasureNotifiedEvent {
         const FlowMeasure::FlowMeasure& measure;
     };
@@ -25,4 +25,4 @@ namespace FlowSdk::Plugin {
         const FlowMeasure::FlowMeasure& original;
         const FlowMeasure::FlowMeasure& reissued;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

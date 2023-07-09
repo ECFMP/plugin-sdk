@@ -10,28 +10,28 @@
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
 
-namespace FlowSdkTest::Api {
+namespace ECFMPTest::Api {
     class EventDataParserTest : public testing::Test
     {
         public:
         EventDataParserTest()
-            : events(std::make_shared<FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event>>()),
-              firs(std::make_shared<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
-                           FlowSdk::FlightInformationRegion::FlightInformationRegion>>()),
+            : events(std::make_shared<ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event>>()),
+              firs(std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
+                           ECFMP::FlightInformationRegion::FlightInformationRegion>>()),
               mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(events, firs, mockLogger)
         {
-            firs->Add(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     1, "EGTT", "London"
             ));
-            firs->Add(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     2, "EGPX", "Scottish"
             ));
         }
 
-        std::shared_ptr<FlowSdk::Api::InternalEventCollection> events;
-        std::shared_ptr<FlowSdk::Api::InternalFlightInformationRegionCollection> firs;
+        std::shared_ptr<ECFMP::Api::InternalEventCollection> events;
+        std::shared_ptr<ECFMP::Api::InternalFlightInformationRegionCollection> firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
-        FlowSdk::Api::EventDataParser parser;
+        ECFMP::Api::EventDataParser parser;
     };
 
     TEST_F(EventDataParserTest, ItDoesNothingIfDataNotObject)
@@ -103,16 +103,16 @@ namespace FlowSdkTest::Api {
         EXPECT_EQ(1, event1->Id());
         EXPECT_EQ("London Event", event1->Name());
         EXPECT_EQ(1, event1->FlightInformationRegion().Id());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-16T13:16:00Z"), event1->Start());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-16T13:17:00Z"), event1->End());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:16:00Z"), event1->Start());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:17:00Z"), event1->End());
         EXPECT_EQ("abc", event1->VatcanCode());
 
         const auto event2 = events->Get(2);
         EXPECT_EQ(2, event2->Id());
         EXPECT_EQ("Scottish Event", event2->Name());
         EXPECT_EQ(2, event2->FlightInformationRegion().Id());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-17T13:16:00Z"), event2->Start());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-18T13:17:00Z"), event2->End());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-17T13:16:00Z"), event2->Start());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-18T13:17:00Z"), event2->End());
         EXPECT_EQ("def", event2->VatcanCode());
     }
 
@@ -143,16 +143,16 @@ namespace FlowSdkTest::Api {
         EXPECT_EQ(1, event1->Id());
         EXPECT_EQ("London Event", event1->Name());
         EXPECT_EQ(1, event1->FlightInformationRegion().Id());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-16T13:16:00Z"), event1->Start());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-16T13:17:00Z"), event1->End());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:16:00Z"), event1->Start());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:17:00Z"), event1->End());
         EXPECT_EQ("abc", event1->VatcanCode());
 
         const auto event2 = events->Get(2);
         EXPECT_EQ(2, event2->Id());
         EXPECT_EQ("Scottish Event", event2->Name());
         EXPECT_EQ(2, event2->FlightInformationRegion().Id());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-17T13:16:00Z"), event2->Start());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-18T13:17:00Z"), event2->End());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-17T13:16:00Z"), event2->Start());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-18T13:17:00Z"), event2->End());
         EXPECT_EQ("def", event2->VatcanCode());
     }
 
@@ -207,16 +207,16 @@ namespace FlowSdkTest::Api {
         EXPECT_EQ(1, event1->Id());
         EXPECT_EQ("London Event", event1->Name());
         EXPECT_EQ(1, event1->FlightInformationRegion().Id());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-16T13:16:00Z"), event1->Start());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-16T13:17:00Z"), event1->End());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:16:00Z"), event1->Start());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:17:00Z"), event1->End());
         EXPECT_EQ("", event1->VatcanCode());
 
         const auto event2 = events->Get(2);
         EXPECT_EQ(2, event2->Id());
         EXPECT_EQ("Scottish Event", event2->Name());
         EXPECT_EQ(2, event2->FlightInformationRegion().Id());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-17T13:16:00Z"), event2->Start());
-        EXPECT_EQ(FlowSdk::Date::TimePointFromDateString("2022-04-18T13:17:00Z"), event2->End());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-17T13:16:00Z"), event2->Start());
+        EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-18T13:17:00Z"), event2->End());
         EXPECT_EQ("", event2->VatcanCode());
     }
 
@@ -276,23 +276,23 @@ namespace FlowSdkTest::Api {
     {
         public:
         EventDataParserBadDataTest()
-            : events(std::make_shared<FlowSdk::Api::ConcreteApiElementCollection<FlowSdk::Event::Event>>()),
-              firs(std::make_shared<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
-                           FlowSdk::FlightInformationRegion::FlightInformationRegion>>()),
+            : events(std::make_shared<ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event>>()),
+              firs(std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
+                           ECFMP::FlightInformationRegion::FlightInformationRegion>>()),
               mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(events, firs, mockLogger)
         {
-            firs->Add(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     1, "EGTT", "London"
             ));
-            firs->Add(std::make_shared<FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     2, "EGPX", "Scottish"
             ));
         }
 
-        std::shared_ptr<FlowSdk::Api::InternalEventCollection> events;
-        std::shared_ptr<FlowSdk::Api::InternalFlightInformationRegionCollection> firs;
+        std::shared_ptr<ECFMP::Api::InternalEventCollection> events;
+        std::shared_ptr<ECFMP::Api::InternalFlightInformationRegionCollection> firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
-        FlowSdk::Api::EventDataParser parser;
+        ECFMP::Api::EventDataParser parser;
     };
 
     INSTANTIATE_TEST_SUITE_P(
@@ -789,4 +789,4 @@ namespace FlowSdkTest::Api {
         EXPECT_NE(nullptr, event1);
         EXPECT_EQ(1, event1->Id());
     }
-}// namespace FlowSdkTest::Api
+}// namespace ECFMPTest::Api

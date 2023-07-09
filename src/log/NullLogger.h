@@ -2,7 +2,7 @@
 #include "flow-sdk/Logger.h"
 #include <string>
 
-namespace FlowSdk::Log {
+namespace ECFMP::Log {
 
     /**
          * A logger that logs nothing, a default if the user doesn't
@@ -17,4 +17,4 @@ namespace FlowSdk::Log {
         void Error(const std::string& message) override;
     };
 
-}// namespace FlowSdk::Log
+}// namespace ECFMP::Log

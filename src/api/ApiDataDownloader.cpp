@@ -4,7 +4,7 @@
 #include "nlohmann/json.hpp"
 #include "plugin/InternalEventListeners.h"
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
 
     const std::string PLUGIN_API_DATA_URL = "https://ecfmp.vatsim.net/api/v1/plugin?deleted=1";
 
@@ -51,4 +51,4 @@ namespace FlowSdk::Api {
         // Disseminate the JSON to any listeners
         listeners->OnEvent(parsedData);
     }
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

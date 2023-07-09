@@ -1,6 +1,6 @@
 #include "ConcreteAirportFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     ConcreteAirportFilter::ConcreteAirportFilter(std::set<std::string> airportStrings, AirportFilterType type) noexcept
         : airportStrings(std::move(airportStrings)), type(type)
     {}
@@ -31,4 +31,4 @@ namespace FlowSdk::FlowMeasure {
     {
         return type;
     }
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

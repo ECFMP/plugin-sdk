@@ -1,8 +1,8 @@
 #include "event/ConcreteEventParticipant.h"
 
-using FlowSdk::Event::ConcreteEventParticipant;
+using ECFMP::Event::ConcreteEventParticipant;
 
-namespace FlowSdkTest::Event {
+namespace ECFMPTest::Event {
     class ConcreteEventParticipantTest : public testing::Test
     {
         public:
@@ -26,4 +26,4 @@ namespace FlowSdkTest::Event {
     {
         EXPECT_EQ("EDDM", participant.DestinationAirport());
     }
-}// namespace FlowSdkTest::Event
+}// namespace ECFMPTest::Event

@@ -5,12 +5,12 @@
 #include "flow-sdk/FlightInformationRegion.h"
 #include "flow-sdk/FlowMeasure.h"
 
-namespace FlowSdk::Api {
-    typedef FlowSdk::Api::InternalStringIdentifiedApiElementCollection<
-            FlowSdk::FlightInformationRegion::FlightInformationRegion>
+namespace ECFMP::Api {
+    typedef ECFMP::Api::InternalStringIdentifiedApiElementCollection<
+            ECFMP::FlightInformationRegion::FlightInformationRegion>
             InternalFlightInformationRegionCollection;
 
-    typedef FlowSdk::Api::InternalApiElementCollection<FlowSdk::Event::Event> InternalEventCollection;
-    typedef FlowSdk::Api::InternalStringIdentifiedApiElementCollection<FlowSdk::FlowMeasure::FlowMeasure>
+    typedef ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> InternalEventCollection;
+    typedef ECFMP::Api::InternalStringIdentifiedApiElementCollection<ECFMP::FlowMeasure::FlowMeasure>
             InternalFlowMeasureCollection;
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

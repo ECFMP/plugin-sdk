@@ -1,7 +1,7 @@
 #pragma once
 #include "ApiElementIterator.h"
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
 
     /**
      * Represents a class that can be iterated.
@@ -15,4 +15,4 @@ namespace FlowSdk::Plugin {
         [[nodiscard]] virtual auto cbegin() const -> Api::ApiElementIterator<T> = 0;
         [[nodiscard]] virtual auto cend() const -> Api::ApiElementIterator<T> = 0;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

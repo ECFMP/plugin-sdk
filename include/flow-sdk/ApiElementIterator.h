@@ -2,7 +2,7 @@
 #include <iterator>
 #include <memory>
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     template<typename T>
     class ApiElementIterator
     {
@@ -30,4 +30,4 @@ namespace FlowSdk::Api {
         struct Impl;
         std::shared_ptr<Impl> impl;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

@@ -2,11 +2,11 @@
 #include "flow-sdk/FlowMeasureFilters.h"
 #include "flow-sdk/MultipleLevelFilter.h"
 
-namespace FlowSdk::FlightInformationRegion {
+namespace ECFMP::FlightInformationRegion {
     class FlightInformationRegion;
-}// namespace FlowSdk::FlightInformationRegion
+}// namespace ECFMP::FlightInformationRegion
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     /**
      * An implementation of the flow measure filters.
      */
@@ -71,4 +71,4 @@ namespace FlowSdk::FlowMeasure {
         // All the range to destination filters
         std::list<std::shared_ptr<RangeToDestinationFilter>> rangeToDestinationFilters;
     };
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

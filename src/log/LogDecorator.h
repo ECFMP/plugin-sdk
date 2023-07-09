@@ -2,7 +2,7 @@
 #include "flow-sdk/Logger.h"
 #include <string>
 
-namespace FlowSdk ::Log {
+namespace ECFMP ::Log {
 
     /**
      * Wraps the user-provided logger and decorates
@@ -23,4 +23,4 @@ namespace FlowSdk ::Log {
         std::unique_ptr<Log::Logger> userLogger;
     };
 
-}// namespace FlowSdk::Log
+}// namespace ECFMP::Log

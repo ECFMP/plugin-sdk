@@ -1,7 +1,7 @@
 #pragma once
 #include "flow-sdk/EventListeners.h"
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
     template<typename... Types>
     /**
      * An internal implementation of EventListeners that adds additional methods for internal use.
@@ -15,4 +15,4 @@ namespace FlowSdk::Plugin {
          */
         virtual void OnEvent(const Types&...) noexcept = 0;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

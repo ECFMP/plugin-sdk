@@ -3,7 +3,7 @@
 #include "flow-sdk/NewEventFilter.h"
 #include "flow-sdk/NewEventListener.h"
 
-namespace FlowSdk::EventBus {
+namespace ECFMP::EventBus {
 
     template<typename EventType>
     class InternalEventStream : public EventStream<EventType>
@@ -35,4 +35,4 @@ namespace FlowSdk::EventBus {
             );
         };
     };
-}// namespace FlowSdk::EventBus
+}// namespace ECFMP::EventBus

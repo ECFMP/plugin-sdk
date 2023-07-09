@@ -1,7 +1,7 @@
 #pragma once
 #include "nlohmann/json_fwd.hpp"
 
-namespace FlowSdk {
+namespace ECFMP {
     namespace Http {
         class HttpClient;
     }// namespace Http
@@ -12,9 +12,9 @@ namespace FlowSdk {
         template<class... Types>
         class InternalEventListeners;
     }// namespace Plugin
-}// namespace FlowSdk
+}// namespace ECFMP
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
 
     /**
      * Downloads API data and disseminates it to any listeners.
@@ -41,4 +41,4 @@ namespace FlowSdk::Api {
         // Logger
         std::shared_ptr<Log::Logger> logger;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

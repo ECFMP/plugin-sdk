@@ -1,7 +1,7 @@
 #pragma once
 #include "flow-sdk/EventBus.h"
 
-namespace FlowSdk::EventBus {
+namespace ECFMP::EventBus {
     class InternalEventBus : public EventBus
     {
         public:
@@ -38,4 +38,4 @@ namespace FlowSdk::EventBus {
         // Events that are waiting to be processed by the EuroScope thread.
         std::vector<std::function<void()>> pendingEvents;
     };
-}// namespace FlowSdk::EventBus
+}// namespace ECFMP::EventBus

@@ -5,7 +5,7 @@
 #include "flow-sdk/MultipleLevelFilter.h"
 #include "flow-sdk/RangeToDestinationFilter.h"
 
-namespace FlowSdk {
+namespace ECFMP {
     namespace FlowMeasure {
         class AirportFilter;
         class EventFilter;
@@ -14,13 +14,13 @@ namespace FlowSdk {
     namespace Log {
         class Logger;
     }// namespace Log
-}// namespace FlowSdk
+}// namespace ECFMP
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
     class FlowMeasureFilterParser : public FlowMeasureFilterParserInterface
     {
         public:
-        explicit FlowMeasureFilterParser(const std::shared_ptr<FlowSdk::Log::Logger>& logger);
+        explicit FlowMeasureFilterParser(const std::shared_ptr<ECFMP::Log::Logger>& logger);
         [[nodiscard]] auto Parse(const nlohmann::json& data, const InternalEventCollection& events) const
                 -> std::unique_ptr<FlowMeasure::FlowMeasureFilters> override;
 
@@ -45,6 +45,6 @@ namespace FlowSdk::Api {
                 -> std::shared_ptr<FlowMeasure::RangeToDestinationFilter>;
 
         // Logger
-        std::shared_ptr<FlowSdk::Log::Logger> logger;
+        std::shared_ptr<ECFMP::Log::Logger> logger;
     };
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

@@ -1,7 +1,7 @@
 #pragma once
 #include "flow-sdk/AirportFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     class ConcreteAirportFilter : public AirportFilter
     {
@@ -22,4 +22,4 @@ namespace FlowSdk::FlowMeasure {
         AirportFilterType type;
     };
 
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

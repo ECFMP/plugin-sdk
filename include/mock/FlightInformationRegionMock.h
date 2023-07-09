@@ -2,9 +2,9 @@
 #include "../flow-sdk/FlightInformationRegion.h"
 #include <gmock/gmock.h>
 
-namespace FlowSdk::Mock::FlightInformationRegion {
+namespace ECFMP::Mock::FlightInformationRegion {
 
-    class FlightInformationRegionMock : public FlowSdk::FlightInformationRegion::FlightInformationRegion
+    class FlightInformationRegionMock : public ECFMP::FlightInformationRegion::FlightInformationRegion
     {
         public:
         MOCK_METHOD(int, Id, (), (const, noexcept, override));
@@ -12,4 +12,4 @@ namespace FlowSdk::Mock::FlightInformationRegion {
         MOCK_METHOD(const std::string&, Name, (), (const, noexcept, override));
     };
 
-}// namespace FlowSdk::Mock::FlightInformationRegion
+}// namespace ECFMP::Mock::FlightInformationRegion

@@ -2,9 +2,9 @@
 #include "../flow-sdk/EventParticipant.h"
 #include <gmock/gmock.h>
 
-namespace FlowSdk::Mock::Event {
+namespace ECFMP::Mock::Event {
 
-    class EventParticipantMock : public FlowSdk::Event::EventParticipant
+    class EventParticipantMock : public ECFMP::Event::EventParticipant
     {
         public:
         MOCK_METHOD(int, Cid, (), (const, noexcept, override));
@@ -12,4 +12,4 @@ namespace FlowSdk::Mock::Event {
         MOCK_METHOD(const std::string&, DestinationAirport, (), (const, noexcept, override));
     };
 
-}// namespace FlowSdk::Mock::Event
+}// namespace ECFMP::Mock::Event

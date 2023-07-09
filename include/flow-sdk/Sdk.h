@@ -1,15 +1,15 @@
 #pragma once
 
-namespace FlowSdk {
+namespace ECFMP {
     namespace EventBus {
         class EventBus;
     }// namespace EventBus
     namespace FlowMeasure {
         class FlowMeasure;
     }// namespace FlowMeasure
-}// namespace FlowSdk
+}// namespace ECFMP
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
 
     /**
      * Represents the public-facing facade of the SDK.
@@ -35,4 +35,4 @@ namespace FlowSdk::Plugin {
          */
         virtual void Destroy() = 0;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

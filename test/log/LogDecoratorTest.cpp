@@ -1,7 +1,7 @@
 #include "log/LogDecorator.h"
 #include "mock/MockLogger.h"
 
-namespace FlowSdkTest::Log {
+namespace ECFMPTest::Log {
     class LogDecoratorTest : public testing::Test
     {
         public:
@@ -15,7 +15,7 @@ namespace FlowSdkTest::Log {
     {
         EXPECT_CALL(*logger.get(), Debug("ECFMP: Hi")).Times(1);
 
-        FlowSdk::Log::LogDecorator decorator(std::move(logger));
+        ECFMP::Log::LogDecorator decorator(std::move(logger));
         decorator.Debug("Hi");
     }
 
@@ -23,7 +23,7 @@ namespace FlowSdkTest::Log {
     {
         EXPECT_CALL(*logger.get(), Info("ECFMP: Hi")).Times(1);
 
-        FlowSdk::Log::LogDecorator decorator(std::move(logger));
+        ECFMP::Log::LogDecorator decorator(std::move(logger));
         decorator.Info("Hi");
     }
 
@@ -31,7 +31,7 @@ namespace FlowSdkTest::Log {
     {
         EXPECT_CALL(*logger.get(), Warning("ECFMP: Hi")).Times(1);
 
-        FlowSdk::Log::LogDecorator decorator(std::move(logger));
+        ECFMP::Log::LogDecorator decorator(std::move(logger));
         decorator.Warning("Hi");
     }
 
@@ -39,7 +39,7 @@ namespace FlowSdkTest::Log {
     {
         EXPECT_CALL(*logger.get(), Error("ECFMP: Hi")).Times(1);
 
-        FlowSdk::Log::LogDecorator decorator(std::move(logger));
+        ECFMP::Log::LogDecorator decorator(std::move(logger));
         decorator.Error("Hi");
     }
-}// namespace FlowSdkTest::Log
+}// namespace ECFMPTest::Log

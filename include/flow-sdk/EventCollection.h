@@ -1,7 +1,7 @@
 #pragma once
 #include "ApiElementCollection.h"
 
-namespace FlowSdk::Event {
+namespace ECFMP::Event {
     class Event;
 
     class EventCollection : Api::ApiElementCollection<Event>
@@ -15,4 +15,4 @@ namespace FlowSdk::Event {
         [[nodiscard]] virtual auto GetByVatcanCode(const std::string& code) const noexcept
                 -> std::shared_ptr<Event> = 0;
     };
-}// namespace FlowSdk::Event
+}// namespace ECFMP::Event

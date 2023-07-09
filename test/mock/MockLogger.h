@@ -1,8 +1,8 @@
 #pragma once
 #include "flow-sdk/Logger.h"
 
-namespace FlowSdkTest::Log {
-    class MockLogger : public FlowSdk::Log::Logger
+namespace ECFMPTest::Log {
+    class MockLogger : public ECFMP::Log::Logger
     {
         public:
         MOCK_METHOD(void, Debug, (const std::string&), (override));
@@ -10,4 +10,4 @@ namespace FlowSdkTest::Log {
         MOCK_METHOD(void, Warning, (const std::string&), (override));
         MOCK_METHOD(void, Error, (const std::string&), (override));
     };
-}// namespace FlowSdkTest::Log
+}// namespace ECFMPTest::Log

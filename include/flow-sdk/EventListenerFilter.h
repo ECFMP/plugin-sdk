@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
     /**
      * A filter for events that can be paired with a listener to determine if
      * it should be called.
@@ -12,4 +12,4 @@ namespace FlowSdk::Plugin {
         virtual ~EventListenerFilter() = default;
         [[nodiscard]] virtual auto Passes(const Types&...) -> bool = 0;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

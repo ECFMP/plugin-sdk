@@ -3,21 +3,21 @@
 #include "mock/MockEventListener.h"
 #include "mock/MockEventListenerFilter.h"
 
-namespace FlowSdkTest::Plugin {
+namespace ECFMPTest::Plugin {
 
     class ConcreteEventListenersTest : public testing::Test
     {
         public:
         ConcreteEventListenersTest()
-            : mockListener(std::make_shared<testing::NiceMock<MockEventListener<FlowSdk::FlowMeasure::FlowMeasure>>>()),
-              mockFilter(
-                      std::make_shared<testing::NiceMock<MockEventListenerFilter<FlowSdk::FlowMeasure::FlowMeasure>>>())
+            : mockListener(std::make_shared<testing::NiceMock<MockEventListener<ECFMP::FlowMeasure::FlowMeasure>>>()),
+              mockFilter(std::make_shared<testing::NiceMock<MockEventListenerFilter<ECFMP::FlowMeasure::FlowMeasure>>>()
+              )
         {}
 
-        testing::NiceMock<FlowSdk::Mock::FlowMeasure::FlowMeasureMock> measureMock;
-        std::shared_ptr<testing::NiceMock<MockEventListener<FlowSdk::FlowMeasure::FlowMeasure>>> mockListener;
-        std::shared_ptr<testing::NiceMock<MockEventListenerFilter<FlowSdk::FlowMeasure::FlowMeasure>>> mockFilter;
-        FlowSdk::Plugin::ConcreteEventListeners<FlowSdk::FlowMeasure::FlowMeasure> listeners;
+        testing::NiceMock<ECFMP::Mock::FlowMeasure::FlowMeasureMock> measureMock;
+        std::shared_ptr<testing::NiceMock<MockEventListener<ECFMP::FlowMeasure::FlowMeasure>>> mockListener;
+        std::shared_ptr<testing::NiceMock<MockEventListenerFilter<ECFMP::FlowMeasure::FlowMeasure>>> mockFilter;
+        ECFMP::Plugin::ConcreteEventListeners<ECFMP::FlowMeasure::FlowMeasure> listeners;
     };
 
     TEST_F(ConcreteEventListenersTest, ItAddsListeners)
@@ -87,4 +87,4 @@ namespace FlowSdkTest::Plugin {
         listeners.Remove(mockListener);
         listeners.OnEvent(measureMock);
     }
-}// namespace FlowSdkTest::Plugin
+}// namespace ECFMPTest::Plugin

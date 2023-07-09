@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
     /**
      * A listener that listens for a particular type of event from the SDK.
      */
@@ -11,4 +11,4 @@ namespace FlowSdk::Plugin {
         virtual ~EventListener() = default;
         virtual void OnEvent(const Types&...) = 0;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
     /**
      * A filter that pertains to the cruising level of the aircraft.
      */
@@ -29,4 +29,4 @@ namespace FlowSdk::FlowMeasure {
          */
         [[nodiscard]] virtual auto ApplicableToAltitude(int level) const noexcept -> bool = 0;
     };
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

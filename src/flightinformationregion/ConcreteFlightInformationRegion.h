@@ -1,7 +1,7 @@
 #pragma once
 #include "flow-sdk/FlightInformationRegion.h"
 
-namespace FlowSdk::FlightInformationRegion {
+namespace ECFMP::FlightInformationRegion {
     class ConcreteFlightInformationRegion : public FlightInformationRegion
     {
         public:
@@ -22,4 +22,4 @@ namespace FlowSdk::FlightInformationRegion {
         // The name, e.g. London
         const std::string name;
     };
-}// namespace FlowSdk::FlightInformationRegion
+}// namespace ECFMP::FlightInformationRegion

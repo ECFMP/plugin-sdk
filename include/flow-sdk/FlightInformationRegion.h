@@ -2,7 +2,7 @@
 #include "ApiElement.h"
 #include "flow-sdk/ApiElementCollection.h"
 
-namespace FlowSdk::FlightInformationRegion {
+namespace ECFMP::FlightInformationRegion {
 
     /**
      * A flight information region.
@@ -27,4 +27,4 @@ namespace FlowSdk::FlightInformationRegion {
          */
         [[nodiscard]] virtual auto Name() const noexcept -> const std::string& = 0;
     };
-}// namespace FlowSdk::FlightInformationRegion
+}// namespace ECFMP::FlightInformationRegion

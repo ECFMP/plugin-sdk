@@ -1,7 +1,7 @@
 #pragma once
 #include "FlowMeasure.h"
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
     template<typename... Types>
     class EventListener;
     template<typename... Types>
@@ -24,12 +24,13 @@ namespace FlowSdk::Plugin {
         /**
          * Adds a listener, with a filter. Duplicates will be ignored.
          */
-        virtual void Add(std::shared_ptr<EventListener<Types...>> listener,
-                         std::shared_ptr<EventListenerFilter<Types...>> filter) noexcept = 0;
+        virtual void
+        Add(std::shared_ptr<EventListener<Types...>> listener,
+            std::shared_ptr<EventListenerFilter<Types...>> filter) noexcept = 0;
 
         /**
          * Removes a listener
          */
         virtual void Remove(std::shared_ptr<EventListener<Types...>> listener) noexcept = 0;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

@@ -2,7 +2,7 @@
 #include "chrono"
 #include <ctime>
 
-namespace FlowSdk::Date {
+namespace ECFMP::Date {
     const std::string timeFormat = "%FT%T%Z";
 
     auto DateStringValid(const std::string& date) -> bool
@@ -36,4 +36,4 @@ namespace FlowSdk::Date {
 
         return oss.str();
     }
-}// namespace FlowSdk::Date
+}// namespace ECFMP::Date

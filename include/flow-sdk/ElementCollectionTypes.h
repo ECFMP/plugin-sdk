@@ -2,8 +2,7 @@
 #include "ApiElementCollection.h"
 #include "FlightInformationRegion.h"
 
-namespace FlowSdk::Api {
-    typedef FlowSdk::Api::StringIdentifiedApiElementCollection<
-            FlowSdk::FlightInformationRegion::FlightInformationRegion>
+namespace ECFMP::Api {
+    typedef ECFMP::Api::StringIdentifiedApiElementCollection<ECFMP::FlightInformationRegion::FlightInformationRegion>
             FlightInformationRegionCollection;
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

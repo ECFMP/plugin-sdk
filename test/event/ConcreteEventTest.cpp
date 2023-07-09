@@ -1,10 +1,10 @@
 #include "event/ConcreteEvent.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 
-using FlowSdk::Event::ConcreteEvent;
-using FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion;
+using ECFMP::Event::ConcreteEvent;
+using ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion;
 
-namespace FlowSdkTest::Event {
+namespace ECFMPTest::Event {
     class ConcreteEventTest : public testing::Test
     {
         public:
@@ -59,4 +59,4 @@ namespace FlowSdkTest::Event {
         EXPECT_EQ(event2, event);
         EXPECT_NE(event3, event);
     }
-}// namespace FlowSdkTest::Event
+}// namespace ECFMPTest::Event

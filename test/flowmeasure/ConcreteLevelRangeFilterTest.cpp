@@ -1,6 +1,6 @@
 #include "flowmeasure/ConcreteLevelRangeFilter.h"
 
-namespace FlowSdkTest::FlowMeasure {
+namespace ECFMPTest::FlowMeasure {
 
     enum ApplicabilityCheckType
     {
@@ -13,7 +13,7 @@ namespace FlowSdkTest::FlowMeasure {
         ApplicabilityCheckType checkType;
 
         // The filter type
-        FlowSdk::FlowMeasure::LevelRangeFilterType filterType;
+        ECFMP::FlowMeasure::LevelRangeFilterType filterType;
 
         // The level for the filter
         int filterLevel;
@@ -28,10 +28,10 @@ namespace FlowSdkTest::FlowMeasure {
     class ConcreteLevelFilterTest : public testing::Test
     {
         public:
-        ConcreteLevelFilterTest() : levelFilter(FlowSdk::FlowMeasure::LevelRangeFilterType::AtOrBelow, 350)
+        ConcreteLevelFilterTest() : levelFilter(ECFMP::FlowMeasure::LevelRangeFilterType::AtOrBelow, 350)
         {}
 
-        FlowSdk::FlowMeasure::ConcreteLevelRangeFilter levelFilter;
+        ECFMP::FlowMeasure::ConcreteLevelRangeFilter levelFilter;
     };
 
     TEST_F(ConcreteLevelFilterTest, ItReturnsLevel)
@@ -46,7 +46,7 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteLevelFilterTest, ItReturnsType)
     {
-        EXPECT_EQ(FlowSdk::FlowMeasure::LevelRangeFilterType::AtOrBelow, levelFilter.Type());
+        EXPECT_EQ(ECFMP::FlowMeasure::LevelRangeFilterType::AtOrBelow, levelFilter.Type());
     }
 
     class ConcreteLevelFilterApplicabilityTest : public testing::TestWithParam<LevelFilterApplicabilityCheck>
@@ -55,7 +55,7 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_P(ConcreteLevelFilterApplicabilityTest, ItChecksAirportApplicability)
     {
-        FlowSdk::FlowMeasure::ConcreteLevelRangeFilter filter(GetParam().filterType, GetParam().filterLevel);
+        ECFMP::FlowMeasure::ConcreteLevelRangeFilter filter(GetParam().filterType, GetParam().filterLevel);
         if (GetParam().checkType == ApplicabilityCheckType::Level) {
             EXPECT_EQ(GetParam().expectedApplicability, filter.ApplicableToLevel(GetParam().checkLevel));
         }
@@ -68,38 +68,38 @@ namespace FlowSdkTest::FlowMeasure {
             ConcreteLevelFilterApplicabilityTestCases, ConcreteLevelFilterApplicabilityTest,
             testing::Values(
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Level, FlowSdk::FlowMeasure::AtOrBelow, 350, 350, true},
+                            ApplicabilityCheckType::Level, ECFMP::FlowMeasure::AtOrBelow, 350, 350, true},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Level, FlowSdk::FlowMeasure::AtOrBelow, 350, 340, true},
+                            ApplicabilityCheckType::Level, ECFMP::FlowMeasure::AtOrBelow, 350, 340, true},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Level, FlowSdk::FlowMeasure::AtOrBelow, 350, 360, false},
+                            ApplicabilityCheckType::Level, ECFMP::FlowMeasure::AtOrBelow, 350, 360, false},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Level, FlowSdk::FlowMeasure::AtOrAbove, 350, 350, true},
+                            ApplicabilityCheckType::Level, ECFMP::FlowMeasure::AtOrAbove, 350, 350, true},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Level, FlowSdk::FlowMeasure::AtOrAbove, 350, 360, true},
+                            ApplicabilityCheckType::Level, ECFMP::FlowMeasure::AtOrAbove, 350, 360, true},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Level, FlowSdk::FlowMeasure::AtOrAbove, 350, 340, false},
+                            ApplicabilityCheckType::Level, ECFMP::FlowMeasure::AtOrAbove, 350, 340, false},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Altitude, FlowSdk::FlowMeasure::AtOrBelow, 350, 35000, true},
+                            ApplicabilityCheckType::Altitude, ECFMP::FlowMeasure::AtOrBelow, 350, 35000, true},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Altitude, FlowSdk::FlowMeasure::AtOrBelow, 350, 34000, true},
+                            ApplicabilityCheckType::Altitude, ECFMP::FlowMeasure::AtOrBelow, 350, 34000, true},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Altitude, FlowSdk::FlowMeasure::AtOrBelow, 350, 36000, false},
+                            ApplicabilityCheckType::Altitude, ECFMP::FlowMeasure::AtOrBelow, 350, 36000, false},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Altitude, FlowSdk::FlowMeasure::AtOrAbove, 350, 35000, true},
+                            ApplicabilityCheckType::Altitude, ECFMP::FlowMeasure::AtOrAbove, 350, 35000, true},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Altitude, FlowSdk::FlowMeasure::AtOrAbove, 350, 36000, true},
+                            ApplicabilityCheckType::Altitude, ECFMP::FlowMeasure::AtOrAbove, 350, 36000, true},
                     LevelFilterApplicabilityCheck{
-                            ApplicabilityCheckType::Altitude, FlowSdk::FlowMeasure::AtOrAbove, 350, 34000, false}
+                            ApplicabilityCheckType::Altitude, ECFMP::FlowMeasure::AtOrAbove, 350, 34000, false}
             ),
             [](const ::testing::TestParamInfo<ConcreteLevelFilterApplicabilityTest::ParamType>& info) {
                 std::string name;
                 switch (info.param.filterType) {
-                case FlowSdk::FlowMeasure::AtOrBelow: {
+                case ECFMP::FlowMeasure::AtOrBelow: {
                     name += "AtOrBelow_";
                     break;
                 }
-                case FlowSdk::FlowMeasure::AtOrAbove: {
+                case ECFMP::FlowMeasure::AtOrAbove: {
                     name += "AtOrAbove_";
                     break;
                 }
@@ -118,4 +118,4 @@ namespace FlowSdkTest::FlowMeasure {
                 return name;
             }
     );
-}// namespace FlowSdkTest::FlowMeasure
+}// namespace ECFMPTest::FlowMeasure

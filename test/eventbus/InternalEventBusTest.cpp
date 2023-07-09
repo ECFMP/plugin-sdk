@@ -2,9 +2,9 @@
 #include "flow-sdk/NewEventFilter.h"
 #include "flow-sdk/NewEventListener.h"
 
-namespace FlowSdkTest::EvenBus {
+namespace ECFMPTest::EvenBus {
 
-    class MockEventListener : public FlowSdk::EventBus::NewEventListener<int>
+    class MockEventListener : public ECFMP::EventBus::NewEventListener<int>
     {
         public:
         explicit MockEventListener(int expectedEvent) : expectedEvent(expectedEvent)
@@ -20,7 +20,7 @@ namespace FlowSdkTest::EvenBus {
         int callCount = 0;
     };
 
-    class MockEventFilter : public FlowSdk::EventBus::NewEventFilter<int>
+    class MockEventFilter : public ECFMP::EventBus::NewEventFilter<int>
     {
         public:
         explicit MockEventFilter(int expectedEvent, bool shouldProcess)
@@ -42,7 +42,7 @@ namespace FlowSdkTest::EvenBus {
     class InternalEventBusTest : public ::testing::Test
     {
         public:
-        FlowSdk::EventBus::InternalEventBus eventBus;
+        ECFMP::EventBus::InternalEventBus eventBus;
     };
 
     TEST_F(InternalEventBusTest, OnEventWithNoSubscriptionsDoesNotThrow)
@@ -107,4 +107,4 @@ namespace FlowSdkTest::EvenBus {
         EXPECT_EQ(listener->callCount, 1);
         EXPECT_EQ(filter->callCount, 1);
     }
-}// namespace FlowSdkTest::EvenBus
+}// namespace ECFMPTest::EvenBus

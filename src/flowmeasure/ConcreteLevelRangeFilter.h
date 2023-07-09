@@ -1,7 +1,7 @@
 #pragma once
 #include "flow-sdk/LevelRangeFilter.h"
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     class ConcreteLevelRangeFilter : public LevelRangeFilter
     {
@@ -24,4 +24,4 @@ namespace FlowSdk::FlowMeasure {
         int filterLevelAsAltitude;
     };
 
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

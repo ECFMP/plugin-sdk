@@ -1,13 +1,13 @@
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 
-namespace FlowSdkTest::FlightInformationRegion {
+namespace ECFMPTest::FlightInformationRegion {
     class ConcreteFlightInformationRegionTest : public testing::Test
     {
         public:
         ConcreteFlightInformationRegionTest() : fir(1, "EGTT", "London")
         {}
 
-        FlowSdk::FlightInformationRegion::ConcreteFlightInformationRegion fir;
+        ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion fir;
     };
 
     TEST_F(ConcreteFlightInformationRegionTest, ItHasAnId)
@@ -24,4 +24,4 @@ namespace FlowSdkTest::FlightInformationRegion {
     {
         EXPECT_EQ("London", fir.Name());
     }
-}// namespace FlowSdkTest::FlightInformationRegion
+}// namespace ECFMPTest::FlightInformationRegion

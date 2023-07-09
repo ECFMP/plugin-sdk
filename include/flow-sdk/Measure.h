@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     /**
      * The different type of flow measures
@@ -74,4 +74,4 @@ namespace FlowSdk::FlowMeasure {
          */
         [[nodiscard]] virtual auto SetValue() const -> const std::set<std::string>& = 0;
     };
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

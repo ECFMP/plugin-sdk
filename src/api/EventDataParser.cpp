@@ -4,7 +4,7 @@
 #include "flow-sdk/Logger.h"
 #include "nlohmann/json.hpp"
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
 
     EventDataParser::EventDataParser(
             std::shared_ptr<InternalEventCollection> events,
@@ -78,4 +78,4 @@ namespace FlowSdk::Api {
     {
         return data.contains(key) && data.at(key).is_string() && Date::DateStringValid(data.at(key));
     }
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api

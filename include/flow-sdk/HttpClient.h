@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::Http {
+namespace ECFMP::Http {
 
     /**
      * Represents the HTTP response.
@@ -28,4 +28,4 @@ namespace FlowSdk::Http {
          */
         [[nodiscard]] virtual auto Get(const std::string& url) -> HttpResponse = 0;
     };
-}// namespace FlowSdk::Http
+}// namespace ECFMP::Http

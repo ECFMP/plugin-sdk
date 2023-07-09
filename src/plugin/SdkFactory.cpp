@@ -18,7 +18,7 @@
 #include "log/LogDecorator.h"
 #include "log/NullLogger.h"
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
     struct SdkFactory::SdkFactoryImpl {
         auto CreateDataListeners() -> std::unique_ptr<Plugin::ConcreteEventListeners<const nlohmann::json&>>
         {
@@ -161,4 +161,4 @@ namespace FlowSdk::Plugin {
                 std::shared_ptr<void>(impl->CreateApiDataScheduler()), impl->GetEventBus()
         );
     }
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

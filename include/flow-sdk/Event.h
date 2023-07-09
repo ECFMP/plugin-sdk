@@ -3,7 +3,7 @@
 #include "EventParticipant.h"
 #include "FlightInformationRegion.h"
 
-namespace FlowSdk::Event {
+namespace ECFMP::Event {
     /**
      * Represents an event on the network.
      */
@@ -48,4 +48,4 @@ namespace FlowSdk::Event {
          */
         [[nodiscard]] auto operator==(const class Event& event) const -> bool;
     };
-}// namespace FlowSdk::Event
+}// namespace ECFMP::Event

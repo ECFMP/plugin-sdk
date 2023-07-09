@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::FlowMeasure {
+namespace ECFMP::FlowMeasure {
 
     enum LevelRangeFilterType
     {
@@ -41,4 +41,4 @@ namespace FlowSdk::FlowMeasure {
          */
         [[nodiscard]] virtual auto ApplicableToAltitude(int level) const noexcept -> bool = 0;
     };
-}// namespace FlowSdk::FlowMeasure
+}// namespace ECFMP::FlowMeasure

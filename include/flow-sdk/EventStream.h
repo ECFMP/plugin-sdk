@@ -3,7 +3,7 @@
 #include <mutex>
 #include <vector>
 
-namespace FlowSdk::EventBus {
+namespace ECFMP::EventBus {
 
     template<typename EventType>
     class NewEventListener;
@@ -69,4 +69,4 @@ namespace FlowSdk::EventBus {
         // All subscriptions to this event stream.
         std::vector<EventSubscription<EventType>> subscriptions;
     };
-}// namespace FlowSdk::EventBus
+}// namespace ECFMP::EventBus

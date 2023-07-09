@@ -5,19 +5,19 @@
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
 
-namespace FlowSdkTest::Api {
+namespace ECFMPTest::Api {
     class FlightInformationRegionDataParserTest : public testing::Test
     {
         public:
         FlightInformationRegionDataParserTest()
-            : firs(std::make_shared<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
-                           FlowSdk::FlightInformationRegion::FlightInformationRegion>>()),
+            : firs(std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
+                           ECFMP::FlightInformationRegion::FlightInformationRegion>>()),
               mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(firs, mockLogger)
         {}
 
-        std::shared_ptr<FlowSdk::Api::InternalFlightInformationRegionCollection> firs;
+        std::shared_ptr<ECFMP::Api::InternalFlightInformationRegionCollection> firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
-        FlowSdk::Api::FlightInformationRegionDataParser parser;
+        ECFMP::Api::FlightInformationRegionDataParser parser;
     };
 
     TEST_F(FlightInformationRegionDataParserTest, ItDoesNothingIfDataNotObject)
@@ -82,16 +82,16 @@ namespace FlowSdkTest::Api {
     {
         public:
         FlightInformationRegionDataParserBadDataTest()
-            : firs(std::make_shared<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
-                           FlowSdk ::FlightInformationRegion::FlightInformationRegion>>()),
+            : firs(std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
+                           ECFMP::FlightInformationRegion::FlightInformationRegion>>()),
               mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(firs, mockLogger)
         {}
 
-        std::shared_ptr<FlowSdk::Api::ConcreteStringIdentifiedApiElementCollection<
-                FlowSdk ::FlightInformationRegion::FlightInformationRegion>>
+        std::shared_ptr<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
+                ECFMP::FlightInformationRegion::FlightInformationRegion>>
                 firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
-        FlowSdk::Api::FlightInformationRegionDataParser parser;
+        ECFMP::Api::FlightInformationRegionDataParser parser;
     };
 
     INSTANTIATE_TEST_SUITE_P(
@@ -157,4 +157,4 @@ namespace FlowSdkTest::Api {
         EXPECT_EQ("EGTT", fir1->Identifier());
         EXPECT_EQ("London", fir1->Name());
     }
-}// namespace FlowSdkTest::Api
+}// namespace ECFMPTest::Api

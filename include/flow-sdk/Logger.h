@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::Log {
+namespace ECFMP::Log {
 
     /**
      * A class that plugins consuming the SDK may implement in order to allow ECFMP to log to their logs.
@@ -14,4 +14,4 @@ namespace FlowSdk::Log {
         virtual void Warning(const std::string& message) = 0;
         virtual void Error(const std::string& message) = 0;
     };
-}// namespace FlowSdk::Log
+}// namespace ECFMP::Log

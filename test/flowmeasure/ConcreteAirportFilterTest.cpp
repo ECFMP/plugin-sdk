@@ -1,6 +1,6 @@
 #include "flowmeasure/ConcreteAirportFilter.h"
 
-namespace FlowSdkTest::FlowMeasure {
+namespace ECFMPTest::FlowMeasure {
 
     using AirportFilterCheck = struct AirportFilterCheck {
         std::string airport;
@@ -13,12 +13,11 @@ namespace FlowSdkTest::FlowMeasure {
         public:
         ConcreteAirportFilterTest()
             : airportFilter(
-                    std::set<std::string>{"EGKK", "LF", "EDD", "K"},
-                    FlowSdk::FlowMeasure::AirportFilterType::Destination
+                    std::set<std::string>{"EGKK", "LF", "EDD", "K"}, ECFMP::FlowMeasure::AirportFilterType::Destination
             )
         {}
 
-        FlowSdk::FlowMeasure::ConcreteAirportFilter airportFilter;
+        ECFMP::FlowMeasure::ConcreteAirportFilter airportFilter;
     };
 
     TEST_F(ConcreteAirportFilterTest, ItReturnsAirportStrings)
@@ -28,7 +27,7 @@ namespace FlowSdkTest::FlowMeasure {
 
     TEST_F(ConcreteAirportFilterTest, ItReturnsAirportFilterType)
     {
-        EXPECT_EQ(FlowSdk::FlowMeasure::AirportFilterType::Destination, airportFilter.Type());
+        EXPECT_EQ(ECFMP::FlowMeasure::AirportFilterType::Destination, airportFilter.Type());
     }
 
     class ConcreteAirportFilterApplicabilityTest : public testing::TestWithParam<AirportFilterCheck>
@@ -36,12 +35,11 @@ namespace FlowSdkTest::FlowMeasure {
         public:
         ConcreteAirportFilterApplicabilityTest()
             : airportFilter(
-                    std::set<std::string>{"EGKK", "LF", "EDD", "K"},
-                    FlowSdk::FlowMeasure::AirportFilterType::Destination
+                    std::set<std::string>{"EGKK", "LF", "EDD", "K"}, ECFMP::FlowMeasure::AirportFilterType::Destination
             )
         {}
 
-        FlowSdk::FlowMeasure::ConcreteAirportFilter airportFilter;
+        ECFMP::FlowMeasure::ConcreteAirportFilter airportFilter;
     };
 
     TEST_P(ConcreteAirportFilterApplicabilityTest, ItChecksAirportApplicability)
@@ -64,4 +62,4 @@ namespace FlowSdkTest::FlowMeasure {
                 return info.param.airport;
             }
     );
-}// namespace FlowSdkTest::FlowMeasure
+}// namespace ECFMPTest::FlowMeasure

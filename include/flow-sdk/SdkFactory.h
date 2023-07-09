@@ -1,16 +1,16 @@
 #pragma once
 #include "Sdk.h"
 
-namespace FlowSdk {
+namespace ECFMP {
     namespace Http {
         class HttpClient;
     }// namespace Http
     namespace Log {
         class Logger;
     }
-}// namespace FlowSdk
+}// namespace ECFMP
 
-namespace FlowSdk::Plugin {
+namespace ECFMP::Plugin {
 
     class SdkConfigurationException : public std::logic_error
     {
@@ -63,4 +63,4 @@ namespace FlowSdk::Plugin {
         struct SdkFactoryImpl;
         std::unique_ptr<SdkFactoryImpl> impl;
     };
-}// namespace FlowSdk::Plugin
+}// namespace ECFMP::Plugin

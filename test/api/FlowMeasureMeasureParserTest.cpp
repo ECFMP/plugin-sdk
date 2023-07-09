@@ -3,14 +3,14 @@
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
 
-namespace FlowSdkTest::Api {
+namespace ECFMPTest::Api {
 
     template<typename ValueType>
     struct FlowMeasureMeasureTestCase {
         std::string description;
         std::string jsonType;
         ValueType jsonValue;
-        FlowSdk::FlowMeasure::MeasureType expectedType;
+        ECFMP::FlowMeasure::MeasureType expectedType;
         ValueType expectedValue;
     };
 
@@ -24,7 +24,7 @@ namespace FlowSdkTest::Api {
         {}
 
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
-        FlowSdk::Api::FlowMeasureMeasureParser parser;
+        ECFMP::Api::FlowMeasureMeasureParser parser;
     };
 
     TEST_P(FlowMeasureMeasureParserIntegerTest, ItParsesIntegerMeasures)
@@ -43,18 +43,18 @@ namespace FlowSdkTest::Api {
             FlowMeasureMeasureParserIntegerTest, FlowMeasureMeasureParserIntegerTest,
             testing::Values(
                     FlowMeasureMeasureTestCase<int>{
-                            "miles_in_trail", "miles_in_trail", 5, FlowSdk::FlowMeasure::MeasureType::MilesInTrail, 5},
+                            "miles_in_trail", "miles_in_trail", 5, ECFMP::FlowMeasure::MeasureType::MilesInTrail, 5},
                     FlowMeasureMeasureTestCase<int>{
                             "minimum_departure_interval", "minimum_departure_interval", 5,
-                            FlowSdk::FlowMeasure::MeasureType::MinimumDepartureInterval, 5},
+                            ECFMP::FlowMeasure::MeasureType::MinimumDepartureInterval, 5},
                     FlowMeasureMeasureTestCase<int>{
-                            "per_hour", "per_hour", 5, FlowSdk::FlowMeasure::MeasureType::PerHour, 5},
+                            "per_hour", "per_hour", 5, ECFMP::FlowMeasure::MeasureType::PerHour, 5},
                     FlowMeasureMeasureTestCase<int>{
                             "max_indicated_airspeed", "max_ias", 5,
-                            FlowSdk::FlowMeasure::MeasureType::MaxIndicatedAirspeed, 5},
+                            ECFMP::FlowMeasure::MeasureType::MaxIndicatedAirspeed, 5},
                     FlowMeasureMeasureTestCase<int>{
                             "indicated_airspeed_reduction", "ias_reduction", 5,
-                            FlowSdk::FlowMeasure::MeasureType::IndicatedAirspeedReduction, 5}
+                            ECFMP::FlowMeasure::MeasureType::IndicatedAirspeedReduction, 5}
             ),
             [](const testing::TestParamInfo<FlowMeasureMeasureTestCase<int>>& info) {
                 return info.param.description;
@@ -70,7 +70,7 @@ namespace FlowSdkTest::Api {
         {}
 
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
-        FlowSdk::Api::FlowMeasureMeasureParser parser;
+        ECFMP::Api::FlowMeasureMeasureParser parser;
     };
 
     TEST_P(FlowMeasureMeasureParserDoubleTest, ItParsesDoubleMeasures)
@@ -89,9 +89,9 @@ namespace FlowSdkTest::Api {
             FlowMeasureMeasureParserDoubleTest, FlowMeasureMeasureParserDoubleTest,
             testing::Values(
                     FlowMeasureMeasureTestCase<double>{
-                            "max_mach", "max_mach", 5.0, FlowSdk::FlowMeasure::MeasureType::MaxMach, 5.0},
+                            "max_mach", "max_mach", 5.0, ECFMP::FlowMeasure::MeasureType::MaxMach, 5.0},
                     FlowMeasureMeasureTestCase<double>{
-                            "mach_reduction", "mach_reduction", 5.0, FlowSdk::FlowMeasure::MeasureType::MachReduction,
+                            "mach_reduction", "mach_reduction", 5.0, ECFMP::FlowMeasure::MeasureType::MachReduction,
                             5.0}
             ),
             [](const testing::TestParamInfo<FlowMeasureMeasureTestCase<double>>& info) {
@@ -109,7 +109,7 @@ namespace FlowSdkTest::Api {
         {}
 
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
-        FlowSdk::Api::FlowMeasureMeasureParser parser;
+        ECFMP::Api::FlowMeasureMeasureParser parser;
     };
 
     TEST_P(FlowMeasureMeasureParserSetTest, ItParsesSetMeasures)
@@ -130,7 +130,7 @@ namespace FlowSdkTest::Api {
                     "mandatory_route",
                     "mandatory_route",
                     {"A", "B", "C"},
-                    FlowSdk::FlowMeasure::MeasureType::MandatoryRoute,
+                    ECFMP::FlowMeasure::MeasureType::MandatoryRoute,
                     {"A", "B", "C"}}),
             [](const testing::TestParamInfo<FlowMeasureMeasureTestCase<std::set<std::string>>>& info) {
                 return info.param.description;
@@ -147,7 +147,7 @@ namespace FlowSdkTest::Api {
         {}
 
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
-        FlowSdk::Api::FlowMeasureMeasureParser parser;
+        ECFMP::Api::FlowMeasureMeasureParser parser;
     };
 
     TEST_P(FlowMeasureParserNoValueTest, ItParsesNoValueMeasures)
@@ -166,10 +166,10 @@ namespace FlowSdkTest::Api {
             testing::Values(
                     FlowMeasureMeasureTestCase<nlohmann::json::value_t>{
                             "ground_stop", "ground_stop", nlohmann::json::value_t::null,
-                            FlowSdk::FlowMeasure::MeasureType::GroundStop, nlohmann::json::value_t::null},
+                            ECFMP::FlowMeasure::MeasureType::GroundStop, nlohmann::json::value_t::null},
                     FlowMeasureMeasureTestCase<nlohmann::json::value_t>{
                             "prohibit", "prohibit", nlohmann::json::value_t::null,
-                            FlowSdk::FlowMeasure::MeasureType::Prohibit, nlohmann::json::value_t::null}
+                            ECFMP::FlowMeasure::MeasureType::Prohibit, nlohmann::json::value_t::null}
             ),
             [](const testing::TestParamInfo<FlowMeasureMeasureTestCase<nlohmann::json::value_t>>& info) {
                 return info.param.description;
@@ -189,7 +189,7 @@ namespace FlowSdkTest::Api {
         {}
 
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
-        FlowSdk::Api::FlowMeasureMeasureParser parser;
+        ECFMP::Api::FlowMeasureMeasureParser parser;
     };
 
     TEST_P(FlowMeasureMeasureParserBadDataTest, ItReturnsNullptrBadData)
@@ -241,4 +241,4 @@ namespace FlowSdkTest::Api {
                 return info.param.description;
             }
     );
-}// namespace FlowSdkTest::Api
+}// namespace ECFMPTest::Api

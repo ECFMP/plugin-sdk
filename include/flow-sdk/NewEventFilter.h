@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FlowSdk::EventBus {
+namespace ECFMP::EventBus {
 
     template<typename EventType>
     class NewEventFilter
@@ -9,4 +9,4 @@ namespace FlowSdk::EventBus {
         virtual ~NewEventFilter() = default;
         virtual bool ShouldProcess(const EventType&) = 0;
     };
-}// namespace FlowSdk::EventBus
+}// namespace ECFMP::EventBus

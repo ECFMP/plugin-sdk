@@ -1,7 +1,7 @@
 #include "date/ParseDateStrings.h"
 #include <chrono>
 
-namespace FlowSdkTest::Date {
+namespace ECFMPTest::Date {
 
     using TimeStringTestParam = struct TimeStringTestParam {
         // The input string
@@ -78,7 +78,7 @@ namespace FlowSdkTest::Date {
 
     TEST_P(ValidateValidTimeStringsTest, ItChecksThatTimeStringsAreValid)
     {
-        EXPECT_EQ(GetParam().expected, FlowSdk::Date::DateStringValid(GetParam().input));
+        EXPECT_EQ(GetParam().expected, ECFMP::Date::DateStringValid(GetParam().input));
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -106,7 +106,7 @@ namespace FlowSdkTest::Date {
     TEST_P(ParseTimeStringsTest, ItParsesTimeStrings)
     {
         const auto expected = TestParamToTimePoint<TimeStringTestParam>(GetParam());
-        EXPECT_EQ(expected, FlowSdk::Date::TimePointFromDateString(GetParam().input));
+        EXPECT_EQ(expected, ECFMP::Date::TimePointFromDateString(GetParam().input));
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -130,7 +130,7 @@ namespace FlowSdkTest::Date {
     TEST_P(DateStringFromTimePointTest, ItConvertsTimePointsToDateStrings)
     {
         const auto timePoint = TestParamToTimePoint<ToTimeStringTestParam>(GetParam());
-        EXPECT_EQ(GetParam().expected, FlowSdk::Date::DateStringFromTimePoint(timePoint));
+        EXPECT_EQ(GetParam().expected, ECFMP::Date::DateStringFromTimePoint(timePoint));
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -147,4 +147,4 @@ namespace FlowSdkTest::Date {
                 return info.param.name;
             }
     );
-}// namespace FlowSdkTest::Date
+}// namespace ECFMPTest::Date

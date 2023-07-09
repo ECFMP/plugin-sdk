@@ -5,11 +5,11 @@
 #include "nlohmann/json_fwd.hpp"
 #include <memory>
 
-namespace FlowSdk::Log {
+namespace ECFMP::Log {
     class Logger;
-}// namespace FlowSdk::Log
+}// namespace ECFMP::Log
 
-namespace FlowSdk::Api {
+namespace ECFMP::Api {
 
     class FlowMeasureFilterParserInterface;
     class FlowMeasureMeasureParserInterface;
@@ -31,7 +31,7 @@ namespace FlowSdk::Api {
         [[nodiscard]] static auto DataIsValid(const nlohmann::json& data) -> bool;
         [[nodiscard]] static auto FlowMeasurePropertiesValid(const nlohmann::json& data) -> bool;
         [[nodiscard]] auto GetNotifiedFirs(const nlohmann::json& data) const
-                -> std::vector<std::shared_ptr<const FlowSdk::FlightInformationRegion::FlightInformationRegion>>;
+                -> std::vector<std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>>;
         [[nodiscard]] auto GetMeasureStatus(
                 const std::chrono::system_clock::time_point& startTime,
                 const std::chrono::system_clock::time_point& endTime,
@@ -57,4 +57,4 @@ namespace FlowSdk::Api {
         std::shared_ptr<Log::Logger> logger;
     };
 
-}// namespace FlowSdk::Api
+}// namespace ECFMP::Api
