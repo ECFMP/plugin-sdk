@@ -1,6 +1,5 @@
 #include "flow-sdk/SdkFactory.h"
 #include "flow-sdk/EventListeners.h"
-#include "flow-sdk/SdkEventListeners.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 
