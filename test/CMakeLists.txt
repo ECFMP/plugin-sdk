@@ -25,6 +25,10 @@ set(test__event
         event/ConcreteEventParticipantTest.cpp
         api/EventDataParserTest.cpp)
 
+set(test__eventbus
+        eventbus/InternalEventStreamTest.cpp
+        eventbus/InternalEventBusTest.cpp)
+
 set(test__flightinformationregion
         flightinformationregion/ConcreteFlightInformationRegionTest.cpp
         )
@@ -49,6 +53,11 @@ set(test__mock
         mock/MockHttpClient.h
         )
 
+set(test__pch
+        pch/pch.cpp
+        pch/pch.h
+        )
+
 set(test__plugin
         plugin/ConcreteEventListenersTest.cpp
         plugin/SdkFactoryTest.cpp
@@ -65,6 +74,7 @@ add_executable(${PROJECT_NAME}
         ${test__api}
         ${test__date}
         ${test__event}
+        ${test__eventbus}
         ${test__flightinformationregion}
         ${test__flowmeasure}
         ${test__log}
