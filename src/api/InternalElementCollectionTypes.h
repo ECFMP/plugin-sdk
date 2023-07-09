@@ -1,9 +1,9 @@
 #pragma once
 #include "InternalApiElementCollection.h"
 #include "InternalStringIdentifiedApiElementCollection.h"
-#include "flow-sdk/Event.h"
-#include "flow-sdk/FlightInformationRegion.h"
-#include "flow-sdk/FlowMeasure.h"
+#include "ECFMP/Event.h"
+#include "ECFMP/FlightInformationRegion.h"
+#include "ECFMP/FlowMeasure.h"
 
 namespace ECFMP::Api {
     typedef ECFMP::Api::InternalStringIdentifiedApiElementCollection<

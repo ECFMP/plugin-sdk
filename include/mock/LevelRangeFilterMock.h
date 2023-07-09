@@ -1,5 +1,5 @@
 #pragma once
-#include "../flow-sdk/LevelRangeFilter.h"
+#include "../ECFMP/LevelRangeFilter.h"
 #include <gmock/gmock.h>
 
 namespace ECFMP::Mock::FlowMeasure {

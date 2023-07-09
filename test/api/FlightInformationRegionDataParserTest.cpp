@@ -1,7 +1,7 @@
 #include "api/FlightInformationRegionDataParser.h"
 #include "api/ConcreteStringIdentifiedApiElementCollection.h"
 #include "api/InternalElementCollectionTypes.h"
-#include "flow-sdk/FlightInformationRegion.h"
+#include "ECFMP/FlightInformationRegion.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
 

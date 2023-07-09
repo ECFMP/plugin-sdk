@@ -1,5 +1,5 @@
 #pragma once
-#include "../flow-sdk/EventParticipant.h"
+#include "../ECFMP/EventParticipant.h"
 #include <gmock/gmock.h>
 
 namespace ECFMP::Mock::Event {

@@ -1,6 +1,6 @@
 #pragma once
-#include "flow-sdk/EventListener.h"
-#include "flow-sdk/FlowMeasure.h"
+#include "ECFMP/EventListener.h"
+#include "ECFMP/FlowMeasure.h"
 #include <gmock/gmock.h>
 
 namespace ECFMPTest::Plugin {

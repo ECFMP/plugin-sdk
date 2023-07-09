@@ -1,5 +1,5 @@
 #pragma once
-#include "../flow-sdk/FlightInformationRegion.h"
+#include "../ECFMP/FlightInformationRegion.h"
 #include <gmock/gmock.h>
 
 namespace ECFMP::Mock::FlightInformationRegion {

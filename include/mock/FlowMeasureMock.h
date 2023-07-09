@@ -1,5 +1,5 @@
 #pragma once
-#include "../flow-sdk/FlowMeasure.h"
+#include "../ECFMP/FlowMeasure.h"
 #include <gmock/gmock.h>
 
 namespace ECFMP::Mock::FlowMeasure {

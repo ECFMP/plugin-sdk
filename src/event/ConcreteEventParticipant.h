@@ -1,5 +1,5 @@
 #pragma once
-#include "flow-sdk/EventParticipant.h"
+#include "ECFMP/EventParticipant.h"
 
 namespace ECFMP::Event {
     class ConcreteEventParticipant : public EventParticipant

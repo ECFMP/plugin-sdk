@@ -1,6 +1,6 @@
 #pragma once
 #include "InternalElementCollectionTypes.h"
-#include "flow-sdk/ElementCollectionTypes.h"
+#include "ECFMP/ElementCollectionTypes.h"
 #include "nlohmann/json_fwd.hpp"
 
 namespace ECFMP {

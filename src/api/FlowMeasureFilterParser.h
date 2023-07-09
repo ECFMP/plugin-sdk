@@ -1,9 +1,9 @@
 #pragma once
 #include "FlowMeasureFilterParserInterface.h"
-#include "flow-sdk/FlowMeasureFilters.h"
-#include "flow-sdk/LevelRangeFilter.h"
-#include "flow-sdk/MultipleLevelFilter.h"
-#include "flow-sdk/RangeToDestinationFilter.h"
+#include "ECFMP/FlowMeasureFilters.h"
+#include "ECFMP/LevelRangeFilter.h"
+#include "ECFMP/MultipleLevelFilter.h"
+#include "ECFMP/RangeToDestinationFilter.h"
 
 namespace ECFMP {
     namespace FlowMeasure {
