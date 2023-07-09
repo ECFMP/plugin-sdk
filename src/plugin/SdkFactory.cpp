@@ -1,4 +1,5 @@
 #include "flow-sdk/SdkFactory.h"
+#include "../eventbus/InternalEventBus.h"
 #include "ConcreteEventListeners.h"
 #include "ConcreteSdk.h"
 #include "ConcreteSdkEventListeners.h"
@@ -20,17 +21,6 @@
 
 namespace FlowSdk::Plugin {
     struct SdkFactory::SdkFactoryImpl {
-        static auto CreateEventListeners() -> std::unique_ptr<ConcreteSdkEventListeners>
-        {
-            return std::make_unique<ConcreteSdkEventListeners>(
-                    std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
-                    std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
-                    std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
-                    std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure>>(),
-                    std::make_unique<ConcreteEventListeners<FlowMeasure::FlowMeasure, FlowMeasure::FlowMeasure>>()
-            );
-        }
-
         auto CreateDataListeners() -> std::unique_ptr<Plugin::ConcreteEventListeners<const nlohmann::json&>>
         {
             auto dataListeners = std::make_unique<Plugin::ConcreteEventListeners<const nlohmann::json&>>();
@@ -45,9 +35,9 @@ namespace FlowSdk::Plugin {
             return dataListeners;
         }
 
-        auto CreateApiDataScheduler() -> std::unique_ptr<Api::ApiDataScheduler>
+        auto CreateApiDataScheduler() -> std::shared_ptr<Api::ApiDataScheduler>
         {
-            return std::make_unique<Api::ApiDataScheduler>(
+            return std::make_shared<Api::ApiDataScheduler>(
                     std::make_unique<Api::ApiDataDownloader>(std::move(httpClient), CreateDataListeners(), GetLogger())
             );
         }
@@ -101,6 +91,15 @@ namespace FlowSdk::Plugin {
             return flowMeasures;
         }
 
+        auto GetEventBus() -> std::shared_ptr<EventBus::InternalEventBus>
+        {
+            if (!eventBus) {
+                eventBus = std::make_shared<EventBus::InternalEventBus>();
+            }
+
+            return eventBus;
+        }
+
         // For performing HTTP requests
         std::unique_ptr<Http::HttpClient> httpClient = nullptr;
 
@@ -109,6 +108,9 @@ namespace FlowSdk::Plugin {
 
         // A wrapper around the logger
         std::shared_ptr<Log::Logger> wrappedLogger = nullptr;
+
+        // For broadcasting events
+        std::shared_ptr<EventBus::InternalEventBus> eventBus = nullptr;
 
         // All the FIRs
         std::shared_ptr<
@@ -156,6 +158,8 @@ namespace FlowSdk::Plugin {
             throw SdkConfigurationException("No http client provided");
         }
 
-        return std::make_unique<ConcreteSdk>(impl->CreateApiDataScheduler(), impl->CreateEventListeners());
+        return std::make_unique<ConcreteSdk>(
+                std::shared_ptr<void>(impl->CreateApiDataScheduler()), impl->GetEventBus()
+        );
     }
 }// namespace FlowSdk::Plugin

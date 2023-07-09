@@ -28,24 +28,12 @@ namespace FlowSdkTest::Plugin {
                                       .WithHttpClient(std::move(http))
                                       .Instance();
 
-        instance->Listeners().FlowMeasureActivatedListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureExpiredListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureNotifiedListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureWithdrawnListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureReissuedListeners().Remove(nullptr);
-
         instance->Destroy();
     }
 
     TEST_F(SdkFactoryTest, ItBuildsAnSdkWithNoLogger)
     {
         const auto instance = FlowSdk::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
-
-        instance->Listeners().FlowMeasureActivatedListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureExpiredListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureNotifiedListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureWithdrawnListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureReissuedListeners().Remove(nullptr);
 
         instance->Destroy();
     }

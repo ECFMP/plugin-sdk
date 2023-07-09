@@ -61,7 +61,7 @@ set(test__pch
 set(test__plugin
         plugin/ConcreteEventListenersTest.cpp
         plugin/SdkFactoryTest.cpp
-        )
+        plugin/ConcreteSdkTest.cpp)
 
 set(test__other
         main.cpp
