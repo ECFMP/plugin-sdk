@@ -1,6 +1,5 @@
 #include "flow-sdk/SdkFactory.h"
 #include "flow-sdk/EventListeners.h"
-#include "flow-sdk/SdkEventListeners.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 
@@ -28,24 +27,12 @@ namespace FlowSdkTest::Plugin {
                                       .WithHttpClient(std::move(http))
                                       .Instance();
 
-        instance->Listeners().FlowMeasureActivatedListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureExpiredListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureNotifiedListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureWithdrawnListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureReissuedListeners().Remove(nullptr);
-
         instance->Destroy();
     }
 
     TEST_F(SdkFactoryTest, ItBuildsAnSdkWithNoLogger)
     {
         const auto instance = FlowSdk::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
-
-        instance->Listeners().FlowMeasureActivatedListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureExpiredListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureNotifiedListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureWithdrawnListeners().Remove(nullptr);
-        instance->Listeners().FlowMeasureReissuedListeners().Remove(nullptr);
 
         instance->Destroy();
     }

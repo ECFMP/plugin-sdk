@@ -14,7 +14,12 @@ set(src_flight_information_regions
 set(src_events
         event/ConcreteEvent.cpp event/ConcreteEvent.h
         event/ConcreteEventParticipant.cpp "event/ConcreteEventParticipant.h"
-        event/Event.cpp)
+        event/Event.cpp ../include/flow-sdk/EventStream.h ../include/flow-sdk/NewEventListener.h ../include/flow-sdk/NewEventFilter.h)
+
+set(src_eventbus
+        ../include/flow-sdk/EventStream.h
+        ../include/flow-sdk/NewEventListener.h
+        ../include/flow-sdk/NewEventFilter.h eventbus/InternalEventStream.h ../include/flow-sdk/EventBus.h eventbus/InternalEventBus.h)
 
 set(src_flowmeasures
         flowmeasure/ConcreteFlowMeasure.cpp flowmeasure/ConcreteFlowMeasure.h flowmeasure/ConcreteAirportFilter.cpp flowmeasure/ConcreteAirportFilter.h flowmeasure/ConcreteEventFilter.cpp flowmeasure/ConcreteEventFilter.h flowmeasure/ConcreteLevelRangeFilter.cpp flowmeasure/ConcreteLevelRangeFilter.h flowmeasure/ConcreteRouteFilter.cpp flowmeasure/ConcreteRouteFilter.h flowmeasure/ConcreteMeasure.cpp flowmeasure/ConcreteMeasure.h flowmeasure/ConcreteMeasureFactory.cpp flowmeasure/ConcreteMeasureFactory.h flowmeasure/ConcreteFlowMeasureFilters.cpp flowmeasure/ConcreteFlowMeasureFilters.h api/FlowMeasureFilterParserInterface.h ../include/flow-sdk/MultipleLevelFilter.h flowmeasure/ConcreteMultipleLevelFilter.cpp flowmeasure/ConcreteMultipleLevelFilter.h ../include/mock/MultipleLevelFilterMock.h ../include/flow-sdk/RangeToDestinationFilter.h flowmeasure/ConcreteRangeToDestinationFilter.cpp flowmeasure/ConcreteRangeToDestinationFilter.h)
@@ -28,12 +33,13 @@ set(src_plugin
         plugin/ConcreteSdk.h
         plugin/ConcreteSdk.cpp
         plugin/InternalEventListeners.h
-        plugin/ConcreteEventListeners.cpp plugin/ConcreteEventListeners.h plugin/ConcreteSdkEventListeners.cpp plugin/ConcreteSdkEventListeners.h plugin/SdkFactory.cpp)
+        plugin/ConcreteEventListeners.cpp plugin/ConcreteEventListeners.h plugin/SdkFactory.cpp ../include/flow-sdk/SdkEvents.h)
 
 set(ALL_FILES
         ${src_api}
         ${src_date}
         ${src_events}
+        ${src_eventbus}
         ${src_flowmeasures}
         ${src_flight_information_regions}
         ${src_log}

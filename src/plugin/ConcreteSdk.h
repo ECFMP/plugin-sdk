@@ -1,27 +1,34 @@
 #pragma once
 #include "flow-sdk/Sdk.h"
 
-namespace FlowSdk::Api {
-    class ApiDataScheduler;
-}// namespace FlowSdk::Api
+namespace FlowSdk {
+    namespace Api {
+        class ApiDataScheduler;
+    }
+    namespace EventBus {
+        class InternalEventBus;
+    }
+}// namespace FlowSdk
 
 namespace FlowSdk::Plugin {
 
     class ConcreteSdk : public Sdk
     {
         public:
-        ConcreteSdk(
-                std::unique_ptr<Api::ApiDataScheduler> apiScheduler, std::unique_ptr<SdkEventListeners> eventListeners
-        );
+        ConcreteSdk(std::shared_ptr<void> apiScheduler, std::shared_ptr<EventBus::InternalEventBus> eventBus);
+        ~ConcreteSdk() override = default;
 
-        [[nodiscard]] auto Listeners() const noexcept -> SdkEventListeners& override;
+        [[nodiscard]] auto EventBus() const noexcept -> EventBus::EventBus& override;
+        void OnEuroscopeTimerTick() override;
+
         void Destroy() override;
 
         private:
-        // Schedulers API downloads
-        std::unique_ptr<Api::ApiDataScheduler> apiScheduler;
+        // Schedules API downloads - this kinda keeps itself to itself, so we dont need to enforce types here
+        // which makes things easier for testing
+        std::shared_ptr<void> apiScheduler;
 
-        // Contains event listeners
-        std::unique_ptr<SdkEventListeners> eventListeners;
+        // The event bus for the SDK, which can be used to subscribe to events.
+        std::shared_ptr<EventBus::InternalEventBus> eventBus;
     };
 }// namespace FlowSdk::Plugin
