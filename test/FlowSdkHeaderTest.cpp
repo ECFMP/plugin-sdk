@@ -1,4 +1,4 @@
-#include "flow-sdk/flow-sdk.h"
+#include "flow-sdk/ECFMP.h"
 
 namespace ECFMPTest {
     class FlowSdkHeaderTest : public testing::Test
