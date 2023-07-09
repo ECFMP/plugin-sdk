@@ -33,7 +33,7 @@ set(src_plugin
         plugin/ConcreteSdk.h
         plugin/ConcreteSdk.cpp
         plugin/InternalEventListeners.h
-        plugin/ConcreteEventListeners.cpp plugin/ConcreteEventListeners.h plugin/ConcreteSdkEventListeners.cpp plugin/ConcreteSdkEventListeners.h plugin/SdkFactory.cpp ../include/flow-sdk/SdkEvents.h)
+        plugin/ConcreteEventListeners.cpp plugin/ConcreteEventListeners.h plugin/SdkFactory.cpp ../include/flow-sdk/SdkEvents.h)
 
 set(ALL_FILES
         ${src_api}
