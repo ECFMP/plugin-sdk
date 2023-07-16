@@ -6,14 +6,14 @@
 namespace ECFMP::EventBus {
 
     template<typename EventType>
-    class NewEventListener;
+    class EventListener;
     template<typename EventType>
-    class NewEventFilter;
+    class EventFilter;
 
     template<typename EventType>
     struct EventSubscription {
-        std::shared_ptr<NewEventListener<EventType>> listener;
-        std::shared_ptr<NewEventFilter<EventType>> filter;
+        std::shared_ptr<EventListener<EventType>> listener;
+        std::shared_ptr<EventFilter<EventType>> filter;
         bool once;
     };
 
@@ -26,14 +26,13 @@ namespace ECFMP::EventBus {
         /**
          * Subscribes the given listener to the event stream.
          */
-        void Subscribe(std::shared_ptr<NewEventListener<EventType>> listener)
+        void Subscribe(std::shared_ptr<EventListener<EventType>> listener)
         {
             Subscribe(listener, nullptr);
         };
 
-        virtual void Subscribe(
-                std::shared_ptr<NewEventListener<EventType>> listener, std::shared_ptr<NewEventFilter<EventType>> filter
-        )
+        virtual void
+        Subscribe(std::shared_ptr<EventListener<EventType>> listener, std::shared_ptr<EventFilter<EventType>> filter)
         {
             if (listener == nullptr) {
                 throw std::invalid_argument("listener cannot be null");
@@ -46,13 +45,13 @@ namespace ECFMP::EventBus {
         /**
          * Subscribes the given listener to the event stream, but only for the next event.
          */
-        virtual void SubscribeOnce(std::shared_ptr<NewEventListener<EventType>> listener)
+        virtual void SubscribeOnce(std::shared_ptr<EventListener<EventType>> listener)
         {
             SubscribeOnce(listener, nullptr);
         }
 
         virtual void SubscribeOnce(
-                std::shared_ptr<NewEventListener<EventType>> listener, std::shared_ptr<NewEventFilter<EventType>> filter
+                std::shared_ptr<EventListener<EventType>> listener, std::shared_ptr<EventFilter<EventType>> filter
         )
         {
             if (listener == nullptr) {

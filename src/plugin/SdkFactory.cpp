@@ -1,11 +1,12 @@
 #include "ECFMP/SdkFactory.h"
-#include "ConcreteEventListeners.h"
 #include "ConcreteSdk.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "ECFMP/http/HttpClient.h"
 #include "ECFMP/log/Logger.h"
+#include "api/ApiDataDownloadedEvent.h"
 #include "api/ApiDataDownloader.h"
+#include "api/ApiDataParser.h"
 #include "api/ApiDataScheduler.h"
 #include "api/ConcreteApiElementCollection.h"
 #include "api/ConcreteStringIdentifiedApiElementCollection.h"
@@ -20,24 +21,23 @@
 
 namespace ECFMP::Plugin {
     struct SdkFactory::SdkFactoryImpl {
-        auto CreateDataListeners() -> std::unique_ptr<Plugin::ConcreteEventListeners<const nlohmann::json&>>
-        {
-            auto dataListeners = std::make_unique<Plugin::ConcreteEventListeners<const nlohmann::json&>>();
-            dataListeners->Add(std::make_shared<Api::FlightInformationRegionDataParser>(GetFirs(), GetLogger()));
-            dataListeners->Add(std::make_shared<Api::EventDataParser>(GetEvents(), GetFirs(), GetLogger()));
-            dataListeners->Add(std::make_shared<Api::FlowMeasureDataParser>(
-                    std::make_unique<Api::FlowMeasureFilterParser>(GetLogger()),
-                    std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetFlowMeasures(), GetEvents(),
-                    GetFirs(), GetLogger()
-            ));
-
-            return dataListeners;
-        }
-
         auto CreateApiDataScheduler() -> std::shared_ptr<Api::ApiDataScheduler>
         {
+            // Set up data listeners
+            // TODO: Test for checking the registration.
+            auto apiDataParser = std::make_shared<Api::ApiDataParser>(
+                    std::make_shared<Api::EventDataParser>(GetLogger()),
+                    std::make_shared<Api::FlightInformationRegionDataParser>(GetLogger()),
+                    std::make_shared<Api::FlowMeasureDataParser>(
+                            std::make_unique<Api::FlowMeasureFilterParser>(GetLogger()),
+                            std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetLogger()
+                    ),
+                    GetLogger()
+            );
+            GetEventBus()->Subscribe<Api::ApiDataDownloadedEvent>(apiDataParser);
+
             return std::make_shared<Api::ApiDataScheduler>(
-                    std::make_unique<Api::ApiDataDownloader>(std::move(httpClient), CreateDataListeners(), GetLogger())
+                    std::make_unique<Api::ApiDataDownloader>(std::move(httpClient), GetEventBus(), GetLogger())
             );
         }
 

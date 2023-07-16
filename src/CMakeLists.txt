@@ -4,7 +4,7 @@ SET(PROJECT_NAME flow_plugin_sdk_src)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(src_api api/ApiDataDownloader.cpp api/ApiDataDownloader.h api/ApiDataScheduler.cpp api/ApiDataScheduler.h api/FlightInformationRegionDataParser.cpp api/FlightInformationRegionDataParser.h api/ApiDataListenerTypes.h api/InternalApiElementCollection.h api/InternalStringIdentifiedApiElementCollection.h api/ConcreteApiElementCollection.cpp api/ConcreteApiElementCollection.h api/ApiElementIterator.cpp api/ConcreteStringIdentifiedApiElementCollection.cpp api/ConcreteStringIdentifiedApiElementCollection.h api/InternalElementCollectionTypes.h api/EventDataParser.cpp api/EventDataParser.h api/FlowMeasureDataParser.cpp api/FlowMeasureDataParser.h api/FlowMeasureMeasureParserInterface.h api/FlowMeasureFilterParser.cpp api/FlowMeasureFilterParser.h)
+set(src_api api/ApiDataDownloader.cpp api/ApiDataDownloader.h api/ApiDataScheduler.cpp api/ApiDataScheduler.h api/FlightInformationRegionDataParser.cpp api/FlightInformationRegionDataParser.h api/InternalApiElementCollection.h api/InternalStringIdentifiedApiElementCollection.h api/ConcreteApiElementCollection.cpp api/ConcreteApiElementCollection.h api/ApiElementIterator.cpp api/ConcreteStringIdentifiedApiElementCollection.cpp api/ConcreteStringIdentifiedApiElementCollection.h api/InternalElementCollectionTypes.h api/EventDataParser.cpp api/EventDataParser.h api/FlowMeasureDataParser.cpp api/FlowMeasureDataParser.h api/FlowMeasureMeasureParserInterface.h api/FlowMeasureFilterParser.cpp api/FlowMeasureFilterParser.h api/ApiDataParser.cpp api/ApiDataParser.h api/ApiDataDownloadedEvent.h api/FlightInformationRegionDataParserInterface.h api/EventDataParserInterface.h api/FlowMeasureDataParserInterface.h)
 
 set(src_date date/ParseDateStrings.cpp date/ParseDateStrings.h)
 
@@ -14,12 +14,12 @@ set(src_flight_information_regions
 set(src_events
         event/ConcreteEvent.cpp event/ConcreteEvent.h
         event/ConcreteEventParticipant.cpp "event/ConcreteEventParticipant.h"
-        event/Event.cpp ../include/ECFMP/eventbus/EventStream.h ../include/ECFMP/eventbus/NewEventListener.h ../include/ECFMP/eventbus/NewEventFilter.h)
+        event/Event.cpp ../include/ECFMP/eventbus/EventStream.h ../include/ECFMP/eventbus/EventListener.h ../include/ECFMP/eventbus/EventFilter.h)
 
 set(src_eventbus
         ../include/ECFMP/eventbus/EventStream.h
-        ../include/ECFMP/eventbus/NewEventListener.h
-        ../include/ECFMP/eventbus/NewEventFilter.h eventbus/InternalEventStream.h ../include/ECFMP/eventbus/EventBus.h eventbus/InternalEventBus.h)
+        ../include/ECFMP/eventbus/EventListener.h
+        ../include/ECFMP/eventbus/EventFilter.h eventbus/InternalEventStream.h ../include/ECFMP/eventbus/EventBus.h eventbus/InternalEventBus.h)
 
 set(src_flowmeasures
         flowmeasure/ConcreteFlowMeasure.cpp flowmeasure/ConcreteFlowMeasure.h flowmeasure/ConcreteAirportFilter.cpp flowmeasure/ConcreteAirportFilter.h flowmeasure/ConcreteEventFilter.cpp flowmeasure/ConcreteEventFilter.h flowmeasure/ConcreteLevelRangeFilter.cpp flowmeasure/ConcreteLevelRangeFilter.h flowmeasure/ConcreteRouteFilter.cpp flowmeasure/ConcreteRouteFilter.h flowmeasure/ConcreteMeasure.cpp flowmeasure/ConcreteMeasure.h flowmeasure/ConcreteMeasureFactory.cpp flowmeasure/ConcreteMeasureFactory.h flowmeasure/ConcreteFlowMeasureFilters.cpp flowmeasure/ConcreteFlowMeasureFilters.h api/FlowMeasureFilterParserInterface.h ../include/ECFMP/flowmeasure/MultipleLevelFilter.h flowmeasure/ConcreteMultipleLevelFilter.cpp flowmeasure/ConcreteMultipleLevelFilter.h ../include/mock/MultipleLevelFilterMock.h ../include/ECFMP/flowmeasure/RangeToDestinationFilter.h flowmeasure/ConcreteRangeToDestinationFilter.cpp flowmeasure/ConcreteRangeToDestinationFilter.h)
@@ -32,8 +32,7 @@ set(src_pch
 set(src_plugin
         plugin/ConcreteSdk.h
         plugin/ConcreteSdk.cpp
-        plugin/InternalEventListeners.h
-        plugin/ConcreteEventListeners.cpp plugin/ConcreteEventListeners.h plugin/SdkFactory.cpp ../include/ECFMP/SdkEvents.h)
+        plugin/SdkFactory.cpp ../include/ECFMP/SdkEvents.h)
 
 set(ALL_FILES
         ${src_api}

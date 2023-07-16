@@ -1,22 +1,22 @@
 #include "ApiDataDownloader.h"
+#include "ApiDataDownloadedEvent.h"
 #include "ECFMP/http/HttpClient.h"
 #include "ECFMP/log/Logger.h"
+#include "eventbus/InternalEventBus.h"
 #include "nlohmann/json.hpp"
-#include "plugin/InternalEventListeners.h"
 
 namespace ECFMP::Api {
 
     const std::string PLUGIN_API_DATA_URL = "https://ecfmp.vatsim.net/api/v1/plugin?deleted=1";
 
     ApiDataDownloader::ApiDataDownloader(
-            std::unique_ptr<Http::HttpClient> httpClient,
-            std::unique_ptr<Plugin::InternalEventListeners<const nlohmann::json&>> listeners,
+            std::unique_ptr<Http::HttpClient> httpClient, std::shared_ptr<EventBus::InternalEventBus> eventBus,
             std::shared_ptr<Log::Logger> logger
     )
-        : httpClient(std::move(httpClient)), listeners(std::move(listeners)), logger(std::move(logger))
+        : httpClient(std::move(httpClient)), eventBus(std::move(eventBus)), logger(std::move(logger))
     {
         assert(this->httpClient && "Http client not set in ApiDataDownloader");
-        assert(this->listeners && "Listeners not set in ApiDataDownloader");
+        assert(this->eventBus && "Event bus not set in ApiDataDownloader");
         assert(this->logger && "Logger not set in ApiDataDownloader");
     }
     ApiDataDownloader::~ApiDataDownloader() = default;
@@ -49,6 +49,6 @@ namespace ECFMP::Api {
         }
 
         // Disseminate the JSON to any listeners
-        listeners->OnEvent(parsedData);
+        eventBus->OnEvent<ApiDataDownloadedEvent>({parsedData});
     }
 }// namespace ECFMP::Api

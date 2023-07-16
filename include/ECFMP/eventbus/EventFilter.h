@@ -3,10 +3,10 @@
 namespace ECFMP::EventBus {
 
     template<typename EventType>
-    class NewEventFilter
+    class EventFilter
     {
         public:
-        virtual ~NewEventFilter() = default;
+        virtual ~EventFilter() = default;
         virtual bool ShouldProcess(const EventType&) = 0;
     };
 }// namespace ECFMP::EventBus

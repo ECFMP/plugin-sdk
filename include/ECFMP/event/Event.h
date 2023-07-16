@@ -47,5 +47,7 @@ namespace ECFMP::Event {
          * Compares events.
          */
         [[nodiscard]] auto operator==(const class Event& event) const -> bool;
+
+        // TODO: Event participants
     };
 }// namespace ECFMP::Event

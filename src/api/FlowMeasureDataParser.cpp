@@ -1,9 +1,11 @@
 #include "FlowMeasureDataParser.h"
+#include "ConcreteStringIdentifiedApiElementCollection.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "ECFMP/log/Logger.h"
 #include "FlowMeasureFilterParser.h"
 #include "FlowMeasureMeasureParser.h"
+#include "InternalStringIdentifiedApiElementCollection.h"
 #include "api/InternalApiElementCollection.h"
 #include "date/ParseDateStrings.h"
 #include "flowmeasure/ConcreteFlowMeasure.h"
@@ -12,30 +14,27 @@
 namespace ECFMP::Api {
     FlowMeasureDataParser::FlowMeasureDataParser(
             std::unique_ptr<FlowMeasureFilterParserInterface> filterParser,
-            std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser,
-            std::shared_ptr<InternalFlowMeasureCollection> flowMeasures,
-            std::shared_ptr<InternalEventCollection> events,
-            std::shared_ptr<const InternalFlightInformationRegionCollection> firs, std::shared_ptr<Log::Logger> logger
+            std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser, std::shared_ptr<Log::Logger> logger
     )
-        : filterParser(std::move(filterParser)), measureParser(std::move(measureParser)),
-          flowMeasures(std::move(flowMeasures)), events(std::move(events)), firs(std::move(firs)),
-          logger(std::move(logger))
+        : filterParser(std::move(filterParser)), measureParser(std::move(measureParser)), logger(std::move(logger))
     {
         assert(this->filterParser != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: filterParser is null");
         assert(this->measureParser != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: measureParser is null");
-        assert(this->flowMeasures != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: flowMeasures is null");
-        assert(this->events != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: events is null");
-        assert(this->firs != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: firs is null");
         assert(this->logger != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: logger is null");
     }
 
-    void FlowMeasureDataParser::OnEvent(const nlohmann::json& data)
+    auto FlowMeasureDataParser::ParseFlowMeasures(
+            const nlohmann::json& data, const InternalEventCollection& events,
+            const InternalFlightInformationRegionCollection& firs
+    ) -> std::shared_ptr<InternalFlowMeasureCollection>
     {
         if (!DataIsValid(data)) {
             logger->Error("FlowMeasureDataParser::OnEvent: data is invalid");
-            return;
+            return nullptr;
         }
 
+        auto flowMeasures =
+                std::make_shared<ConcreteStringIdentifiedApiElementCollection<ECFMP::FlowMeasure::FlowMeasure>>();
         for (const auto& flowMeasureData: data["flow_measures"]) {
             if (!FlowMeasurePropertiesValid(flowMeasureData)) {
                 logger->Error("FlowMeasureDataParser::OnEvent: flow measure properties are invalid");
@@ -43,7 +42,7 @@ namespace ECFMP::Api {
             }
 
             // Get the notfied firs
-            auto notifiedFirs = GetNotifiedFirs(flowMeasureData);
+            auto notifiedFirs = GetNotifiedFirs(flowMeasureData, firs);
             if (notifiedFirs.empty()) {
                 logger->Error("FlowMeasureDataParser::OnEvent: notified firs are empty");
                 continue;
@@ -57,7 +56,7 @@ namespace ECFMP::Api {
             }
 
             // Get the filters
-            auto filters = filterParser->Parse(flowMeasureData.at("filters"), *events);
+            auto filters = filterParser->Parse(flowMeasureData.at("filters"), events);
             if (filters == nullptr) {
                 logger->Error("FlowMeasureDataParser::OnEvent: filters are invalid");
                 continue;
@@ -66,7 +65,7 @@ namespace ECFMP::Api {
             // Get the event
             std::shared_ptr<const ECFMP::Event::Event> event;
             if (flowMeasureData.at("event_id").is_number_integer()) {
-                event = events->Get(flowMeasureData.at("event_id").get<int>());
+                event = events.Get(flowMeasureData.at("event_id").get<int>());
                 if (event == nullptr) {
                     logger->Error("FlowMeasureDataParser::OnEvent: event is invalid");
                     continue;
@@ -91,6 +90,8 @@ namespace ECFMP::Api {
             );
             flowMeasures->Add(flowMeasure);
         }
+
+        return flowMeasures;
     }
 
     auto FlowMeasureDataParser::DataIsValid(const nlohmann::json& data) -> bool
@@ -116,8 +117,9 @@ namespace ECFMP::Api {
                 && data.contains("measure") && data.contains("filters");
     }
 
-    auto FlowMeasureDataParser::GetNotifiedFirs(const nlohmann::json& data) const
-            -> std::vector<std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>>
+    auto FlowMeasureDataParser::GetNotifiedFirs(
+            const nlohmann::json& data, const InternalFlightInformationRegionCollection& firs
+    ) const -> std::vector<std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>>
     {
         if (!data.contains("notified_flight_information_regions")
             || !data.at("notified_flight_information_regions").is_array()) {
@@ -132,7 +134,7 @@ namespace ECFMP::Api {
                 return {};
             }
 
-            auto fir = firs->Get(firId.get<int>());
+            auto fir = firs.Get(firId.get<int>());
             if (fir == nullptr) {
                 logger->Error("FlowMeasureDataParser::GetNotifiedFirs: fir is null");
                 return {};
@@ -148,7 +150,7 @@ namespace ECFMP::Api {
             const std::chrono::system_clock::time_point& startTime,
             const std::chrono::system_clock::time_point& endTime,
             const std::chrono::system_clock::time_point& withdrawnTime
-    ) const -> FlowMeasure::MeasureStatus
+    ) -> FlowMeasure::MeasureStatus
     {
         if (withdrawnTime != (std::chrono::system_clock::time_point::max)()) {
             return FlowMeasure::Withdrawn;

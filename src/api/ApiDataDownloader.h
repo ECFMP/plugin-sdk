@@ -1,17 +1,17 @@
 #pragma once
+#include "eventbus/InternalEventBus.h"
 #include "nlohmann/json_fwd.hpp"
 
 namespace ECFMP {
+    namespace EventBus {
+        class InternalEventBus;
+    }// namespace EventBus
     namespace Http {
         class HttpClient;
     }// namespace Http
     namespace Log {
         class Logger;
     }// namespace Log
-    namespace Plugin {
-        template<class... Types>
-        class InternalEventListeners;
-    }// namespace Plugin
 }// namespace ECFMP
 
 namespace ECFMP::Api {
@@ -23,8 +23,7 @@ namespace ECFMP::Api {
     {
         public:
         explicit ApiDataDownloader(
-                std::unique_ptr<Http::HttpClient> httpClient,
-                std::unique_ptr<Plugin::InternalEventListeners<const nlohmann::json&>> listeners,
+                std::unique_ptr<Http::HttpClient> httpClient, std::shared_ptr<EventBus::InternalEventBus> eventBus,
                 std::shared_ptr<Log::Logger> logger
         );
 
@@ -35,8 +34,8 @@ namespace ECFMP::Api {
         // HTTP client for getting data
         std::unique_ptr<Http::HttpClient> httpClient;
 
-        // All the listeners
-        std::unique_ptr<Plugin::InternalEventListeners<const nlohmann::json&>> listeners;
+        // Eventbus
+        std::shared_ptr<EventBus::InternalEventBus> eventBus;
 
         // Logger
         std::shared_ptr<Log::Logger> logger;

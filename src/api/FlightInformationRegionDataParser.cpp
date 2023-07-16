@@ -1,26 +1,29 @@
 #include "FlightInformationRegionDataParser.h"
+#include "ConcreteStringIdentifiedApiElementCollection.h"
 #include "ECFMP/log/Logger.h"
+#include "InternalStringIdentifiedApiElementCollection.h"
 #include "api/ConcreteApiElementCollection.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 #include "nlohmann/json.hpp"
 
 namespace ECFMP::Api {
 
-    FlightInformationRegionDataParser::FlightInformationRegionDataParser(
-            std::shared_ptr<InternalFlightInformationRegionCollection> firs, std::shared_ptr<Log::Logger> logger
-    )
-        : firs(std::move(firs)), logger(std::move(logger))
+    FlightInformationRegionDataParser::FlightInformationRegionDataParser(std::shared_ptr<Log::Logger> logger)
+        : logger(std::move(logger))
     {
-        assert(this->firs && "firs not set in FlightInformationRegionDataParser");
         assert(this->logger && "logger not set in FlightInformationRegionDataParser");
     }
 
-    void FlightInformationRegionDataParser::OnEvent(const nlohmann::json& data)
+    auto FlightInformationRegionDataParser::ParseFirs(const nlohmann::json& data)
+            -> std::shared_ptr<InternalFlightInformationRegionCollection>
     {
+        auto firs = std::make_shared<
+                Api::ConcreteStringIdentifiedApiElementCollection<FlightInformationRegion::FlightInformationRegion>>();
+
         logger->Debug("Updating FIRs");
         if (!DataIsValid(data)) {
             logger->Error("Invalid FIR data from API");
-            return;
+            return nullptr;
         }
 
         for (const auto& fir: data.at("flight_information_regions")) {
@@ -36,6 +39,7 @@ namespace ECFMP::Api {
         }
 
         logger->Debug("Finished updating FIRs");
+        return firs;
     }
 
     auto FlightInformationRegionDataParser::DataIsValid(const nlohmann::json& data) -> bool

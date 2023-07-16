@@ -14,7 +14,8 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/
 set(test__api
         api/ApiDataDownloaderTest.cpp
         api/FlightInformationRegionDataParserTest.cpp
-        api/ApiElementIteratorTest.cpp api/ConcreteApiElementCollectionTest.cpp api/ConcreteStringIdentifiedApiElementCollectionTest.cpp api/FlowMeasureMeasureParserTest.cpp api/FlowMeasureFilterParserTest.cpp)
+        api/ApiElementIteratorTest.cpp api/ConcreteApiElementCollectionTest.cpp api/ConcreteStringIdentifiedApiElementCollectionTest.cpp api/FlowMeasureMeasureParserTest.cpp api/FlowMeasureFilterParserTest.cpp
+        api/ApiDataParserTest.cpp)
 
 set(test__date
         
@@ -48,7 +49,6 @@ set(test__log
         )
 
 set(test__mock
-        mock/MockEventListener.h
         mock/MockLogger.h
         mock/MockHttpClient.h
         )
@@ -59,15 +59,14 @@ set(test__pch
         )
 
 set(test__plugin
-        plugin/ConcreteEventListenersTest.cpp
         plugin/SdkFactoryTest.cpp
         plugin/ConcreteSdkTest.cpp)
 
 set(test__other
         main.cpp
         pch/pch.cpp pch/pch.h
-        FlowSdkHeaderTest.cpp
-        FlowSdkMockHeaderTest.cpp
+        SdkHeaderTest.cpp
+        MockHeaderTest.cpp
         flowmeasure/ConcreteMultipleLevelFilterTest.cpp)
 
 add_executable(${PROJECT_NAME}
