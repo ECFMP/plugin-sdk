@@ -1,11 +1,11 @@
 #pragma once
-#include "ECFMP/api/ApiElementCollection.h"
+#include "ECFMP/api/StringIdentifierApiElementCollection.h"
 #include <memory>
 #include <mutex>
 
 namespace ECFMP::Api {
     template<typename T>
-    class InternalApiElementCollection : public ApiElementCollection<T>
+    class InternalStringIdentifierApiElementCollection : public StringIdentifierApiElementCollection<T>
     {
         public:
         void Add(const std::shared_ptr<T>& element) noexcept

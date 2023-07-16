@@ -1,7 +1,7 @@
 #include "EventDataParser.h"
-#include "ConcreteApiElementCollection.h"
 #include "ECFMP/event/EventParticipant.h"
 #include "ECFMP/log/Logger.h"
+#include "InternalApiElementCollection.h"
 #include "date/ParseDateStrings.h"
 #include "event/ConcreteEvent.h"
 #include "event/ConcreteEventParticipant.h"
@@ -17,7 +17,7 @@ namespace ECFMP::Api {
     auto EventDataParser::ParseEvents(const nlohmann::json& data, const InternalFlightInformationRegionCollection& firs)
             -> std::shared_ptr<InternalEventCollection>
     {
-        auto events = std::make_shared<Api::ConcreteApiElementCollection<Event::Event>>();
+        auto events = std::make_shared<Api::InternalApiElementCollection<Event::Event>>();
         logger->Debug("Updating event data");
         if (!DataIsValid(data)) {
             logger->Error("Invalid event data from API");

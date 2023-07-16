@@ -3,7 +3,7 @@
 #include "ECFMP/flowmeasure/EventFilter.h"
 #include "ECFMP/flowmeasure/LevelRangeFilter.h"
 #include "ECFMP/flowmeasure/RouteFilter.h"
-#include "api/ConcreteApiElementCollection.h"
+#include "api/InternalApiElementCollection.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "mock/EventMock.h"
@@ -18,7 +18,7 @@ namespace ECFMPTest::Api {
         FlowMeasureFilterParserNoDataTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
         ECFMP::Api::FlowMeasureFilterParser parser;
     };
@@ -51,7 +51,7 @@ namespace ECFMPTest::Api {
         FlowMeasureFilterParserAirportFilterTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
         ECFMP::Api::FlowMeasureFilterParser parser;
     };
@@ -105,7 +105,7 @@ namespace ECFMPTest::Api {
         FlowMeasureFilterParserLevelRangeFilterTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
         ECFMP::Api::FlowMeasureFilterParser parser;
     };
@@ -157,7 +157,7 @@ namespace ECFMPTest::Api {
         FlowMeasureFilterParserSpecificLevelFilterTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
         ECFMP::Api::FlowMeasureFilterParser parser;
     };
@@ -213,7 +213,7 @@ namespace ECFMPTest::Api {
             events.Add(event2);
         }
 
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
         ECFMP::Api::FlowMeasureFilterParser parser;
     };
@@ -266,7 +266,7 @@ namespace ECFMPTest::Api {
         FlowMeasureFilterParserRouteFilterTest() : parser(std::make_shared<Log::MockLogger>())
         {}
 
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
         ECFMP::Api::FlowMeasureFilterParser parser;
     };
@@ -321,7 +321,7 @@ namespace ECFMPTest::Api {
             events.Add(event2);
         }
 
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
         ECFMP::Api::FlowMeasureFilterParser parser;
     };
@@ -373,7 +373,7 @@ namespace ECFMPTest::Api {
             events.Add(event2);
         }
 
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
         testing::NiceMock<Log::MockLogger> logger;
         ECFMP::Api::FlowMeasureFilterParser parser;
     };

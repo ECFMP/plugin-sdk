@@ -1,6 +1,6 @@
 #include "api/EventDataParser.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
-#include "api/ConcreteStringIdentifiedApiElementCollection.h"
+#include "api/InternalElementCollectionTypes.h"
 #include "date/ParseDateStrings.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 #include "mock/MockLogger.h"
@@ -21,9 +21,7 @@ namespace ECFMPTest::Api {
             ));
         }
 
-        ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                ECFMP::FlightInformationRegion::FlightInformationRegion>
-                firs;
+        ECFMP::Api::InternalFlightInformationRegionCollection firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
         ECFMP::Api::EventDataParser parser;
     };
@@ -334,9 +332,7 @@ namespace ECFMPTest::Api {
             ));
         }
 
-        ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                ECFMP::FlightInformationRegion::FlightInformationRegion>
-                firs;
+        ECFMP::Api::InternalFlightInformationRegionCollection firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
         ECFMP::Api::EventDataParser parser;
     };

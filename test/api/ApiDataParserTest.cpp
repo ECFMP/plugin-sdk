@@ -1,10 +1,10 @@
 #include "api/ApiDataParser.h"
 #include "api/ApiDataDownloadedEvent.h"
-#include "api/ConcreteApiElementCollection.h"
-#include "api/ConcreteStringIdentifiedApiElementCollection.h"
 #include "api/EventDataParserInterface.h"
 #include "api/FlightInformationRegionDataParserInterface.h"
 #include "api/FlowMeasureDataParserInterface.h"
+#include "api/InternalApiElementCollection.h"
+#include "api/InternalElementCollectionTypes.h"
 #include "log/NullLogger.h"
 #include "gmock/gmock.h"
 #include <ECFMP/event/Event.h>
@@ -80,8 +80,7 @@ namespace ECFMPTest::Api {
     {
         nlohmann::json data;
         ECFMP::Api::ApiDataDownloadedEvent event{data};
-        auto firs = std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                ECFMP::FlightInformationRegion ::FlightInformationRegion>>();
+        auto firs = std::make_shared<ECFMP::Api::InternalFlightInformationRegionCollection>();
 
         EXPECT_CALL(*this->firParser, ParseFirs(data)).WillOnce(testing::Return(firs));
 
@@ -97,11 +96,9 @@ namespace ECFMPTest::Api {
     {
         nlohmann::json data;
         ECFMP::Api::ApiDataDownloadedEvent event{data};
-        auto firs = std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                ECFMP::FlightInformationRegion::FlightInformationRegion>>();
-        auto events = std::make_shared<ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event>>();
-        auto flowMeasures = std::make_shared<
-                ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<ECFMP::FlowMeasure::FlowMeasure>>();
+        auto firs = std::make_shared<ECFMP::Api::InternalFlightInformationRegionCollection>();
+        auto events = std::make_shared<ECFMP::Api::InternalEventCollection>();
+        auto flowMeasures = std::make_shared<ECFMP::Api::InternalFlowMeasureCollection>();
 
         EXPECT_CALL(*this->firParser, ParseFirs(data)).WillOnce(testing::Return(firs));
 

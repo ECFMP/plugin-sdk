@@ -11,12 +11,13 @@ namespace ECFMP::Api {
         std::unique_lock<std::recursive_mutex> lock;
 
         // The current iterator position
-        typename std::map<int, std::shared_ptr<T>>::const_iterator current;
+        typename std::unordered_map<int, std::shared_ptr<const T>>::const_iterator current;
     };
 
     template<typename T>
     ApiElementIterator<T>::ApiElementIterator(
-            std::recursive_mutex& lockingMutex, typename std::map<int, std::shared_ptr<T>>::const_iterator current
+            std::recursive_mutex& lockingMutex,
+            typename std::unordered_map<int, std::shared_ptr<const T>>::const_iterator current
     )
     {
         impl = std::make_shared<ApiElementIterator<T>::Impl>();
@@ -36,13 +37,13 @@ namespace ECFMP::Api {
     ApiElementIterator<T>::~ApiElementIterator() = default;
 
     template<typename T>
-    auto ApiElementIterator<T>::operator*() const -> T&
+    auto ApiElementIterator<T>::operator*() const -> const T&
     {
         return *impl->current->second;
     }
 
     template<typename T>
-    auto ApiElementIterator<T>::operator->() const -> T*
+    auto ApiElementIterator<T>::operator->() const -> const T*
     {
         return impl->current->second.get();
     }

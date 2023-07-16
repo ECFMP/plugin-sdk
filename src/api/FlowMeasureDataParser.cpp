@@ -1,11 +1,10 @@
 #include "FlowMeasureDataParser.h"
-#include "ConcreteStringIdentifiedApiElementCollection.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "ECFMP/log/Logger.h"
 #include "FlowMeasureFilterParser.h"
 #include "FlowMeasureMeasureParser.h"
-#include "InternalStringIdentifiedApiElementCollection.h"
+#include "InternalElementCollectionTypes.h"
 #include "api/InternalApiElementCollection.h"
 #include "date/ParseDateStrings.h"
 #include "flowmeasure/ConcreteFlowMeasure.h"
@@ -33,8 +32,7 @@ namespace ECFMP::Api {
             return nullptr;
         }
 
-        auto flowMeasures =
-                std::make_shared<ConcreteStringIdentifiedApiElementCollection<ECFMP::FlowMeasure::FlowMeasure>>();
+        auto flowMeasures = std::make_shared<InternalFlowMeasureCollection>();
         for (const auto& flowMeasureData: data["flow_measures"]) {
             if (!FlowMeasurePropertiesValid(flowMeasureData)) {
                 logger->Error("FlowMeasureDataParser::OnEvent: flow measure properties are invalid");
