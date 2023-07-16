@@ -15,15 +15,14 @@ namespace ECFMP::EventBus {
          * Subscribes the given listener to the event stream.
          */
         template<typename EventType>
-        void Subscribe(std::shared_ptr<NewEventListener<EventType>> listener)
+        void Subscribe(std::shared_ptr<EventListener<EventType>> listener)
         {
             Subscribe<EventType>(listener, nullptr);
         };
 
         template<typename EventType>
-        void Subscribe(
-                std::shared_ptr<NewEventListener<EventType>> listener, std::shared_ptr<NewEventFilter<EventType>> filter
-        )
+        void
+        Subscribe(std::shared_ptr<EventListener<EventType>> listener, std::shared_ptr<EventFilter<EventType>> filter)
         {
             GetStream<EventType>().Subscribe(listener, filter);
         };
@@ -32,14 +31,14 @@ namespace ECFMP::EventBus {
          * Subscribes the given listener to the event stream, but only for the next event.
          */
         template<typename EventType>
-        void SubscribeOnce(std::shared_ptr<NewEventListener<EventType>> listener)
+        void SubscribeOnce(std::shared_ptr<EventListener<EventType>> listener)
         {
             SubscribeOnce<EventType>(listener, nullptr);
         }
 
         template<typename EventType>
         void SubscribeOnce(
-                std::shared_ptr<NewEventListener<EventType>> listener, std::shared_ptr<NewEventFilter<EventType>> filter
+                std::shared_ptr<EventListener<EventType>> listener, std::shared_ptr<EventFilter<EventType>> filter
         )
         {
             GetStream<EventType>().SubscribeOnce(listener, filter);

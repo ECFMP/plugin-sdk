@@ -7,7 +7,7 @@
 
 namespace ECFMPTest::Api {
 
-    class MockEventHandler : public ECFMP::EventBus::NewEventListener<ECFMP::Api::ApiDataDownloadedEvent>
+    class MockEventHandler : public ECFMP::EventBus::EventListener<ECFMP::Api::ApiDataDownloadedEvent>
     {
         public:
         explicit MockEventHandler(nlohmann::json expectedJson) : expectedJson(std::move(expectedJson))

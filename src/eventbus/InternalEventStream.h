@@ -1,7 +1,7 @@
 #pragma once
+#include "ECFMP/eventbus/EventFilter.h"
+#include "ECFMP/eventbus/EventListener.h"
 #include "ECFMP/eventbus/EventStream.h"
-#include "ECFMP/eventbus/NewEventFilter.h"
-#include "ECFMP/eventbus/NewEventListener.h"
 
 namespace ECFMP::EventBus {
 

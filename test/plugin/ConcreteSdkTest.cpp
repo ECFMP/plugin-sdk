@@ -1,12 +1,12 @@
 #include "plugin/ConcreteSdk.h"
-#include "ECFMP/eventbus/NewEventListener.h"
+#include "ECFMP/eventbus/EventListener.h"
 #include "api/ApiDataDownloader.h"
 #include "eventbus/InternalEventBus.h"
 #include "mock/MockHttpClient.h"
 
 namespace ECFMPTest::Plugin {
 
-    class MockEventListener : public ECFMP::EventBus::NewEventListener<int>
+    class MockEventListener : public ECFMP::EventBus::EventListener<int>
     {
         public:
         void OnEvent(const int&) override

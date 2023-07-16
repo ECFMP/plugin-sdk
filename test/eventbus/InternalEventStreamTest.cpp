@@ -1,9 +1,9 @@
 #include "eventbus/InternalEventStream.h"
-#include "ECFMP/eventbus/NewEventListener.h"
+#include "ECFMP/eventbus/EventListener.h"
 
 namespace ECFMP::EventBus {
 
-    class MockEventListener : public NewEventListener<int>
+    class MockEventListener : public EventListener<int>
     {
         public:
         explicit MockEventListener(int expectedEvent) : expectedEvent(expectedEvent)
@@ -19,7 +19,7 @@ namespace ECFMP::EventBus {
         int callCount = 0;
     };
 
-    class MockEventFilter : public NewEventFilter<int>
+    class MockEventFilter : public EventFilter<int>
     {
         public:
         explicit MockEventFilter(int expectedEvent, bool shouldProcess)

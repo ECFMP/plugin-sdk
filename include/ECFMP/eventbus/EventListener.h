@@ -2,10 +2,10 @@
 
 namespace ECFMP::EventBus {
     template<typename EventType>
-    class NewEventListener
+    class EventListener
     {
         public:
-        virtual ~NewEventListener() = default;
+        virtual ~EventListener() = default;
         virtual void OnEvent(const EventType&) = 0;
     };
 }// namespace ECFMP::EventBus

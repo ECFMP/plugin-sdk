@@ -1,6 +1,6 @@
 #pragma once
 #include "ApiDataDownloadedEvent.h"
-#include "ECFMP/eventbus/NewEventListener.h"
+#include "ECFMP/eventbus/EventListener.h"
 
 namespace ECFMP::Log {
     class Logger;
@@ -12,7 +12,7 @@ namespace ECFMP::Api {
     class FlightInformationRegionDataParserInterface;
     class FlowMeasureDataParserInterface;
 
-    class ApiDataParser : public EventBus::NewEventListener<ApiDataDownloadedEvent>
+    class ApiDataParser : public EventBus::EventListener<ApiDataDownloadedEvent>
     {
         public:
         ApiDataParser(
