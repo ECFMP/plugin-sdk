@@ -16,9 +16,6 @@
 #include "flowmeasure/ConcreteMeasure.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
-#include <chrono>
-#include <cmath>
-#include <gtest/gtest.h>
 
 namespace ECFMPTest::Api {
 
@@ -71,34 +68,28 @@ namespace ECFMPTest::Api {
             filterParserRaw = filterParser.get();
             auto measureParser = std::make_unique<MockFlowMeasureMeasureParser>();
             measureParserRaw = measureParser.get();
-
-            flowMeasures = std::make_shared<
-                    ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<ECFMP::FlowMeasure::FlowMeasure>>();
-            events = std::make_shared<ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event>>();
-            firs = std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                    ECFMP::FlightInformationRegion::FlightInformationRegion>>();
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
-                    std::move(filterParser), std::move(measureParser), flowMeasures, events, firs,
-                    std::make_shared<Log::MockLogger>()
+                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>()
             );
 
-            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     1, "EGTT", "London"
             ));
-            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     2, "EGPX", "Scottish"
             ));
 
-            events->Add(std::make_shared<ECFMP::Event::ConcreteEvent>(
-                    1, "Test event", now, plusOneHour, firs->Get(1), "abc"
-            ));
+            events.Add(
+                    std::make_shared<ECFMP::Event::ConcreteEvent>(1, "Test event", now, plusOneHour, firs.Get(1), "abc")
+            );
         }
 
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
-        std::shared_ptr<ECFMP::Api::InternalFlowMeasureCollection> flowMeasures;
-        std::shared_ptr<ECFMP::Api::InternalEventCollection> events;
-        std::shared_ptr<ECFMP::Api::InternalFlightInformationRegionCollection> firs;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
+                ECFMP::FlightInformationRegion::FlightInformationRegion>
+                firs;
         std::unique_ptr<ECFMP::Api::FlowMeasureDataParser> parser;
     };
 
@@ -128,7 +119,7 @@ namespace ECFMPTest::Api {
                 }));
 
         auto data = nlohmann::json{{"flow_measures", nlohmann::json::array({testCase.data})}};
-        parser->OnEvent(data);
+        auto flowMeasures = parser->ParseFlowMeasures(data, events, firs);
         EXPECT_EQ(testCase.expectedId, flowMeasures->Get(testCase.expectedId)->Id());
         EXPECT_EQ(testCase.expectedEventId, flowMeasures->Get(testCase.expectedId)->Event()->Id());
         EXPECT_EQ(testCase.expectedIdentifier, flowMeasures->Get(testCase.expectedId)->Identifier());
@@ -282,34 +273,28 @@ namespace ECFMPTest::Api {
             filterParserRaw = filterParser.get();
             auto measureParser = std::make_unique<MockFlowMeasureMeasureParser>();
             measureParserRaw = measureParser.get();
-
-            flowMeasures = std::make_shared<
-                    ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<ECFMP::FlowMeasure::FlowMeasure>>();
-            events = std::make_shared<ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event>>();
-            firs = std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                    ECFMP::FlightInformationRegion::FlightInformationRegion>>();
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
-                    std::move(filterParser), std::move(measureParser), flowMeasures, events, firs,
-                    std::make_shared<Log::MockLogger>()
+                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>()
             );
 
-            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     1, "EGTT", "London"
             ));
-            firs->Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
+            firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                     2, "EGPX", "Scottish"
             ));
 
-            events->Add(std::make_shared<ECFMP::Event::ConcreteEvent>(
-                    1, "Test event", now, plusOneHour, firs->Get(1), "abc"
-            ));
+            events.Add(
+                    std::make_shared<ECFMP::Event::ConcreteEvent>(1, "Test event", now, plusOneHour, firs.Get(1), "abc")
+            );
         }
 
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
-        std::shared_ptr<ECFMP::Api::InternalFlowMeasureCollection> flowMeasures;
-        std::shared_ptr<ECFMP::Api::InternalEventCollection> events;
-        std::shared_ptr<ECFMP::Api::InternalFlightInformationRegionCollection> firs;
+        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
+        ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
+                ECFMP::FlightInformationRegion::FlightInformationRegion>
+                firs;
         std::unique_ptr<ECFMP::Api::FlowMeasureDataParser> parser;
     };
 
@@ -340,14 +325,19 @@ namespace ECFMPTest::Api {
                 ? nlohmann::json{{"flow_measures", nlohmann::json::array({testCase.data})}}
                 : testCase.data;
 
-        parser->OnEvent(dataUnderTest);
-        EXPECT_EQ(0, flowMeasures->Count());
+        auto flowMeasures = parser->ParseFlowMeasures(dataUnderTest, events, firs);
+        if (!testCase.data.is_object()) {
+            EXPECT_EQ(nullptr, flowMeasures);
+        }
+        else {
+            EXPECT_EQ(0, flowMeasures->Count());
+        }
     }
 
     INSTANTIATE_TEST_SUITE_P(
             FlowMeasureDataParserBadDataTest, FlowMeasureDataParserBadDataTest,
             testing::Values(
-                    FlowMeasureDataParserBadDataTestCase{"data_not_array", nlohmann::json{{"foo", "bar"}}},
+                    FlowMeasureDataParserBadDataTestCase{"data_not_object", nlohmann::json::array()},
                     FlowMeasureDataParserBadDataTestCase{
                             "missing_id",
                             nlohmann::json{

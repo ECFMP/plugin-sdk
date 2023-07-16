@@ -1,34 +1,60 @@
 #include "api/ApiDataDownloader.h"
 #include "ECFMP/http/HttpClient.h"
+#include "api/ApiDataDownloadedEvent.h"
 #include "mock/MockEventListener.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
-#include "plugin/ConcreteEventListeners.h"
 
 namespace ECFMPTest::Api {
+
+    class MockEventHandler : public ECFMP::EventBus::NewEventListener<ECFMP::Api::ApiDataDownloadedEvent>
+    {
+        public:
+        explicit MockEventHandler(nlohmann::json expectedJson) : expectedJson(std::move(expectedJson))
+        {}
+
+        void OnEvent(const ECFMP::Api::ApiDataDownloadedEvent& event) override
+        {
+            callCount++;
+            ASSERT_EQ(event.data, expectedJson);
+        }
+
+        [[nodiscard]] auto GetCallCount() const -> int
+        {
+            return callCount;
+        }
+
+        private:
+        nlohmann::json expectedJson;
+
+        int callCount = 0;
+    };
+
     class ApiDataDownloaderTest : public testing::Test
     {
         public:
         ApiDataDownloaderTest()
-            : logger(std::make_shared<testing::NiceMock<Log::MockLogger>>()),
-              httpClient(std::make_unique<testing::NiceMock<Http::MockHttpClient>>()),
-              listener(std::make_unique<testing::NiceMock<Plugin::MockEventListener<const nlohmann::json&>>>())
-        {}
+            : mockEventHandler(std::make_shared<MockEventHandler>(nlohmann::json{{"abc", "def"}})),
+              eventBus(std::make_shared<ECFMP::EventBus::InternalEventBus>()),
+              logger(std::make_shared<testing::NiceMock<Log::MockLogger>>()),
+              httpClient(std::make_unique<testing::NiceMock<Http::MockHttpClient>>())
+        {
+            // Add mock listener to event bus
+            eventBus->Subscribe<ECFMP::Api::ApiDataDownloadedEvent>(mockEventHandler);
+        }
 
         [[nodiscard]] auto MakeDownloader() -> ECFMP::Api::ApiDataDownloader
         {
-            auto listeners = std::make_unique<ECFMP::Plugin::ConcreteEventListeners<const nlohmann::json&>>();
-            listeners->Add(listener);
-
-            return ECFMP::Api::ApiDataDownloader(std::move(httpClient), std::move(listeners), logger);
+            return ECFMP::Api::ApiDataDownloader(std::move(httpClient), eventBus, logger);
         }
 
         const std::string API_URL = "https://ecfmp.vatsim.net/api/v1/plugin?deleted=1";
 
+        std::shared_ptr<MockEventHandler> mockEventHandler;
+        std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> logger;
         std::unique_ptr<testing::NiceMock<Http::MockHttpClient>> httpClient;
-        std::shared_ptr<testing::NiceMock<Plugin::MockEventListener<const nlohmann::json&>>> listener;
     };
 
     TEST_F(ApiDataDownloaderTest, ItDoesNothingIfApiReturnsNonOkCode)
@@ -39,9 +65,9 @@ namespace ECFMPTest::Api {
 
         EXPECT_CALL(*logger, Error).Times(1);
 
-        EXPECT_CALL(*listener, OnEvent).Times(0);
-
         MakeDownloader().DownloadData();
+
+        EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(ApiDataDownloaderTest, ItDoesNothingIfApiReturnsInvalidJson)
@@ -52,9 +78,9 @@ namespace ECFMPTest::Api {
 
         EXPECT_CALL(*logger, Error).Times(1);
 
-        EXPECT_CALL(*listener, OnEvent).Times(0);
-
         MakeDownloader().DownloadData();
+
+        EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(ApiDataDownloaderTest, ItDoesNothingIfApiReturnsNonObjectJson)
@@ -65,9 +91,9 @@ namespace ECFMPTest::Api {
 
         EXPECT_CALL(*logger, Error).Times(1);
 
-        EXPECT_CALL(*listener, OnEvent).Times(0);
-
         MakeDownloader().DownloadData();
+
+        EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(ApiDataDownloaderTest, ItCallsListenersWithData)
@@ -80,8 +106,9 @@ namespace ECFMPTest::Api {
 
         EXPECT_CALL(*logger, Error).Times(0);
 
-        EXPECT_CALL(*listener, OnEvent(data)).Times(1);
-
         MakeDownloader().DownloadData();
+
+        eventBus->ProcessPendingEvents();
+        EXPECT_EQ(1, mockEventHandler->GetCallCount());
     }
 }// namespace ECFMPTest::Api

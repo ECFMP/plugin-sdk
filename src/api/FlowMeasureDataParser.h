@@ -1,9 +1,8 @@
 #pragma once
 #include "ApiDataListenerTypes.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
-#include "InternalElementCollectionTypes.h"
+#include "FlowMeasureDataParserInterface.h"
 #include "nlohmann/json_fwd.hpp"
-#include <memory>
 
 namespace ECFMP::Log {
     class Logger;
@@ -14,44 +13,36 @@ namespace ECFMP::Api {
     class FlowMeasureFilterParserInterface;
     class FlowMeasureMeasureParserInterface;
 
-    class FlowMeasureDataParser : public ApiDataListener
+    class FlowMeasureDataParser : public FlowMeasureDataParserInterface
     {
         public:
         FlowMeasureDataParser(
                 std::unique_ptr<FlowMeasureFilterParserInterface> filterParser,
-                std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser,
-                std::shared_ptr<InternalFlowMeasureCollection> flowMeasures,
-                std::shared_ptr<InternalEventCollection> events,
-                std::shared_ptr<const InternalFlightInformationRegionCollection> firs,
-                std::shared_ptr<Log::Logger> logger
+                std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser, std::shared_ptr<Log::Logger> logger
         );
-        void OnEvent(const nlohmann::json& data) override;
+        ~FlowMeasureDataParser() override = default;
+        [[nodiscard]] auto ParseFlowMeasures(
+                const nlohmann::json& data, const InternalEventCollection& events,
+                const InternalFlightInformationRegionCollection& firs
+        ) -> std::shared_ptr<InternalFlowMeasureCollection> override;
 
         private:
         [[nodiscard]] static auto DataIsValid(const nlohmann::json& data) -> bool;
         [[nodiscard]] static auto FlowMeasurePropertiesValid(const nlohmann::json& data) -> bool;
-        [[nodiscard]] auto GetNotifiedFirs(const nlohmann::json& data) const
+        [[nodiscard]] auto
+        GetNotifiedFirs(const nlohmann::json& data, const InternalFlightInformationRegionCollection& firs) const
                 -> std::vector<std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>>;
-        [[nodiscard]] auto GetMeasureStatus(
+        [[nodiscard]] static auto GetMeasureStatus(
                 const std::chrono::system_clock::time_point& startTime,
                 const std::chrono::system_clock::time_point& endTime,
                 const std::chrono::system_clock::time_point& withdrawnTime
-        ) const -> FlowMeasure::MeasureStatus;
+        ) -> FlowMeasure::MeasureStatus;
 
         // Filter parser
         std::unique_ptr<FlowMeasureFilterParserInterface> filterParser;
 
         // Measure parser
         std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser;
-
-        // All the flow measures
-        std::shared_ptr<InternalFlowMeasureCollection> flowMeasures;
-
-        // All the events
-        std::shared_ptr<InternalEventCollection> events;
-
-        // All the firs
-        std::shared_ptr<const InternalFlightInformationRegionCollection> firs;
 
         // Logger
         std::shared_ptr<Log::Logger> logger;

@@ -1,5 +1,6 @@
 #pragma once
-#include "ApiDataListenerTypes.h"
+#include "ECFMP/api/ElementCollectionTypes.h"
+#include "FlightInformationRegionDataParserInterface.h"
 #include "InternalElementCollectionTypes.h"
 #include "nlohmann/json_fwd.hpp"
 
@@ -13,13 +14,12 @@ namespace ECFMP::Api {
     /**
      * Parses and updates flight information regions.
      */
-    class FlightInformationRegionDataParser : public ApiDataListener
+    class FlightInformationRegionDataParser : public FlightInformationRegionDataParserInterface
     {
         public:
-        FlightInformationRegionDataParser(
-                std::shared_ptr<InternalFlightInformationRegionCollection> firs, std::shared_ptr<Log::Logger> logger
-        );
-        void OnEvent(const nlohmann::json& data) override;
+        FlightInformationRegionDataParser(std::shared_ptr<Log::Logger> logger);
+        [[nodiscard]] auto ParseFirs(const nlohmann::json& data)
+                -> std::shared_ptr<InternalFlightInformationRegionCollection> override;
 
         private:
         [[nodiscard]] static auto DataIsValid(const nlohmann::json& data) -> bool;
@@ -27,8 +27,5 @@ namespace ECFMP::Api {
 
         // A logger, for logging things
         std::shared_ptr<Log::Logger> logger;
-
-        // Stores the FIR objects
-        std::shared_ptr<InternalFlightInformationRegionCollection> firs;
     };
 }// namespace ECFMP::Api

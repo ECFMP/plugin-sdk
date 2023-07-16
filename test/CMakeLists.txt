@@ -14,7 +14,8 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/../third_party/googletest" "third_party/
 set(test__api
         api/ApiDataDownloaderTest.cpp
         api/FlightInformationRegionDataParserTest.cpp
-        api/ApiElementIteratorTest.cpp api/ConcreteApiElementCollectionTest.cpp api/ConcreteStringIdentifiedApiElementCollectionTest.cpp api/FlowMeasureMeasureParserTest.cpp api/FlowMeasureFilterParserTest.cpp)
+        api/ApiElementIteratorTest.cpp api/ConcreteApiElementCollectionTest.cpp api/ConcreteStringIdentifiedApiElementCollectionTest.cpp api/FlowMeasureMeasureParserTest.cpp api/FlowMeasureFilterParserTest.cpp
+        api/ApiDataParserTest.cpp)
 
 set(test__date
         

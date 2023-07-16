@@ -1,4 +1,5 @@
 #include "EventDataParser.h"
+#include "ConcreteApiElementCollection.h"
 #include "ECFMP/log/Logger.h"
 #include "date/ParseDateStrings.h"
 #include "event/ConcreteEvent.h"
@@ -6,23 +7,23 @@
 
 namespace ECFMP::Api {
 
-    EventDataParser::EventDataParser(
-            std::shared_ptr<InternalEventCollection> events,
-            std::shared_ptr<const InternalFlightInformationRegionCollection> firs, std::shared_ptr<Log::Logger> logger
-    )
-        : events(std::move(events)), firs(std::move(firs)), logger(std::move(logger))
-    {}
-
-    void EventDataParser::OnEvent(const nlohmann::json& data)
+    EventDataParser::EventDataParser(std::shared_ptr<Log::Logger> logger) : logger(std::move(logger))
     {
+        assert(this->logger != nullptr && "Logger cannot be null");
+    }
+
+    auto EventDataParser::ParseEvents(const nlohmann::json& data, const InternalFlightInformationRegionCollection& firs)
+            -> std::shared_ptr<InternalEventCollection>
+    {
+        auto events = std::make_shared<Api::ConcreteApiElementCollection<Event::Event>>();
         logger->Debug("Updating event data");
         if (!DataIsValid(data)) {
             logger->Error("Invalid event data from API");
-            return;
+            return nullptr;
         }
 
         for (const auto& event: data.at("events")) {
-            if (!EventDataIsValid(event)) {
+            if (!EventDataIsValid(event, firs)) {
                 logger->Error("Invalid event in event data from API");
                 logger->Debug("Failed updating event: " + event.dump());
                 continue;
@@ -32,12 +33,13 @@ namespace ECFMP::Api {
                     event.at("id").get<int>(), event.at("name").get<std::string>(),
                     Date::TimePointFromDateString(event.at("date_start").get<std::string>()),
                     Date::TimePointFromDateString(event.at("date_end").get<std::string>()),
-                    firs->Get(event.at("flight_information_region_id").get<int>()),
+                    firs.Get(event.at("flight_information_region_id").get<int>()),
                     event.at("vatcan_code").is_null() ? "" : event.at("vatcan_code").get<std::string>()
             ));
         }
 
         logger->Debug("Finished updating events");
+        return events;
     }
 
     auto EventDataParser::DataIsValid(const nlohmann::json& data) -> bool
@@ -45,13 +47,15 @@ namespace ECFMP::Api {
         return data.is_object() && data.contains("events") && data.at("events").is_array();
     }
 
-    auto EventDataParser::EventDataIsValid(const nlohmann::json& data) -> bool
+    auto
+    EventDataParser::EventDataIsValid(const nlohmann::json& data, const InternalFlightInformationRegionCollection& firs)
+            -> bool
     {
         return data.is_object() && data.contains("id") && data.at("id").is_number_integer() && data.contains("name")
                 && data.at("name").is_string() && DateValid(data, "date_start") && DateValid(data, "date_end")
                 && data.contains("flight_information_region_id")
                 && data.at("flight_information_region_id").is_number_integer()
-                && firs->Get(data.at("flight_information_region_id").get<int>()) != nullptr
+                && firs.Get(data.at("flight_information_region_id").get<int>()) != nullptr
                 && (data.contains("vatcan_code")
                     && (data.at("vatcan_code").is_null() || data.at("vatcan_code").is_string()))
                 && data.contains("participants") && ParticipantsValid(data.at("participants"));

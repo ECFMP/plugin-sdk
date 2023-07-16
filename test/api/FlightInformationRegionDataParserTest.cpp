@@ -10,32 +10,26 @@ namespace ECFMPTest::Api {
     {
         public:
         FlightInformationRegionDataParserTest()
-            : firs(std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                           ECFMP::FlightInformationRegion::FlightInformationRegion>>()),
-              mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(firs, mockLogger)
+            : mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(mockLogger)
         {}
 
-        std::shared_ptr<ECFMP::Api::InternalFlightInformationRegionCollection> firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
         ECFMP::Api::FlightInformationRegionDataParser parser;
     };
 
-    TEST_F(FlightInformationRegionDataParserTest, ItDoesNothingIfDataNotObject)
+    TEST_F(FlightInformationRegionDataParserTest, ItReturnsNullptrIfDataNotObject)
     {
-        parser.OnEvent(nlohmann::json::array());
-        EXPECT_EQ(0, firs->Count());
+        EXPECT_EQ(nullptr, parser.ParseFirs(nlohmann::json::array()));
     }
 
-    TEST_F(FlightInformationRegionDataParserTest, ItDoesNothingIfDataDoesNotContainFirs)
+    TEST_F(FlightInformationRegionDataParserTest, ItReturnsNullptrIfDataDoesNotContainFirs)
     {
-        parser.OnEvent(nlohmann::json{{"not_flight_information_regions", "abc"}});
-        EXPECT_EQ(0, firs->Count());
+        EXPECT_EQ(nullptr, parser.ParseFirs(nlohmann::json{{"not_flight_information_regions", "abc"}}));
     }
 
-    TEST_F(FlightInformationRegionDataParserTest, ItDoesNothingIfFirsNotArray)
+    TEST_F(FlightInformationRegionDataParserTest, ItReturnsNullptrIfFirsNotArray)
     {
-        parser.OnEvent(nlohmann::json{{"flight_information_regions", "abc"}});
-        EXPECT_EQ(0, firs->Count());
+        EXPECT_EQ(nullptr, parser.ParseFirs(nlohmann::json{{"flight_information_regions", "abc"}}));
     }
 
     TEST_F(FlightInformationRegionDataParserTest, ItParsesFirs)
@@ -53,7 +47,7 @@ namespace ECFMPTest::Api {
                  }}
         );
 
-        parser.OnEvent(nlohmann::json{{"flight_information_regions", firData}});
+        auto firs = parser.ParseFirs(nlohmann::json{{"flight_information_regions", firData}});
         EXPECT_EQ(2, firs->Count());
 
         const auto fir1 = firs->Get(1);
@@ -82,14 +76,9 @@ namespace ECFMPTest::Api {
     {
         public:
         FlightInformationRegionDataParserBadDataTest()
-            : firs(std::make_shared<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                           ECFMP::FlightInformationRegion::FlightInformationRegion>>()),
-              mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(firs, mockLogger)
+            : mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(mockLogger)
         {}
 
-        std::shared_ptr<ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                ECFMP::FlightInformationRegion::FlightInformationRegion>>
-                firs;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
         ECFMP::Api::FlightInformationRegionDataParser parser;
     };
@@ -147,7 +136,7 @@ namespace ECFMPTest::Api {
 
         auto data = nlohmann::json::array({GetParam().data});
         data.push_back(validRegion);
-        parser.OnEvent(nlohmann::json{{"flight_information_regions", data}});
+        auto firs = parser.ParseFirs(nlohmann::json{{"flight_information_regions", data}});
 
         EXPECT_EQ(1, firs->Count());
 
