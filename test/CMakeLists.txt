@@ -65,8 +65,8 @@ set(test__plugin
 set(test__other
         main.cpp
         pch/pch.cpp pch/pch.h
-        FlowSdkHeaderTest.cpp
-        FlowSdkMockHeaderTest.cpp
+        SdkHeaderTest.cpp
+        MockHeaderTest.cpp
         flowmeasure/ConcreteMultipleLevelFilterTest.cpp)
 
 add_executable(${PROJECT_NAME}
