@@ -1,15 +1,12 @@
 #include "ECFMP/SdkFactory.h"
 #include "ConcreteSdk.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
-#include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "ECFMP/http/HttpClient.h"
 #include "ECFMP/log/Logger.h"
 #include "api/ApiDataDownloadedEvent.h"
 #include "api/ApiDataDownloader.h"
 #include "api/ApiDataParser.h"
 #include "api/ApiDataScheduler.h"
-#include "api/ConcreteApiElementCollection.h"
-#include "api/ConcreteStringIdentifiedApiElementCollection.h"
 #include "api/EventDataParser.h"
 #include "api/FlightInformationRegionDataParser.h"
 #include "api/FlowMeasureDataParser.h"
@@ -59,37 +56,6 @@ namespace ECFMP::Plugin {
             return wrappedLogger;
         }
 
-        auto GetFirs() -> std::shared_ptr<
-                Api::ConcreteStringIdentifiedApiElementCollection<FlightInformationRegion::FlightInformationRegion>>
-        {
-            if (!firs) {
-                firs = std::make_shared<Api::ConcreteStringIdentifiedApiElementCollection<
-                        FlightInformationRegion::FlightInformationRegion>>();
-            }
-
-            return firs;
-        }
-
-        auto GetEvents() -> std::shared_ptr<Api::ConcreteApiElementCollection<Event::Event>>
-        {
-            if (!events) {
-                events = std::make_shared<Api::ConcreteApiElementCollection<Event::Event>>();
-            }
-
-            return events;
-        }
-
-        auto GetFlowMeasures()
-                -> std::shared_ptr<Api::ConcreteStringIdentifiedApiElementCollection<FlowMeasure::FlowMeasure>>
-        {
-            if (!flowMeasures) {
-                flowMeasures =
-                        std::make_shared<Api::ConcreteStringIdentifiedApiElementCollection<FlowMeasure::FlowMeasure>>();
-            }
-
-            return flowMeasures;
-        }
-
         auto GetEventBus() -> std::shared_ptr<EventBus::InternalEventBus>
         {
             if (!eventBus) {
@@ -110,15 +76,6 @@ namespace ECFMP::Plugin {
 
         // For broadcasting events
         std::shared_ptr<EventBus::InternalEventBus> eventBus = nullptr;
-
-        // All the FIRs
-        std::shared_ptr<
-                Api::ConcreteStringIdentifiedApiElementCollection<FlightInformationRegion::FlightInformationRegion>>
-                firs;
-
-        std::shared_ptr<Api::ConcreteApiElementCollection<Event::Event>> events;
-
-        std::shared_ptr<Api::ConcreteStringIdentifiedApiElementCollection<FlowMeasure::FlowMeasure>> flowMeasures;
     };
 
     SdkFactory::SdkFactory() : impl(std::make_unique<SdkFactoryImpl>())

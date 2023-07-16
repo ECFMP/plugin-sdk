@@ -1,13 +1,12 @@
 #include "api/FlowMeasureDataParser.h"
-#include "ECFMP/event/Event.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "ECFMP/flowmeasure/Measure.h"
 #include "ECFMP/flowmeasure/MultipleLevelFilter.h"
 #include "ECFMP/flowmeasure/RangeToDestinationFilter.h"
-#include "api/ConcreteApiElementCollection.h"
-#include "api/ConcreteStringIdentifiedApiElementCollection.h"
 #include "api/FlowMeasureFilterParserInterface.h"
 #include "api/FlowMeasureMeasureParserInterface.h"
+#include "api/InternalApiElementCollection.h"
+#include "api/InternalElementCollectionTypes.h"
 #include "date/ParseDateStrings.h"
 #include "event/ConcreteEvent.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
@@ -86,10 +85,8 @@ namespace ECFMPTest::Api {
 
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
-        ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                ECFMP::FlightInformationRegion::FlightInformationRegion>
-                firs;
+        ECFMP::Api::InternalEventCollection events;
+        ECFMP::Api::InternalFlightInformationRegionCollection firs;
         std::unique_ptr<ECFMP::Api::FlowMeasureDataParser> parser;
     };
 
@@ -291,10 +288,8 @@ namespace ECFMPTest::Api {
 
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
-        ECFMP::Api::ConcreteApiElementCollection<ECFMP::Event::Event> events;
-        ECFMP::Api::ConcreteStringIdentifiedApiElementCollection<
-                ECFMP::FlightInformationRegion::FlightInformationRegion>
-                firs;
+        ECFMP::Api::InternalEventCollection events;
+        ECFMP::Api::InternalFlightInformationRegionCollection firs;
         std::unique_ptr<ECFMP::Api::FlowMeasureDataParser> parser;
     };
 

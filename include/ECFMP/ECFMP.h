@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ECFMP/api/ApiElementCollection.h"
-#include "ECFMP/api/EventCollection.h"
+#include "ECFMP/api/StringIdentifierApiElementCollection.h"
 #include "ECFMP/event/Event.h"
 #include "ECFMP/event/EventParticipant.h"
 #include "ECFMP/eventbus/EventBus.h"

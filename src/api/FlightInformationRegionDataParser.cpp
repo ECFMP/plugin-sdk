@@ -1,8 +1,6 @@
 #include "FlightInformationRegionDataParser.h"
-#include "ConcreteStringIdentifiedApiElementCollection.h"
 #include "ECFMP/log/Logger.h"
-#include "InternalStringIdentifiedApiElementCollection.h"
-#include "api/ConcreteApiElementCollection.h"
+#include "InternalElementCollectionTypes.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 #include "nlohmann/json.hpp"
 
@@ -17,8 +15,7 @@ namespace ECFMP::Api {
     auto FlightInformationRegionDataParser::ParseFirs(const nlohmann::json& data)
             -> std::shared_ptr<InternalFlightInformationRegionCollection>
     {
-        auto firs = std::make_shared<
-                Api::ConcreteStringIdentifiedApiElementCollection<FlightInformationRegion::FlightInformationRegion>>();
+        auto firs = std::make_shared<InternalFlightInformationRegionCollection>();
 
         logger->Debug("Updating FIRs");
         if (!DataIsValid(data)) {

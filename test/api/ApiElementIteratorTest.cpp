@@ -22,7 +22,7 @@ namespace ECFMPTest::Api {
         std::shared_ptr<ECFMP::FlightInformationRegion::FlightInformationRegion> fir1;
         std::shared_ptr<ECFMP::FlightInformationRegion::FlightInformationRegion> fir2;
         std::shared_ptr<ECFMP::FlightInformationRegion::FlightInformationRegion> fir3;
-        std::map<int, std::shared_ptr<ECFMP::FlightInformationRegion::FlightInformationRegion>> map;
+        std::unordered_map<int, std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>> map;
     };
 
     TEST_F(ApiElementIteratorTest, ItReturnsTheCurrentValue)
