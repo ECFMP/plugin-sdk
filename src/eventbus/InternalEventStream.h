@@ -34,5 +34,26 @@ namespace ECFMP::EventBus {
                     this->subscriptions.end()
             );
         };
+
+        /**
+         * A method for testing only, shouldn't normally be used.
+         */
+        template<typename ListenerType>
+        [[nodiscard]] auto HasListenerOfType() -> bool
+        {
+            auto guard = std::lock_guard(this->mutex);
+            return std::any_of(
+                    this->subscriptions.begin(), this->subscriptions.end(),
+                    [](const EventSubscription<EventType>& subscription) {
+                        try {
+                            static_cast<void>(dynamic_cast<const ListenerType&>(*subscription.listener));
+                            return true;
+                        }
+                        catch (std::bad_cast&) {
+                            return false;
+                        }
+                    }
+            );
+        }
     };
 }// namespace ECFMP::EventBus

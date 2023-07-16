@@ -1,5 +1,8 @@
 #include "ECFMP/SdkFactory.h"
 #include "ECFMP/EventListeners.h"
+#include "ECFMP/eventbus/EventBus.h"
+#include "api/ApiDataDownloadedEvent.h"
+#include "api/ApiDataParser.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 
@@ -63,5 +66,14 @@ namespace ECFMPTest::Plugin {
                 static_cast<void>(ECFMP::Plugin::SdkFactory::Build().WithLogger(std::move(logger)).Instance()),
                 ECFMP::Plugin::SdkConfigurationException
         );
+    }
+
+    TEST_F(SdkFactoryTest, ItRegistersApiDataParserForApiDataEvents)
+    {
+        const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
+        auto hasListener =
+                instance->EventBus().HasListenerOfType<ECFMP::Api::ApiDataParser, ECFMP::Api::ApiDataDownloadedEvent>();
+        EXPECT_TRUE(hasListener);
+        instance->Destroy();
     }
 }// namespace ECFMPTest::Plugin

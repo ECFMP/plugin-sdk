@@ -7,9 +7,6 @@
 
 namespace ECFMP::EventBus {
 
-    template<typename EventType>
-    class EventStreamFactory;
-
     class EventBus
     {
         public:
@@ -47,6 +44,17 @@ namespace ECFMP::EventBus {
         {
             GetStream<EventType>().SubscribeOnce(listener, filter);
         };
+
+        /**
+         * Checks whether a specified type of listener is registered for a specified type of event.
+         *
+         * Can be used for test assertions.
+         */
+        template<typename ListenerType, typename EventType>
+        [[nodiscard]] auto HasListenerOfType() -> bool
+        {
+            return GetStream<EventType>().template HasListenerOfType<ListenerType>();
+        }
 
         private:
         template<typename EventType>
