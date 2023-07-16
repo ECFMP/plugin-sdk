@@ -11,7 +11,8 @@ namespace ECFMPTest::FlowMeasure {
             : fir(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(1, "EGTT", "London")
             ),
               event(std::make_shared<ECFMP::Event::ConcreteEvent>(
-                      1, "TEST", std::chrono::system_clock::now(), std::chrono::system_clock::now(), fir, "ABC"
+                      1, "TEST", std::chrono::system_clock::now(), std::chrono::system_clock::now(), fir, "ABC",
+                      std::vector<std::shared_ptr<ECFMP::Event::EventParticipant>>{}
               )),
               eventFilter(event, ECFMP::FlowMeasure::EventParticipation::NotParticipating)
         {}
@@ -42,7 +43,7 @@ namespace ECFMPTest::FlowMeasure {
     TEST_F(ConcreteEventFilterTest, ItHasEventApplicability)
     {
         ECFMP::Event::ConcreteEvent event2(
-                2, "TEST", std::chrono::system_clock::now(), std::chrono::system_clock::now(), fir, "ABC"
+                2, "TEST", std::chrono::system_clock::now(), std::chrono::system_clock::now(), fir, "ABC", {}
         );
         EXPECT_TRUE(eventFilter.ApplicableToEvent(*event));
         EXPECT_FALSE(eventFilter.ApplicableToEvent(event2));

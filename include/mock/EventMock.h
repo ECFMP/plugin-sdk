@@ -16,6 +16,10 @@ namespace ECFMP::Mock::Event {
                 (const, noexcept, override)
         );
         MOCK_METHOD(const std::string&, VatcanCode, (), (const, noexcept, override));
+        MOCK_METHOD(
+                const std::vector<std::shared_ptr<ECFMP::Event::EventParticipant>>&, Participants, (),
+                (const, noexcept, override)
+        );
     };
 
 }// namespace ECFMP::Mock::Event

@@ -78,9 +78,10 @@ namespace ECFMPTest::Api {
                     2, "EGPX", "Scottish"
             ));
 
-            events.Add(
-                    std::make_shared<ECFMP::Event::ConcreteEvent>(1, "Test event", now, plusOneHour, firs.Get(1), "abc")
-            );
+            events.Add(std::make_shared<ECFMP::Event::ConcreteEvent>(
+                    1, "Test event", now, plusOneHour, firs.Get(1), "abc",
+                    std::vector<std::shared_ptr<ECFMP::Event::EventParticipant>>{}
+            ));
         }
 
         MockFlowMeasureFilterParser* filterParserRaw;
@@ -281,9 +282,10 @@ namespace ECFMPTest::Api {
                     2, "EGPX", "Scottish"
             ));
 
-            events.Add(
-                    std::make_shared<ECFMP::Event::ConcreteEvent>(1, "Test event", now, plusOneHour, firs.Get(1), "abc")
-            );
+            events.Add(std::make_shared<ECFMP::Event::ConcreteEvent>(
+                    1, "Test event", now, plusOneHour, firs.Get(1), "abc",
+                    std::vector<std::shared_ptr<ECFMP::Event::EventParticipant>>{}
+            ));
         }
 
         MockFlowMeasureFilterParser* filterParserRaw;

@@ -95,6 +95,16 @@ namespace ECFMPTest::Api {
         EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:16:00Z"), event1->Start());
         EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:17:00Z"), event1->End());
         EXPECT_EQ("abc", event1->VatcanCode());
+        auto event1Participants = event1->Participants();
+        EXPECT_EQ(2, event1Participants.size());
+        const auto event1Participant1 = event1Participants[0];
+        EXPECT_EQ(1203533, event1Participant1->Cid());
+        EXPECT_EQ("EGKK", event1Participant1->OriginAirport());
+        EXPECT_EQ("EGLL", event1Participant1->DestinationAirport());
+        const auto event1Participant2 = event1Participants[1];
+        EXPECT_EQ(1203534, event1Participant2->Cid());
+        EXPECT_EQ("EGKK", event1Participant2->OriginAirport());
+        EXPECT_EQ("EGLL", event1Participant2->DestinationAirport());
 
         const auto event2 = events->Get(2);
         EXPECT_EQ(2, event2->Id());
@@ -103,6 +113,16 @@ namespace ECFMPTest::Api {
         EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-17T13:16:00Z"), event2->Start());
         EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-18T13:17:00Z"), event2->End());
         EXPECT_EQ("def", event2->VatcanCode());
+        auto event2Participants = event2->Participants();
+        EXPECT_EQ(2, event2Participants.size());
+        const auto event2Participant1 = event2Participants[0];
+        EXPECT_EQ(1203535, event2Participant1->Cid());
+        EXPECT_EQ("EGLL", event2Participant1->OriginAirport());
+        EXPECT_EQ("EGCC", event2Participant1->DestinationAirport());
+        const auto event2Participant2 = event2Participants[1];
+        EXPECT_EQ(1203536, event2Participant2->Cid());
+        EXPECT_EQ("EGCC", event2Participant2->OriginAirport());
+        EXPECT_EQ("EGPH", event2Participant2->DestinationAirport());
     }
 
     TEST_F(EventDataParserTest, ItParsesEventsWithNoParticipants)
@@ -264,6 +284,14 @@ namespace ECFMPTest::Api {
         EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:16:00Z"), event1->Start());
         EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-16T13:17:00Z"), event1->End());
         EXPECT_EQ("abc", event1->VatcanCode());
+        auto event1Participants = event1->Participants();
+        EXPECT_EQ(2, event1Participants.size());
+        EXPECT_EQ(1203533, event1Participants[0]->Cid());
+        EXPECT_EQ("", event1Participants[0]->OriginAirport());
+        EXPECT_EQ("", event1Participants[0]->DestinationAirport());
+        EXPECT_EQ(1203534, event1Participants[1]->Cid());
+        EXPECT_EQ("", event1Participants[1]->OriginAirport());
+        EXPECT_EQ("", event1Participants[1]->DestinationAirport());
 
         const auto event2 = events->Get(2);
         EXPECT_EQ(2, event2->Id());
@@ -272,6 +300,14 @@ namespace ECFMPTest::Api {
         EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-17T13:16:00Z"), event2->Start());
         EXPECT_EQ(ECFMP::Date::TimePointFromDateString("2022-04-18T13:17:00Z"), event2->End());
         EXPECT_EQ("def", event2->VatcanCode());
+        auto event2Participants = event2->Participants();
+        EXPECT_EQ(2, event2Participants.size());
+        EXPECT_EQ(1203535, event2Participants[0]->Cid());
+        EXPECT_EQ("", event2Participants[0]->OriginAirport());
+        EXPECT_EQ("", event2Participants[0]->DestinationAirport());
+        EXPECT_EQ(1203536, event2Participants[1]->Cid());
+        EXPECT_EQ("", event2Participants[1]->OriginAirport());
+        EXPECT_EQ("", event2Participants[1]->DestinationAirport());
     }
 
     using BadEventDataCheck = struct BadEventDataCheck {

@@ -15,7 +15,7 @@ namespace ECFMP::Event {
         /**
          * The id of the event in the API.
          */
-        [[nodiscard]] virtual auto Id() const noexcept -> int = 0;
+        [[nodiscard]] auto Id() const noexcept -> int override = 0;
 
         /**
          * Returns the name of the event.
@@ -44,10 +44,13 @@ namespace ECFMP::Event {
         [[nodiscard]] virtual auto VatcanCode() const noexcept -> const std::string& = 0;
 
         /**
+         * Returns the participants of the event.
+         */
+        [[nodiscard]] virtual auto Participants() const -> const std::vector<std::shared_ptr<EventParticipant>>& = 0;
+
+        /**
          * Compares events.
          */
         [[nodiscard]] auto operator==(const class Event& event) const -> bool;
-
-        // TODO: Event participants
     };
 }// namespace ECFMP::Event

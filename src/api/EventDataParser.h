@@ -10,7 +10,7 @@ namespace ECFMP::Api {
     class EventDataParser : public EventDataParserInterface
     {
         public:
-        EventDataParser(std::shared_ptr<Log::Logger> logger);
+        explicit EventDataParser(std::shared_ptr<Log::Logger> logger);
         [[nodiscard]] auto
         ParseEvents(const nlohmann::json& data, const InternalFlightInformationRegionCollection& firs)
                 -> std::shared_ptr<InternalEventCollection> override;
