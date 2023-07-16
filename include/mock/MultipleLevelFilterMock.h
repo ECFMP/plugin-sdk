@@ -4,7 +4,7 @@
 
 namespace ECFMP::Mock::FlowMeasure {
 
-    class LevelRangeFilterMock : public ECFMP::FlowMeasure::MultipleLevelFilter
+    class MultipleLevelFilterMock : public ECFMP::FlowMeasure::MultipleLevelFilter
     {
         public:
         MOCK_METHOD(std::vector<int>, Levels, (), (const, noexcept, override));

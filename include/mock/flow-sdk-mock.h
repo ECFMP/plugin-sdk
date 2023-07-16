@@ -9,4 +9,5 @@
 #include "FlowMeasureMock.h"
 #include "LevelRangeFilterMock.h"
 #include "MeasureMock.h"
+#include "MultipleLevelFilterMock.h"
 #include "RouteFilterMock.h"

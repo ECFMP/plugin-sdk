@@ -15,6 +15,7 @@ namespace ECFMPTest {
         testing::NiceMock<ECFMP::Mock::FlowMeasure::FlowMeasureMock> flowMeasure;
         testing::NiceMock<ECFMP::Mock::FlowMeasure::FlowMeasureFiltersMock> filters;
         testing::NiceMock<ECFMP::Mock::FlowMeasure::LevelRangeFilterMock> levelFilter;
+        testing::NiceMock<ECFMP::Mock::FlowMeasure::MultipleLevelFilterMock> mutliLevelFilter;
         testing::NiceMock<ECFMP::Mock::FlowMeasure::MeasureMock> measure;
         testing::NiceMock<ECFMP::Mock::FlowMeasure::RouteFilterMock> routeFilter;
 
