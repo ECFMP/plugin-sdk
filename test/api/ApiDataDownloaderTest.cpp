@@ -1,7 +1,6 @@
 #include "api/ApiDataDownloader.h"
 #include "ECFMP/http/HttpClient.h"
 #include "api/ApiDataDownloadedEvent.h"
-#include "mock/MockEventListener.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"

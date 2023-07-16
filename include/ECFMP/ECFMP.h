@@ -15,8 +15,5 @@
 #include "ECFMP/flowmeasure/RouteFilter.h"
 #include "ECFMP/http/HttpClient.h"
 #include "ECFMP/log/Logger.h"
-#include "EventListener.h"
-#include "EventListenerFilter.h"
-#include "EventListeners.h"
 #include "Sdk.h"
 #include "SdkEvents.h"

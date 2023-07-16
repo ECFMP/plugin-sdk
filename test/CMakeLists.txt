@@ -49,7 +49,6 @@ set(test__log
         )
 
 set(test__mock
-        mock/MockEventListener.h
         mock/MockLogger.h
         mock/MockHttpClient.h
         )
@@ -60,7 +59,6 @@ set(test__pch
         )
 
 set(test__plugin
-        plugin/ConcreteEventListenersTest.cpp
         plugin/SdkFactoryTest.cpp
         plugin/ConcreteSdkTest.cpp)
 
