@@ -27,7 +27,7 @@ namespace ECFMPTest::FlowMeasure {
                       std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
                               1, "EGTT", "London"
                       ),
-                      "ABC"
+                      "ABC", std::vector<std::shared_ptr<ECFMP::Event::EventParticipant>>{}
               )),
               measure1(
                       1, event, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,

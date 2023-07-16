@@ -12,7 +12,8 @@ namespace ECFMP::Event {
         ConcreteEvent(
                 int id, std::string name, std::chrono::system_clock::time_point start,
                 std::chrono::system_clock::time_point end,
-                std::shared_ptr<const FlightInformationRegion::FlightInformationRegion> fir, std::string vatcanCode
+                std::shared_ptr<const FlightInformationRegion::FlightInformationRegion> fir, std::string vatcanCode,
+                std::vector<std::shared_ptr<EventParticipant>> participants
         );
         [[nodiscard]] auto Id() const noexcept -> int override;
         [[nodiscard]] auto Name() const noexcept -> const std::string& override;
@@ -21,6 +22,7 @@ namespace ECFMP::Event {
         [[nodiscard]] auto FlightInformationRegion() const noexcept
                 -> const FlightInformationRegion::FlightInformationRegion& override;
         [[nodiscard]] auto VatcanCode() const noexcept -> const std::string& override;
+        [[nodiscard]] auto Participants() const -> const std::vector<std::shared_ptr<EventParticipant>>& override;
 
         private:
         // Api event id
@@ -40,5 +42,8 @@ namespace ECFMP::Event {
 
         // Code for the vatcan code
         std::string vatcanCode;
+
+        // The participants
+        std::vector<std::shared_ptr<EventParticipant>> participants;
     };
 }// namespace ECFMP::Event

@@ -1,8 +1,10 @@
 #include "EventDataParser.h"
 #include "ConcreteApiElementCollection.h"
+#include "ECFMP/event/EventParticipant.h"
 #include "ECFMP/log/Logger.h"
 #include "date/ParseDateStrings.h"
 #include "event/ConcreteEvent.h"
+#include "event/ConcreteEventParticipant.h"
 #include "nlohmann/json.hpp"
 
 namespace ECFMP::Api {
@@ -29,12 +31,23 @@ namespace ECFMP::Api {
                 continue;
             }
 
+            // Parse participants
+            std::vector<std::shared_ptr<Event::EventParticipant>> participants;
+            for (const auto& participant: event.at("participants")) {
+                participants.push_back(std::make_shared<Event::ConcreteEventParticipant>(
+                        participant.at("cid").get<int>(),
+                        participant.at("origin").is_string() ? participant.at("origin").get<std::string>() : "",
+                        participant.at("destination").is_string() ? participant.at("destination").get<std::string>()
+                                                                  : ""
+                ));
+            }
+
             events->Add(std::make_shared<Event::ConcreteEvent>(
                     event.at("id").get<int>(), event.at("name").get<std::string>(),
                     Date::TimePointFromDateString(event.at("date_start").get<std::string>()),
                     Date::TimePointFromDateString(event.at("date_end").get<std::string>()),
                     firs.Get(event.at("flight_information_region_id").get<int>()),
-                    event.at("vatcan_code").is_null() ? "" : event.at("vatcan_code").get<std::string>()
+                    event.at("vatcan_code").is_null() ? "" : event.at("vatcan_code").get<std::string>(), participants
             ));
         }
 
