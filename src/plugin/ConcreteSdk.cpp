@@ -26,8 +26,16 @@ namespace ECFMP::Plugin {
         eventBus->ProcessPendingEvents();
     }
 
-    auto ConcreteSdk::FlightInformationRegions() const noexcept -> const Api::FlightInformationRegionCollection&
+    auto ConcreteSdk::FlightInformationRegions() const noexcept
+            -> std::shared_ptr<const Api::FlightInformationRegionCollection>
     {
-        return *flightInformationRegions;
+        auto lock = std::lock_guard(mutex);
+        return flightInformationRegions;
+    }
+
+    void ConcreteSdk::OnEvent(const FlightInformationRegionsUpdatedEvent& event)
+    {
+        auto lock = std::lock_guard(mutex);
+        flightInformationRegions = event.firs;
     }
 }// namespace ECFMP::Plugin

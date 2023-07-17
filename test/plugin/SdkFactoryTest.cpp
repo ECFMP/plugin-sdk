@@ -4,6 +4,8 @@
 #include "api/ApiDataParser.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
+#include "plugin/ConcreteSdk.h"
+#include "plugin/InternalSdkEvents.h"
 
 namespace ECFMPTest::Plugin {
     class SdkFactoryTest : public testing::Test
@@ -72,6 +74,17 @@ namespace ECFMPTest::Plugin {
         const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
         auto hasListener =
                 instance->EventBus().HasListenerOfType<ECFMP::Api::ApiDataParser, ECFMP::Api::ApiDataDownloadedEvent>();
+        EXPECT_TRUE(hasListener);
+        instance->Destroy();
+    }
+
+    TEST_F(SdkFactoryTest, ItRegistersSdkForFirUpdateEvents)
+    {
+        const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
+        auto hasListener =
+                instance->EventBus()
+                        .HasListenerOfType<
+                                ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::FlightInformationRegionsUpdatedEvent>();
         EXPECT_TRUE(hasListener);
         instance->Destroy();
     }

@@ -48,4 +48,18 @@ namespace ECFMPTest::Plugin {
         instance.OnEuroscopeTimerTick();
         EXPECT_EQ(1, mockEventListener->callCount);
     }
+
+    TEST_F(ConcreteSdkTest, ItHasADefaultFlightInformationRegionCollection)
+    {
+        EXPECT_EQ(0, instance.FlightInformationRegions()->Count());
+    }
+
+    TEST_F(ConcreteSdkTest, ItUpdatesFlightInformationRegionsOnEvent)
+    {
+        auto newFirs = std::make_shared<ECFMP::Api::InternalFlightInformationRegionCollection>();
+        auto event = ECFMP::Plugin::FlightInformationRegionsUpdatedEvent{newFirs};
+        instance.OnEvent(event);
+
+        EXPECT_EQ(newFirs, instance.FlightInformationRegions());
+    }
 }// namespace ECFMPTest::Plugin

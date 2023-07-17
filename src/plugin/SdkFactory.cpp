@@ -3,6 +3,7 @@
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/http/HttpClient.h"
 #include "ECFMP/log/Logger.h"
+#include "InternalSdkEvents.h"
 #include "api/ApiDataDownloadedEvent.h"
 #include "api/ApiDataDownloader.h"
 #include "api/ApiDataParser.h"
@@ -107,16 +108,17 @@ namespace ECFMP::Plugin {
         return *this;
     }
 
-    auto SdkFactory::Instance() -> std::unique_ptr<Sdk>
+    auto SdkFactory::Instance() -> std::shared_ptr<Sdk>
     {
         if (!impl->httpClient) {
             throw SdkConfigurationException("No http client provided");
         }
 
-        // TODO: Register for events
-
-        return std::make_unique<ConcreteSdk>(
+        auto sdk = std::make_shared<ConcreteSdk>(
                 std::shared_ptr<void>(impl->CreateApiDataScheduler()), impl->GetEventBus()
         );
+        impl->GetEventBus()->Subscribe<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
+
+        return std::move(sdk);
     }
 }// namespace ECFMP::Plugin
