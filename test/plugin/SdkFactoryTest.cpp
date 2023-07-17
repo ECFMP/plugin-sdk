@@ -1,4 +1,5 @@
 #include "ECFMP/SdkFactory.h"
+#include "ECFMP/SdkEvents.h"
 #include "ECFMP/eventbus/EventBus.h"
 #include "api/ApiDataDownloadedEvent.h"
 #include "api/ApiDataParser.h"
@@ -85,6 +86,15 @@ namespace ECFMPTest::Plugin {
                 instance->EventBus()
                         .HasListenerOfType<
                                 ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::FlightInformationRegionsUpdatedEvent>();
+        EXPECT_TRUE(hasListener);
+        instance->Destroy();
+    }
+
+    TEST_F(SdkFactoryTest, ItRegistersSdkForEventsUpdateEvents)
+    {
+        const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
+        auto hasListener =
+                instance->EventBus().HasListenerOfType<ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::EventsUpdatedEvent>();
         EXPECT_TRUE(hasListener);
         instance->Destroy();
     }

@@ -55,18 +55,21 @@ namespace ECFMPTest::Api {
     TEST_F(FlightInformationRegionDataParserTest, ItReturnsNullptrIfDataNotObject)
     {
         EXPECT_EQ(nullptr, parser.ParseFirs(nlohmann::json::array()));
+        eventBus->ProcessPendingEvents();
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(FlightInformationRegionDataParserTest, ItReturnsNullptrIfDataDoesNotContainFirs)
     {
         EXPECT_EQ(nullptr, parser.ParseFirs(nlohmann::json{{"not_flight_information_regions", "abc"}}));
+        eventBus->ProcessPendingEvents();
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(FlightInformationRegionDataParserTest, ItReturnsNullptrIfFirsNotArray)
     {
         EXPECT_EQ(nullptr, parser.ParseFirs(nlohmann::json{{"flight_information_regions", "abc"}}));
+        eventBus->ProcessPendingEvents();
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 

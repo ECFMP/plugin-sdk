@@ -1,10 +1,18 @@
 #pragma once
+#include "ECFMP/api/ElementCollectionTypes.h"
 
 namespace ECFMP::FlowMeasure {
     class FlowMeasure;
 }// namespace ECFMP::FlowMeasure
 
 namespace ECFMP::Plugin {
+
+    // Events
+    using EventsUpdatedEvent = struct EventsUpdatedEvent {
+        std::shared_ptr<ECFMP::Api::EventCollection> events;
+    };
+
+    // Flow measures
     using FlowMeasureNotifiedEvent = struct FlowMeasureNotifiedEvent {
         const FlowMeasure::FlowMeasure& measure;
     };

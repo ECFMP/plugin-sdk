@@ -62,4 +62,18 @@ namespace ECFMPTest::Plugin {
 
         EXPECT_EQ(newFirs, instance.FlightInformationRegions());
     }
+
+    TEST_F(ConcreteSdkTest, ItHasADefaultEventCollection)
+    {
+        EXPECT_EQ(0, instance.Events()->Count());
+    }
+
+    TEST_F(ConcreteSdkTest, ItUpdatesEventsOnEvent)
+    {
+        auto newEvents = std::make_shared<ECFMP::Api::InternalEventCollection>();
+        auto event = ECFMP::Plugin::EventsUpdatedEvent{newEvents};
+        instance.OnEvent(event);
+
+        EXPECT_EQ(newEvents, instance.Events());
+    }
 }// namespace ECFMPTest::Plugin

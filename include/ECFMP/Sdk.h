@@ -27,6 +27,11 @@ namespace ECFMP::Plugin {
                 -> std::shared_ptr<const Api::FlightInformationRegionCollection> = 0;
 
         /**
+         * All the events that are currently loaded.
+         */
+        [[nodiscard]] virtual auto Events() const noexcept -> std::shared_ptr<const Api::EventCollection> = 0;
+
+        /**
          * The event bus for the SDK, which can be used to subscribe to events.
          */
         [[nodiscard]] virtual auto EventBus() const noexcept -> EventBus::EventBus& = 0;

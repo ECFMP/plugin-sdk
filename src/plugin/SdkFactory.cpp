@@ -1,5 +1,6 @@
 #include "ECFMP/SdkFactory.h"
 #include "ConcreteSdk.h"
+#include "ECFMP/SdkEvents.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/http/HttpClient.h"
 #include "ECFMP/log/Logger.h"
@@ -23,7 +24,7 @@ namespace ECFMP::Plugin {
         {
             // Set up data listeners
             auto apiDataParser = std::make_shared<Api::ApiDataParser>(
-                    std::make_shared<Api::EventDataParser>(GetLogger()),
+                    std::make_shared<Api::EventDataParser>(GetLogger(), GetEventBus()),
                     std::make_shared<Api::FlightInformationRegionDataParser>(GetLogger(), GetEventBus()),
                     std::make_shared<Api::FlowMeasureDataParser>(
                             std::make_unique<Api::FlowMeasureFilterParser>(GetLogger()),
@@ -118,6 +119,7 @@ namespace ECFMP::Plugin {
                 std::shared_ptr<void>(impl->CreateApiDataScheduler()), impl->GetEventBus()
         );
         impl->GetEventBus()->Subscribe<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
+        impl->GetEventBus()->Subscribe<Plugin::EventsUpdatedEvent>(sdk);
 
         return std::move(sdk);
     }

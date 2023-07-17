@@ -4,7 +4,8 @@
 namespace ECFMP::Plugin {
     ConcreteSdk::ConcreteSdk(std::shared_ptr<void> apiScheduler, std::shared_ptr<EventBus::InternalEventBus> eventBus)
         : apiScheduler(std::move(apiScheduler)), eventBus(std::move(eventBus)),
-          flightInformationRegions(std::make_shared<Api::InternalFlightInformationRegionCollection>())
+          flightInformationRegions(std::make_shared<Api::InternalFlightInformationRegionCollection>()),
+          events(std::make_shared<Api::InternalEventCollection>())
     {
         assert(this->apiScheduler && "Api scheduler not set in ConcreteSdk");
         assert(this->eventBus && "Event bus not set in ConcreteSdk");
@@ -37,5 +38,17 @@ namespace ECFMP::Plugin {
     {
         auto lock = std::lock_guard(mutex);
         flightInformationRegions = event.firs;
+    }
+
+    auto ConcreteSdk::Events() const noexcept -> std::shared_ptr<const Api::EventCollection>
+    {
+        auto lock = std::lock_guard(mutex);
+        return events;
+    }
+
+    void ConcreteSdk::OnEvent(const EventsUpdatedEvent& event)
+    {
+        auto lock = std::lock_guard(mutex);
+        events = event.events;
     }
 }// namespace ECFMP::Plugin
