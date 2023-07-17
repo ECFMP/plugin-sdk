@@ -1,5 +1,6 @@
 #pragma once
 #include "ECFMP/Sdk.h"
+#include "api/InternalElementCollectionTypes.h"
 
 namespace ECFMP {
     namespace Api {
@@ -18,6 +19,9 @@ namespace ECFMP::Plugin {
         ConcreteSdk(std::shared_ptr<void> apiScheduler, std::shared_ptr<EventBus::InternalEventBus> eventBus);
         ~ConcreteSdk() override = default;
 
+        [[nodiscard]] auto FlightInformationRegions() const noexcept
+                -> const Api::FlightInformationRegionCollection& override;
+
         [[nodiscard]] auto EventBus() const noexcept -> EventBus::EventBus& override;
         void OnEuroscopeTimerTick() override;
 
@@ -30,5 +34,8 @@ namespace ECFMP::Plugin {
 
         // The event bus for the SDK, which can be used to subscribe to events.
         std::shared_ptr<EventBus::InternalEventBus> eventBus;
+
+        // The flight information regions that are currently loaded.
+        std::shared_ptr<Api::InternalFlightInformationRegionCollection> flightInformationRegions;
     };
 }// namespace ECFMP::Plugin

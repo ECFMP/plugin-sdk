@@ -3,7 +3,8 @@
 
 namespace ECFMP::Plugin {
     ConcreteSdk::ConcreteSdk(std::shared_ptr<void> apiScheduler, std::shared_ptr<EventBus::InternalEventBus> eventBus)
-        : apiScheduler(std::move(apiScheduler)), eventBus(std::move(eventBus))
+        : apiScheduler(std::move(apiScheduler)), eventBus(std::move(eventBus)),
+          flightInformationRegions(std::make_shared<Api::InternalFlightInformationRegionCollection>())
     {
         assert(this->apiScheduler && "Api scheduler not set in ConcreteSdk");
         assert(this->eventBus && "Event bus not set in ConcreteSdk");
@@ -23,5 +24,10 @@ namespace ECFMP::Plugin {
     void ConcreteSdk::OnEuroscopeTimerTick()
     {
         eventBus->ProcessPendingEvents();
+    }
+
+    auto ConcreteSdk::FlightInformationRegions() const noexcept -> const Api::FlightInformationRegionCollection&
+    {
+        return *flightInformationRegions;
     }
 }// namespace ECFMP::Plugin

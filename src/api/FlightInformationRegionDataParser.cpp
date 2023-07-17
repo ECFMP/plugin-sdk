@@ -1,15 +1,20 @@
 #include "FlightInformationRegionDataParser.h"
 #include "ECFMP/log/Logger.h"
 #include "InternalElementCollectionTypes.h"
+#include "eventbus/InternalEventBus.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 #include "nlohmann/json.hpp"
+#include "plugin/InternalSdkEvents.h"
 
 namespace ECFMP::Api {
 
-    FlightInformationRegionDataParser::FlightInformationRegionDataParser(std::shared_ptr<Log::Logger> logger)
-        : logger(std::move(logger))
+    FlightInformationRegionDataParser::FlightInformationRegionDataParser(
+            std::shared_ptr<Log::Logger> logger, std::shared_ptr<EventBus::InternalEventBus> eventBus
+    )
+        : logger(std::move(logger)), eventBus(std::move(eventBus))
     {
         assert(this->logger && "logger not set in FlightInformationRegionDataParser");
+        assert(this->eventBus && "eventBus not set in FlightInformationRegionDataParser");
     }
 
     auto FlightInformationRegionDataParser::ParseFirs(const nlohmann::json& data)
@@ -36,6 +41,7 @@ namespace ECFMP::Api {
         }
 
         logger->Debug("Finished updating FIRs");
+        eventBus->OnEvent<Plugin::FlightInformationRegionsUpdatedEvent>({firs});
         return firs;
     }
 

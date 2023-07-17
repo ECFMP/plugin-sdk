@@ -32,7 +32,7 @@ set(src_pch
 set(src_plugin
         plugin/ConcreteSdk.h
         plugin/ConcreteSdk.cpp
-        plugin/SdkFactory.cpp ../include/ECFMP/SdkEvents.h)
+        plugin/SdkFactory.cpp ../include/ECFMP/SdkEvents.h plugin/InternalSdkEvents.h)
 
 set(ALL_FILES
         ${src_api}

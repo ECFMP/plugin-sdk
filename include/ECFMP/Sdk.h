@@ -1,4 +1,5 @@
 #pragma once
+#include "api/ElementCollectionTypes.h"
 
 namespace ECFMP {
     namespace EventBus {
@@ -18,6 +19,12 @@ namespace ECFMP::Plugin {
     {
         public:
         virtual ~Sdk() = default;
+
+        /**
+         * All the flight information regions that are currently loaded.
+         */
+        [[nodiscard]] virtual auto FlightInformationRegions() const noexcept
+                -> const Api::FlightInformationRegionCollection& = 0;
 
         /**
          * The event bus for the SDK, which can be used to subscribe to events.

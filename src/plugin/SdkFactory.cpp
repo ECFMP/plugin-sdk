@@ -21,10 +21,9 @@ namespace ECFMP::Plugin {
         auto CreateApiDataScheduler() -> std::shared_ptr<Api::ApiDataScheduler>
         {
             // Set up data listeners
-            // TODO: Test for checking the registration.
             auto apiDataParser = std::make_shared<Api::ApiDataParser>(
                     std::make_shared<Api::EventDataParser>(GetLogger()),
-                    std::make_shared<Api::FlightInformationRegionDataParser>(GetLogger()),
+                    std::make_shared<Api::FlightInformationRegionDataParser>(GetLogger(), GetEventBus()),
                     std::make_shared<Api::FlowMeasureDataParser>(
                             std::make_unique<Api::FlowMeasureFilterParser>(GetLogger()),
                             std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetLogger()
@@ -113,6 +112,8 @@ namespace ECFMP::Plugin {
         if (!impl->httpClient) {
             throw SdkConfigurationException("No http client provided");
         }
+
+        // TODO: Register for events
 
         return std::make_unique<ConcreteSdk>(
                 std::shared_ptr<void>(impl->CreateApiDataScheduler()), impl->GetEventBus()
