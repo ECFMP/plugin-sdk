@@ -98,4 +98,14 @@ namespace ECFMPTest::Plugin {
         EXPECT_TRUE(hasListener);
         instance->Destroy();
     }
+
+    TEST_F(SdkFactoryTest, ItRegistersSdkForFlowMeasureUpdateEvents)
+    {
+        const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
+        auto hasListener =
+                instance->EventBus()
+                        .HasListenerOfType<ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::FlowMeasuresUpdatedEvent>();
+        EXPECT_TRUE(hasListener);
+        instance->Destroy();
+    }
 }// namespace ECFMPTest::Plugin

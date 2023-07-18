@@ -1,4 +1,5 @@
 #include "api/FlowMeasureDataParser.h"
+#include "ECFMP/SdkEvents.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "ECFMP/flowmeasure/Measure.h"
 #include "ECFMP/flowmeasure/MultipleLevelFilter.h"
@@ -9,6 +10,7 @@
 #include "api/InternalElementCollectionTypes.h"
 #include "date/ParseDateStrings.h"
 #include "event/ConcreteEvent.h"
+#include "eventbus/InternalEventBus.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
@@ -43,6 +45,30 @@ namespace ECFMPTest::Api {
         );
     };
 
+    class MockFlowMeasuresUpdatedEventHandler
+        : public ECFMP::EventBus::EventListener<ECFMP::Plugin::FlowMeasuresUpdatedEvent>
+    {
+        public:
+        explicit MockFlowMeasuresUpdatedEventHandler(int expectedItemCount) : expectedItemCount(expectedItemCount)
+        {}
+
+        void OnEvent(const ECFMP::Plugin::FlowMeasuresUpdatedEvent& event) override
+        {
+            callCount++;
+            EXPECT_EQ(expectedItemCount, event.flowMeasures->Count());
+        }
+
+        [[nodiscard]] auto GetCallCount() const -> int
+        {
+            return callCount;
+        }
+
+        private:
+        int expectedItemCount;
+
+        int callCount = 0;
+    };
+
     struct FlowMeasureDataParserTestCase {
         std::string description;
         nlohmann::json data;
@@ -67,8 +93,13 @@ namespace ECFMPTest::Api {
             filterParserRaw = filterParser.get();
             auto measureParser = std::make_unique<MockFlowMeasureMeasureParser>();
             measureParserRaw = measureParser.get();
+
+            eventBus = std::make_shared<ECFMP::EventBus::InternalEventBus>();
+            mockEventHandler = std::make_shared<MockFlowMeasuresUpdatedEventHandler>(1);
+            eventBus->Subscribe<ECFMP::Plugin::FlowMeasuresUpdatedEvent>(mockEventHandler);
+
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
-                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>()
+                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus
             );
 
             firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
@@ -84,6 +115,8 @@ namespace ECFMPTest::Api {
             ));
         }
 
+        std::shared_ptr<MockFlowMeasuresUpdatedEventHandler> mockEventHandler;
+        std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
         ECFMP::Api::InternalEventCollection events;
@@ -118,6 +151,7 @@ namespace ECFMPTest::Api {
 
         auto data = nlohmann::json{{"flow_measures", nlohmann::json::array({testCase.data})}};
         auto flowMeasures = parser->ParseFlowMeasures(data, events, firs);
+        eventBus->ProcessPendingEvents();
         EXPECT_EQ(testCase.expectedId, flowMeasures->Get(testCase.expectedId)->Id());
         EXPECT_EQ(testCase.expectedEventId, flowMeasures->Get(testCase.expectedId)->Event()->Id());
         EXPECT_EQ(testCase.expectedIdentifier, flowMeasures->Get(testCase.expectedId)->Identifier());
@@ -143,6 +177,9 @@ namespace ECFMPTest::Api {
         );
 
         EXPECT_EQ(testCase.expectedNotifiedFirIds, notifiedFirIds);
+
+        // Check that the event was published
+        EXPECT_EQ(1, mockEventHandler->GetCallCount());
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -271,8 +308,13 @@ namespace ECFMPTest::Api {
             filterParserRaw = filterParser.get();
             auto measureParser = std::make_unique<MockFlowMeasureMeasureParser>();
             measureParserRaw = measureParser.get();
+
+            eventBus = std::make_shared<ECFMP::EventBus::InternalEventBus>();
+            mockEventHandler = std::make_shared<MockFlowMeasuresUpdatedEventHandler>(0);
+            eventBus->Subscribe<ECFMP::Plugin::FlowMeasuresUpdatedEvent>(mockEventHandler);
+
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
-                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>()
+                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus
             );
 
             firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
@@ -288,6 +330,8 @@ namespace ECFMPTest::Api {
             ));
         }
 
+        std::shared_ptr<MockFlowMeasuresUpdatedEventHandler> mockEventHandler;
+        std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
         ECFMP::Api::InternalEventCollection events;
@@ -323,18 +367,21 @@ namespace ECFMPTest::Api {
                 : testCase.data;
 
         auto flowMeasures = parser->ParseFlowMeasures(dataUnderTest, events, firs);
+        eventBus->ProcessPendingEvents();
         if (!testCase.data.is_object()) {
             EXPECT_EQ(nullptr, flowMeasures);
         }
         else {
             EXPECT_EQ(0, flowMeasures->Count());
         }
+
+        // Check that the event handler was called
+        EXPECT_EQ(1, mockEventHandler->GetCallCount());
     }
 
     INSTANTIATE_TEST_SUITE_P(
             FlowMeasureDataParserBadDataTest, FlowMeasureDataParserBadDataTest,
             testing::Values(
-                    FlowMeasureDataParserBadDataTestCase{"data_not_object", nlohmann::json::array()},
                     FlowMeasureDataParserBadDataTestCase{
                             "missing_id",
                             nlohmann::json{
@@ -707,4 +754,69 @@ namespace ECFMPTest::Api {
                 return info.param.description;
             }
     );
+
+    class FlowMeasureDataParserBizarreDataTest : public testing::Test
+    {
+        public:
+        void SetUp() override
+        {
+            // Create the mock parsers
+            auto filterParser = std::make_unique<MockFlowMeasureFilterParser>();
+            filterParserRaw = filterParser.get();
+            auto measureParser = std::make_unique<MockFlowMeasureMeasureParser>();
+            measureParserRaw = measureParser.get();
+
+            eventBus = std::make_shared<ECFMP::EventBus::InternalEventBus>();
+            mockEventHandler = std::make_shared<MockFlowMeasuresUpdatedEventHandler>(0);
+            eventBus->Subscribe<ECFMP::Plugin::FlowMeasuresUpdatedEvent>(mockEventHandler);
+
+            parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
+                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus
+            );
+
+            firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
+                    1, "EGTT", "London"
+            ));
+            firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
+                    2, "EGPX", "Scottish"
+            ));
+
+            events.Add(std::make_shared<ECFMP::Event::ConcreteEvent>(
+                    1, "Test event", now, plusOneHour, firs.Get(1), "abc",
+                    std::vector<std::shared_ptr<ECFMP::Event::EventParticipant>>{}
+            ));
+        }
+
+        std::shared_ptr<MockFlowMeasuresUpdatedEventHandler> mockEventHandler;
+        std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
+        MockFlowMeasureFilterParser* filterParserRaw;
+        MockFlowMeasureMeasureParser* measureParserRaw;
+        ECFMP::Api::InternalEventCollection events;
+        ECFMP::Api::InternalFlightInformationRegionCollection firs;
+        std::unique_ptr<ECFMP::Api::FlowMeasureDataParser> parser;
+    };
+
+    TEST_F(FlowMeasureDataParserBizarreDataTest, ItReturnsNullptrIfJsonNotObject)
+    {
+        auto result = parser->ParseFlowMeasures(nlohmann::json::array(), events, firs);
+        eventBus->ProcessPendingEvents();
+        ASSERT_EQ(nullptr, result);
+        EXPECT_EQ(0, mockEventHandler->GetCallCount());
+    }
+
+    TEST_F(FlowMeasureDataParserBizarreDataTest, ItReturnsNullptrIfJsonDoesntContainFlowMeasuresKey)
+    {
+        auto result = parser->ParseFlowMeasures(nlohmann::json{{"foo", "bar"}}, events, firs);
+        eventBus->ProcessPendingEvents();
+        ASSERT_EQ(nullptr, result);
+        EXPECT_EQ(0, mockEventHandler->GetCallCount());
+    }
+
+    TEST_F(FlowMeasureDataParserBizarreDataTest, ItReturnsNullptrIfFlowMeasuresKeyIsNotArray)
+    {
+        auto result = parser->ParseFlowMeasures(nlohmann::json{{"flow_measures", "bar"}}, events, firs);
+        eventBus->ProcessPendingEvents();
+        ASSERT_EQ(nullptr, result);
+        EXPECT_EQ(0, mockEventHandler->GetCallCount());
+    }
 }// namespace ECFMPTest::Api

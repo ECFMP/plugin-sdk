@@ -76,4 +76,18 @@ namespace ECFMPTest::Plugin {
 
         EXPECT_EQ(newEvents, instance.Events());
     }
+
+    TEST_F(ConcreteSdkTest, ItHasADefaultFlowMeasureCollection)
+    {
+        EXPECT_EQ(0, instance.FlowMeasures()->Count());
+    }
+
+    TEST_F(ConcreteSdkTest, ItUpdatesFlowMeasuresOnEvent)
+    {
+        auto newFlowMeasures = std::make_shared<ECFMP::Api::InternalFlowMeasureCollection>();
+        auto event = ECFMP::Plugin::FlowMeasuresUpdatedEvent{newFlowMeasures};
+        instance.OnEvent(event);
+
+        EXPECT_EQ(newFlowMeasures, instance.FlowMeasures());
+    }
 }// namespace ECFMPTest::Plugin

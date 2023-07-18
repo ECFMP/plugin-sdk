@@ -19,7 +19,8 @@ namespace ECFMP::Plugin {
 
     class ConcreteSdk : public Sdk,
                         public EventBus::EventListener<Plugin::FlightInformationRegionsUpdatedEvent>,
-                        public EventBus::EventListener<Plugin::EventsUpdatedEvent>
+                        public EventBus::EventListener<Plugin::EventsUpdatedEvent>,
+                        public EventBus::EventListener<Plugin::FlowMeasuresUpdatedEvent>
     {
         public:
         ConcreteSdk(std::shared_ptr<void> apiScheduler, std::shared_ptr<EventBus::InternalEventBus> eventBus);
@@ -28,11 +29,13 @@ namespace ECFMP::Plugin {
         [[nodiscard]] auto FlightInformationRegions() const noexcept
                 -> std::shared_ptr<const Api::FlightInformationRegionCollection> override;
         [[nodiscard]] auto Events() const noexcept -> std::shared_ptr<const Api::EventCollection> override;
+        [[nodiscard]] auto FlowMeasures() const noexcept -> std::shared_ptr<const Api::FlowMeasureCollection> override;
 
         [[nodiscard]] auto EventBus() const noexcept -> EventBus::EventBus& override;
         void OnEuroscopeTimerTick() override;
         void OnEvent(const FlightInformationRegionsUpdatedEvent& event) override;
         void OnEvent(const EventsUpdatedEvent& eventType) override;
+        void OnEvent(const FlowMeasuresUpdatedEvent& eventType) override;
 
         void Destroy() override;
 
@@ -49,6 +52,9 @@ namespace ECFMP::Plugin {
 
         // The events that are currently loaded.
         std::shared_ptr<Api::EventCollection> events;
+
+        // The flow measures that are currently loaded.
+        std::shared_ptr<Api::FlowMeasureCollection> flowMeasures;
 
         // Locks the class for returning the flight information regions.
         mutable std::mutex mutex;

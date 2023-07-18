@@ -32,6 +32,12 @@ namespace ECFMP::Plugin {
         [[nodiscard]] virtual auto Events() const noexcept -> std::shared_ptr<const Api::EventCollection> = 0;
 
         /**
+         * All the flow measures that are currently loaded.
+         */
+        [[nodiscard]] virtual auto FlowMeasures() const noexcept
+                -> std::shared_ptr<const Api::FlowMeasureCollection> = 0;
+
+        /**
          * The event bus for the SDK, which can be used to subscribe to events.
          */
         [[nodiscard]] virtual auto EventBus() const noexcept -> EventBus::EventBus& = 0;

@@ -28,7 +28,7 @@ namespace ECFMP::Plugin {
                     std::make_shared<Api::FlightInformationRegionDataParser>(GetLogger(), GetEventBus()),
                     std::make_shared<Api::FlowMeasureDataParser>(
                             std::make_unique<Api::FlowMeasureFilterParser>(GetLogger()),
-                            std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetLogger()
+                            std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetLogger(), GetEventBus()
                     ),
                     GetLogger()
             );
@@ -120,6 +120,7 @@ namespace ECFMP::Plugin {
         );
         impl->GetEventBus()->Subscribe<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
         impl->GetEventBus()->Subscribe<Plugin::EventsUpdatedEvent>(sdk);
+        impl->GetEventBus()->Subscribe<Plugin::FlowMeasuresUpdatedEvent>(sdk);
 
         return std::move(sdk);
     }

@@ -13,6 +13,10 @@ namespace ECFMP::Plugin {
     };
 
     // Flow measures
+    using FlowMeasuresUpdatedEvent = struct FlowMeasureUpdatedEvent {
+        std::shared_ptr<ECFMP::Api::FlowMeasureCollection> flowMeasures;
+    };
+
     using FlowMeasureNotifiedEvent = struct FlowMeasureNotifiedEvent {
         const FlowMeasure::FlowMeasure& measure;
     };
