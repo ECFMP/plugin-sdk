@@ -5,37 +5,125 @@ namespace ECFMP::EventBus {
     class InternalEventBus : public EventBus
     {
         public:
+        explicit InternalEventBus(const std::shared_ptr<EventDispatcherFactory>& dispatcherFactory)
+            : EventBus(dispatcherFactory)
+        {}
+
         template<typename EventType>
         void OnEvent(const EventType& event)
         {
-            auto lock = std::lock_guard(pendingMutex);
-            pendingEvents.push_back([event, this]() {
-                GetStream<EventType>().OnEvent(event);
-            });
+            GetStream<EventType>().OnEvent(event);
         }
 
         /**
-         * Processes all pending events.
-         *
-         * This method should be called from the EuroScope thread.
-         *
-         * This is necessary because we're expecting our users to use EuroScope classes such as FlightPlan,
-         * which can only be used on the ES thread.
+         * Subscribes the given listener to the event stream, asynchronously.
          */
-        void ProcessPendingEvents()
+        template<typename EventType>
+        void SubscribeAsync(std::shared_ptr<EventListener<EventType>> listener)
         {
-            auto lock = std::lock_guard(pendingMutex);
-            for (const auto& event: pendingEvents) {
-                event();
+            SubscribeAsync<EventType>(listener, nullptr);
+        };
+
+        template<typename EventType>
+        void SubscribeAsync(
+                std::shared_ptr<EventListener<EventType>> listener, std::shared_ptr<EventFilter<EventType>> filter
+        )
+        {
+            if (listener == nullptr) {
+                throw std::invalid_argument("Listener cannot be null");
             }
-            pendingEvents.clear();
+
+            Subscribe<EventType>(EventSubscription{
+                    dispatcherFactory->CreateDispatcher<EventType>(listener, EventDispatchMode::Async),
+                    listener,
+                    filter,
+                    {EventDispatchMode::Async, false}});
+        };
+
+        /**
+         * Subscribes the given listener to the event stream, asynchronously, once.
+         */
+        template<typename EventType>
+        void SubscribeAsyncOnce(std::shared_ptr<EventListener<EventType>> listener)
+        {
+            SubscribeAsyncOnce<EventType>(listener, nullptr);
+        };
+
+        template<typename EventType>
+        void SubscribeAsyncOnce(
+                std::shared_ptr<EventListener<EventType>> listener, std::shared_ptr<EventFilter<EventType>> filter
+        )
+        {
+            if (listener == nullptr) {
+                throw std::invalid_argument("Listener cannot be null");
+            }
+
+            Subscribe<EventType>(EventSubscription{
+                    dispatcherFactory->CreateDispatcher<EventType>(listener, EventDispatchMode::Async),
+                    listener,
+                    filter,
+                    {EventDispatchMode::Async, true}});
+        };
+
+        /**
+         * Subscribes the given listener to the event stream, synchronously.
+         */
+        template<typename EventType>
+        void SubscribeSync(std::shared_ptr<EventListener<EventType>> listener)
+        {
+            SubscribeSync<EventType>(listener, nullptr);
+        };
+
+        template<typename EventType>
+        void SubscribeSync(
+                std::shared_ptr<EventListener<EventType>> listener, std::shared_ptr<EventFilter<EventType>> filter
+        )
+        {
+            if (listener == nullptr) {
+                throw std::invalid_argument("Listener cannot be null");
+            }
+
+            Subscribe<EventType>(EventSubscription{
+                    dispatcherFactory->CreateDispatcher<EventType>(listener, EventDispatchMode::Sync),
+                    listener,
+                    filter,
+                    {EventDispatchMode::Sync, false}});
+        };
+
+        /**
+         * Subscribes the given listener to the event stream, once, synchronously.
+         */
+        template<typename EventType>
+        void SubscribeSyncOnce(std::shared_ptr<EventListener<EventType>> listener)
+        {
+            SubscribeSyncOnce<EventType>(listener, nullptr);
+        };
+
+        template<typename EventType>
+        void SubscribeSyncOnce(
+                std::shared_ptr<EventListener<EventType>> listener, std::shared_ptr<EventFilter<EventType>> filter
+        )
+        {
+            if (listener == nullptr) {
+                throw std::invalid_argument("Listener cannot be null");
+            }
+
+            Subscribe<EventType>(EventSubscription{
+                    dispatcherFactory->CreateDispatcher<EventType>(listener, EventDispatchMode::Sync),
+                    listener,
+                    filter,
+                    {EventDispatchMode::Sync, true}});
+        };
+
+        /**
+         * Checks whether a specified type of listener is registered for a specified type of event.
+         *
+         * Can be used for test assertions.
+         */
+        template<typename ListenerType, typename EventType>
+        [[nodiscard]] auto HasListenerForSubscription(const SubscriptionFlags& flags) -> bool
+        {
+            return GetStream<EventType>().template HasListenerForSubscription<ListenerType>(flags);
         }
-
-        private:
-        // Protects the pending events
-        std::mutex pendingMutex;
-
-        // Events that are waiting to be processed by the EuroScope thread.
-        std::vector<std::function<void()>> pendingEvents;
     };
 }// namespace ECFMP::EventBus

@@ -14,7 +14,7 @@
 #include "api/FlowMeasureDataParser.h"
 #include "api/FlowMeasureFilterParser.h"
 #include "api/FlowMeasureMeasureParser.h"
-#include "eventbus/InternalEventBus.h"
+#include "eventbus/InternalEventBusFactory.h"
 #include "log/LogDecorator.h"
 #include "log/NullLogger.h"
 
@@ -32,7 +32,7 @@ namespace ECFMP::Plugin {
                     ),
                     GetLogger()
             );
-            GetEventBus()->Subscribe<Api::ApiDataDownloadedEvent>(apiDataParser);
+            GetEventBus()->SubscribeAsync<Api::ApiDataDownloadedEvent>(apiDataParser);
 
             return std::make_shared<Api::ApiDataScheduler>(
                     std::make_unique<Api::ApiDataDownloader>(std::move(httpClient), GetEventBus(), GetLogger())
@@ -60,7 +60,7 @@ namespace ECFMP::Plugin {
         auto GetEventBus() -> std::shared_ptr<EventBus::InternalEventBus>
         {
             if (!eventBus) {
-                eventBus = std::make_shared<EventBus::InternalEventBus>();
+                eventBus = EventBus::MakeEventBus();
             }
 
             return eventBus;
@@ -118,9 +118,9 @@ namespace ECFMP::Plugin {
         auto sdk = std::make_shared<ConcreteSdk>(
                 std::shared_ptr<void>(impl->CreateApiDataScheduler()), impl->GetEventBus()
         );
-        impl->GetEventBus()->Subscribe<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
-        impl->GetEventBus()->Subscribe<Plugin::EventsUpdatedEvent>(sdk);
-        impl->GetEventBus()->Subscribe<Plugin::FlowMeasuresUpdatedEvent>(sdk);
+        impl->GetEventBus()->SubscribeAsync<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
+        impl->GetEventBus()->SubscribeAsync<Plugin::EventsUpdatedEvent>(sdk);
+        impl->GetEventBus()->SubscribeAsync<Plugin::FlowMeasuresUpdatedEvent>(sdk);
 
         return std::move(sdk);
     }

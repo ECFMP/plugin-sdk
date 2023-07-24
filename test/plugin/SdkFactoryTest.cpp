@@ -3,6 +3,9 @@
 #include "ECFMP/eventbus/EventBus.h"
 #include "api/ApiDataDownloadedEvent.h"
 #include "api/ApiDataParser.h"
+#include "eventbus/InternalEventBus.h"
+#include "eventbus/PendingEuroscopeEvents.h"
+#include "eventbus/SubscriptionFlags.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 #include "plugin/ConcreteSdk.h"
@@ -18,6 +21,14 @@ namespace ECFMPTest::Plugin {
               http(std::make_unique<testing::NiceMock<Http::MockHttpClient>>()),
               http2(std::make_unique<testing::NiceMock<Http::MockHttpClient>>())
         {}
+
+        [[nodiscard]] auto InternalBus(const std::shared_ptr<ECFMP::Plugin::Sdk> sdk)
+                -> ECFMP::EventBus::InternalEventBus&
+        {
+            return const_cast<ECFMP::EventBus::InternalEventBus&>(
+                    static_cast<const ECFMP::EventBus::InternalEventBus&>(sdk->EventBus())
+            );
+        }
 
         std::unique_ptr<testing::NiceMock<Log::MockLogger>> logger;
         std::unique_ptr<testing::NiceMock<Log::MockLogger>> logger2;
@@ -74,7 +85,10 @@ namespace ECFMPTest::Plugin {
     {
         const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
         auto hasListener =
-                instance->EventBus().HasListenerOfType<ECFMP::Api::ApiDataParser, ECFMP::Api::ApiDataDownloadedEvent>();
+                InternalBus(instance)
+                        .HasListenerForSubscription<ECFMP::Api::ApiDataParser, ECFMP::Api::ApiDataDownloadedEvent>(
+                                {ECFMP::EventBus::EventDispatchMode::Async, false}
+                        );
         EXPECT_TRUE(hasListener);
         instance->Destroy();
     }
@@ -83,9 +97,11 @@ namespace ECFMPTest::Plugin {
     {
         const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
         auto hasListener =
-                instance->EventBus()
-                        .HasListenerOfType<
-                                ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::FlightInformationRegionsUpdatedEvent>();
+                InternalBus(instance)
+                        .HasListenerForSubscription<
+                                ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::FlightInformationRegionsUpdatedEvent>(
+                                {ECFMP::EventBus::EventDispatchMode::Async, false}
+                        );
         EXPECT_TRUE(hasListener);
         instance->Destroy();
     }
@@ -94,7 +110,10 @@ namespace ECFMPTest::Plugin {
     {
         const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
         auto hasListener =
-                instance->EventBus().HasListenerOfType<ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::EventsUpdatedEvent>();
+                InternalBus(instance)
+                        .HasListenerForSubscription<ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::EventsUpdatedEvent>(
+                                {ECFMP::EventBus::EventDispatchMode::Async, false}
+                        );
         EXPECT_TRUE(hasListener);
         instance->Destroy();
     }
@@ -102,9 +121,24 @@ namespace ECFMPTest::Plugin {
     TEST_F(SdkFactoryTest, ItRegistersSdkForFlowMeasureUpdateEvents)
     {
         const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
+        auto hasListener = InternalBus(instance)
+                                   .HasListenerForSubscription<
+                                           ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::FlowMeasuresUpdatedEvent>(
+                                           {ECFMP::EventBus::EventDispatchMode::Async, false}
+                                   );
+        EXPECT_TRUE(hasListener);
+        instance->Destroy();
+    }
+
+    TEST_F(SdkFactoryTest, ItRegistersPendingEuroscopeEventsForTimerTickEvents)
+    {
+        const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
         auto hasListener =
-                instance->EventBus()
-                        .HasListenerOfType<ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::FlowMeasuresUpdatedEvent>();
+                InternalBus(instance)
+                        .HasListenerForSubscription<
+                                ECFMP::EventBus::PendingEuroscopeEvents, ECFMP::Plugin::EuroscopeTimerTickEvent>(
+                                {ECFMP::EventBus::EventDispatchMode::Sync, false}
+                        );
         EXPECT_TRUE(hasListener);
         instance->Destroy();
     }

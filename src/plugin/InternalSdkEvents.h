@@ -7,4 +7,8 @@ namespace ECFMP::Plugin {
     using FlightInformationRegionsUpdatedEvent = struct FlightInformationRegionsUpdatedEvent {
         std::shared_ptr<Api::InternalFlightInformationRegionCollection> firs;
     };
+
+    // EuroScope
+    using EuroscopeTimerTickEvent = struct EuroscopeTimerTickEvent {
+    };
 }// namespace ECFMP::Plugin

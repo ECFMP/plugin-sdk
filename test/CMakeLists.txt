@@ -27,8 +27,8 @@ set(test__event
         api/EventDataParserTest.cpp)
 
 set(test__eventbus
-        eventbus/InternalEventStreamTest.cpp
-        eventbus/InternalEventBusTest.cpp)
+        eventbus/EventStreamTest.cpp
+        eventbus/InternalEventBusTest.cpp ../src/eventbus/InternalEventBusFactory.h eventbus/EventDispatcherFactoryTest.cpp)
 
 set(test__flightinformationregion
         flightinformationregion/ConcreteFlightInformationRegionTest.cpp

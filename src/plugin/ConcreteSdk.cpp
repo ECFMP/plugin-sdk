@@ -1,4 +1,5 @@
 #include "ConcreteSdk.h"
+#include "InternalSdkEvents.h"
 #include "eventbus/InternalEventBus.h"
 
 namespace ECFMP::Plugin {
@@ -25,7 +26,7 @@ namespace ECFMP::Plugin {
 
     void ConcreteSdk::OnEuroscopeTimerTick()
     {
-        eventBus->ProcessPendingEvents();
+        eventBus->OnEvent<EuroscopeTimerTickEvent>(EuroscopeTimerTickEvent{});
     }
 
     auto ConcreteSdk::FlightInformationRegions() const noexcept

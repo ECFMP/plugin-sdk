@@ -3,6 +3,7 @@
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "api/InternalElementCollectionTypes.h"
 #include "date/ParseDateStrings.h"
+#include "eventbus/InternalEventBusFactory.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
@@ -38,7 +39,7 @@ namespace ECFMPTest::Api {
         public:
         EventDataParserTest()
             : mockEventHandler(std::make_shared<MockEventsUpdatedEventHandler>(2)),
-              eventBus(std::make_shared<ECFMP::EventBus::InternalEventBus>()),
+              eventBus(ECFMP::EventBus::MakeEventBus()),
               mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(mockLogger, eventBus)
         {
             firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
@@ -48,7 +49,7 @@ namespace ECFMPTest::Api {
                     2, "EGPX", "Scottish"
             ));
 
-            eventBus->Subscribe<ECFMP::Plugin::EventsUpdatedEvent>(mockEventHandler);
+            eventBus->SubscribeSync<ECFMP::Plugin::EventsUpdatedEvent>(mockEventHandler);
         }
 
         std::shared_ptr<MockEventsUpdatedEventHandler> mockEventHandler;
@@ -61,21 +62,18 @@ namespace ECFMPTest::Api {
     TEST_F(EventDataParserTest, ItReturnsNullptrIfDataNotObject)
     {
         EXPECT_EQ(nullptr, parser.ParseEvents(nlohmann::json::array(), firs));
-        eventBus->ProcessPendingEvents();
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(EventDataParserTest, ItReturnsNullptrIfIfDataDoesNotContainEvents)
     {
         EXPECT_EQ(nullptr, parser.ParseEvents(nlohmann::json{{"not_events", "abc"}}, firs));
-        eventBus->ProcessPendingEvents();
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(EventDataParserTest, ItReturnsNullptrIfIfEventsNotArray)
     {
         EXPECT_EQ(nullptr, parser.ParseEvents(nlohmann::json{{"events", "abc"}}, firs));
-        eventBus->ProcessPendingEvents();
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
@@ -123,7 +121,6 @@ namespace ECFMPTest::Api {
         );
 
         auto events = parser.ParseEvents(nlohmann::json{{"events", eventData}}, firs);
-        eventBus->ProcessPendingEvents();
         EXPECT_EQ(2, events->Count());
 
         const auto event1 = events->Get(1);
@@ -186,7 +183,6 @@ namespace ECFMPTest::Api {
         );
 
         auto events = parser.ParseEvents(nlohmann::json{{"events", eventData}}, firs);
-        eventBus->ProcessPendingEvents();
         EXPECT_EQ(2, events->Count());
 
         const auto event1 = events->Get(1);
@@ -253,7 +249,6 @@ namespace ECFMPTest::Api {
         );
 
         auto events = parser.ParseEvents(nlohmann::json{{"events", eventData}}, firs);
-        eventBus->ProcessPendingEvents();
         EXPECT_EQ(2, events->Count());
 
         const auto event1 = events->Get(1);
@@ -320,7 +315,6 @@ namespace ECFMPTest::Api {
         );
 
         auto events = parser.ParseEvents(nlohmann::json{{"events", eventData}}, firs);
-        eventBus->ProcessPendingEvents();
         EXPECT_EQ(2, events->Count());
 
         const auto event1 = events->Get(1);
@@ -372,7 +366,7 @@ namespace ECFMPTest::Api {
         public:
         EventDataParserBadDataTest()
             : mockEventHandler(std::make_shared<MockEventsUpdatedEventHandler>(1)),
-              eventBus(std::make_shared<ECFMP::EventBus::InternalEventBus>()),
+              eventBus(ECFMP::EventBus::MakeEventBus()),
               mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(mockLogger, eventBus)
         {
             firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
@@ -382,7 +376,7 @@ namespace ECFMPTest::Api {
                     2, "EGPX", "Scottish"
             ));
 
-            eventBus->Subscribe<ECFMP::Plugin::EventsUpdatedEvent>(mockEventHandler);
+            eventBus->SubscribeSync<ECFMP::Plugin::EventsUpdatedEvent>(mockEventHandler);
         }
 
         std::shared_ptr<MockEventsUpdatedEventHandler> mockEventHandler;
@@ -879,7 +873,6 @@ namespace ECFMPTest::Api {
         auto data = nlohmann::json::array({GetParam().data});
         data.push_back(validEvent);
         auto events = parser.ParseEvents(nlohmann::json{{"events", data}}, firs);
-        eventBus->ProcessPendingEvents();
 
         EXPECT_EQ(1, events->Count());
 

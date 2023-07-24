@@ -1,15 +1,15 @@
 #include "plugin/ConcreteSdk.h"
 #include "ECFMP/eventbus/EventListener.h"
-#include "api/ApiDataDownloader.h"
-#include "eventbus/InternalEventBus.h"
+#include "eventbus/InternalEventBusFactory.h"
 #include "mock/MockHttpClient.h"
 
 namespace ECFMPTest::Plugin {
 
-    class MockEventListener : public ECFMP::EventBus::EventListener<int>
+    template<typename EventType>
+    class MockEventListener : public ECFMP::EventBus::EventListener<EventType>
     {
         public:
-        void OnEvent(const int&) override
+        void OnEvent(const EventType&) override
         {
             callCount++;
         }
@@ -21,7 +21,7 @@ namespace ECFMPTest::Plugin {
     {
         public:
         ConcreteSdkTest()
-            : eventBus(std::make_shared<ECFMP::EventBus::InternalEventBus>()), testPtr(std::make_shared<int>(5)),
+            : eventBus(ECFMP::EventBus::MakeEventBus()), testPtr(std::make_shared<int>(5)),
               instance(std::shared_ptr<void>(testPtr), eventBus)
         {}
 
@@ -30,11 +30,10 @@ namespace ECFMPTest::Plugin {
         ECFMP::Plugin::ConcreteSdk instance;
     };
 
-    TEST_F(ConcreteSdkTest, OnEuroscopeTimerTickProcessesEvents)
+    TEST_F(ConcreteSdkTest, OnEuroscopeTimerTickTriggersEvent)
     {
-        auto mockEventListener = std::make_shared<MockEventListener>();
-        eventBus->Subscribe<int>(mockEventListener);
-        eventBus->OnEvent<int>(5);
+        auto mockEventListener = std::make_shared<MockEventListener<ECFMP::Plugin::EuroscopeTimerTickEvent>>();
+        eventBus->SubscribeSync<ECFMP::Plugin::EuroscopeTimerTickEvent>(mockEventListener);
         EXPECT_EQ(0, mockEventListener->callCount);
         instance.OnEuroscopeTimerTick();
         EXPECT_EQ(1, mockEventListener->callCount);
@@ -42,7 +41,7 @@ namespace ECFMPTest::Plugin {
 
     TEST_F(ConcreteSdkTest, ItHasAnEventBus)
     {
-        auto mockEventListener = std::make_shared<MockEventListener>();
+        auto mockEventListener = std::make_shared<MockEventListener<int>>();
         instance.EventBus().Subscribe<int>(mockEventListener);
         eventBus->OnEvent<int>(5);
         instance.OnEuroscopeTimerTick();

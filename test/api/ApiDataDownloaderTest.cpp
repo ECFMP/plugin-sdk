@@ -1,6 +1,7 @@
 #include "api/ApiDataDownloader.h"
 #include "ECFMP/http/HttpClient.h"
 #include "api/ApiDataDownloadedEvent.h"
+#include "eventbus/InternalEventBusFactory.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
@@ -35,12 +36,11 @@ namespace ECFMPTest::Api {
         public:
         ApiDataDownloaderTest()
             : mockEventHandler(std::make_shared<MockEventHandler>(nlohmann::json{{"abc", "def"}})),
-              eventBus(std::make_shared<ECFMP::EventBus::InternalEventBus>()),
-              logger(std::make_shared<testing::NiceMock<Log::MockLogger>>()),
+              eventBus(ECFMP::EventBus::MakeEventBus()), logger(std::make_shared<testing::NiceMock<Log::MockLogger>>()),
               httpClient(std::make_unique<testing::NiceMock<Http::MockHttpClient>>())
         {
             // Add mock listener to event bus
-            eventBus->Subscribe<ECFMP::Api::ApiDataDownloadedEvent>(mockEventHandler);
+            eventBus->SubscribeSync<ECFMP::Api::ApiDataDownloadedEvent>(mockEventHandler);
         }
 
         [[nodiscard]] auto MakeDownloader() -> ECFMP::Api::ApiDataDownloader
@@ -107,7 +107,6 @@ namespace ECFMPTest::Api {
 
         MakeDownloader().DownloadData();
 
-        eventBus->ProcessPendingEvents();
         EXPECT_EQ(1, mockEventHandler->GetCallCount());
     }
 }// namespace ECFMPTest::Api

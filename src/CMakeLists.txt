@@ -14,12 +14,12 @@ set(src_flight_information_regions
 set(src_events
         event/ConcreteEvent.cpp event/ConcreteEvent.h
         event/ConcreteEventParticipant.cpp "event/ConcreteEventParticipant.h"
-        event/Event.cpp ../include/ECFMP/eventbus/EventStream.h ../include/ECFMP/eventbus/EventListener.h ../include/ECFMP/eventbus/EventFilter.h)
+        event/Event.cpp eventbus/EventStream.h ../include/ECFMP/eventbus/EventListener.h ../include/ECFMP/eventbus/EventFilter.h)
 
 set(src_eventbus
-        ../include/ECFMP/eventbus/EventStream.h
+        eventbus/EventStream.h
         ../include/ECFMP/eventbus/EventListener.h
-        ../include/ECFMP/eventbus/EventFilter.h eventbus/InternalEventStream.h ../include/ECFMP/eventbus/EventBus.h eventbus/InternalEventBus.h)
+        ../include/ECFMP/eventbus/EventFilter.h ../include/ECFMP/eventbus/EventBus.h eventbus/InternalEventBus.h eventbus/EventDispatcher.h eventbus/SynchronousEventDispatcher.h eventbus/AsynchronousEventDispatcher.h eventbus/EuroscopeEventDispatcher.h eventbus/PendingEuroscopeEvents.cpp eventbus/PendingEuroscopeEvents.h eventbus/EventDispatcherFactory.h eventbus/SubscriptionFlags.h)
 
 set(src_flowmeasures
         flowmeasure/ConcreteFlowMeasure.cpp flowmeasure/ConcreteFlowMeasure.h flowmeasure/ConcreteAirportFilter.cpp flowmeasure/ConcreteAirportFilter.h flowmeasure/ConcreteEventFilter.cpp flowmeasure/ConcreteEventFilter.h flowmeasure/ConcreteLevelRangeFilter.cpp flowmeasure/ConcreteLevelRangeFilter.h flowmeasure/ConcreteRouteFilter.cpp flowmeasure/ConcreteRouteFilter.h flowmeasure/ConcreteMeasure.cpp flowmeasure/ConcreteMeasure.h flowmeasure/ConcreteMeasureFactory.cpp flowmeasure/ConcreteMeasureFactory.h flowmeasure/ConcreteFlowMeasureFilters.cpp flowmeasure/ConcreteFlowMeasureFilters.h api/FlowMeasureFilterParserInterface.h ../include/ECFMP/flowmeasure/MultipleLevelFilter.h flowmeasure/ConcreteMultipleLevelFilter.cpp flowmeasure/ConcreteMultipleLevelFilter.h ../include/mock/MultipleLevelFilterMock.h ../include/ECFMP/flowmeasure/RangeToDestinationFilter.h flowmeasure/ConcreteRangeToDestinationFilter.cpp flowmeasure/ConcreteRangeToDestinationFilter.h)
@@ -43,7 +43,7 @@ set(ALL_FILES
         ${src_flight_information_regions}
         ${src_log}
         ${src_pch}
-        ${src_plugin} api/FlowMeasureMeasureParser.cpp api/FlowMeasureMeasureParser.h)
+        ${src_plugin} api/FlowMeasureMeasureParser.cpp api/FlowMeasureMeasureParser.h eventbus/InternalEventBusFactory.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" JSON_MultipleHeaders "ON")
