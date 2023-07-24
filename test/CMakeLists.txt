@@ -15,7 +15,7 @@ set(test__api
         api/ApiDataDownloaderTest.cpp
         api/FlightInformationRegionDataParserTest.cpp
         api/ApiElementIteratorTest.cpp api/InternalApiElementCollectionTest.cpp api/FlowMeasureMeasureParserTest.cpp api/FlowMeasureFilterParserTest.cpp
-        api/ApiDataParserTest.cpp api/InternalStringIdentifierApiElementCollectionTest.cpp)
+        api/ApiDataParserTest.cpp api/InternalStringIdentifierApiElementCollectionTest.cpp api/ApiDataSchedulerTest.cpp)
 
 set(test__date
         

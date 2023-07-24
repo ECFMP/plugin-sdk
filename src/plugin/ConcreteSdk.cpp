@@ -3,20 +3,18 @@
 #include "eventbus/InternalEventBus.h"
 
 namespace ECFMP::Plugin {
-    ConcreteSdk::ConcreteSdk(std::shared_ptr<void> apiScheduler, std::shared_ptr<EventBus::InternalEventBus> eventBus)
-        : apiScheduler(std::move(apiScheduler)), eventBus(std::move(eventBus)),
+    ConcreteSdk::ConcreteSdk(std::shared_ptr<EventBus::InternalEventBus> eventBus)
+        : eventBus(std::move(eventBus)),
           flightInformationRegions(std::make_shared<Api::InternalFlightInformationRegionCollection>()),
           events(std::make_shared<Api::InternalEventCollection>()),
           flowMeasures(std::make_shared<Api::InternalFlowMeasureCollection>())
     {
-        assert(this->apiScheduler && "Api scheduler not set in ConcreteSdk");
         assert(this->eventBus && "Event bus not set in ConcreteSdk");
     }
 
     void ConcreteSdk::Destroy()
     {
-        // Shutdown the API data downloader
-        apiScheduler.reset();
+        eventBus.reset();
     }
 
     auto ConcreteSdk::EventBus() const noexcept -> EventBus::EventBus&

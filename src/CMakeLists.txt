@@ -4,7 +4,7 @@ SET(PROJECT_NAME flow_plugin_sdk_src)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(src_api api/ApiDataDownloader.cpp api/ApiDataDownloader.h api/ApiDataScheduler.cpp api/ApiDataScheduler.h api/FlightInformationRegionDataParser.cpp api/FlightInformationRegionDataParser.h api/InternalApiElementCollection.h api/InternalApiElementCollection.h api/ApiElementIterator.cpp api/InternalElementCollectionTypes.h api/EventDataParser.cpp api/EventDataParser.h api/FlowMeasureDataParser.cpp api/FlowMeasureDataParser.h api/FlowMeasureMeasureParserInterface.h api/FlowMeasureFilterParser.cpp api/FlowMeasureFilterParser.h api/ApiDataParser.cpp api/ApiDataParser.h api/ApiDataDownloadedEvent.h api/FlightInformationRegionDataParserInterface.h api/EventDataParserInterface.h api/FlowMeasureDataParserInterface.h ../include/ECFMP/api/StringIdentifierApiElementCollection.h api/InternalStringIdentifierApiElementCollection.h)
+set(src_api api/ApiDataDownloader.cpp api/ApiDataDownloader.h api/ApiDataScheduler.cpp api/ApiDataScheduler.h api/FlightInformationRegionDataParser.cpp api/FlightInformationRegionDataParser.h api/InternalApiElementCollection.h api/InternalApiElementCollection.h api/ApiElementIterator.cpp api/InternalElementCollectionTypes.h api/EventDataParser.cpp api/EventDataParser.h api/FlowMeasureDataParser.cpp api/FlowMeasureDataParser.h api/FlowMeasureMeasureParserInterface.h api/FlowMeasureFilterParser.cpp api/FlowMeasureFilterParser.h api/ApiDataParser.cpp api/ApiDataParser.h api/ApiDataDownloadedEvent.h api/FlightInformationRegionDataParserInterface.h api/EventDataParserInterface.h api/FlowMeasureDataParserInterface.h ../include/ECFMP/api/StringIdentifierApiElementCollection.h api/InternalStringIdentifierApiElementCollection.h api/FlowMeasureMeasureParser.cpp api/FlowMeasureMeasureParser.h eventbus/InternalEventBusFactory.cpp)
 
 set(src_date date/ParseDateStrings.cpp date/ParseDateStrings.h)
 
@@ -34,6 +34,8 @@ set(src_plugin
         plugin/ConcreteSdk.cpp
         plugin/SdkFactory.cpp ../include/ECFMP/SdkEvents.h plugin/InternalSdkEvents.h)
 
+set(src_time time/Clock.cpp time/Clock.h)
+
 set(ALL_FILES
         ${src_api}
         ${src_date}
@@ -43,7 +45,8 @@ set(ALL_FILES
         ${src_flight_information_regions}
         ${src_log}
         ${src_pch}
-        ${src_plugin} api/FlowMeasureMeasureParser.cpp api/FlowMeasureMeasureParser.h eventbus/InternalEventBusFactory.cpp)
+        ${src_plugin}
+        ${src_time})
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" JSON_MultipleHeaders "ON")

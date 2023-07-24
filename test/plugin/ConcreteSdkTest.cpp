@@ -20,13 +20,10 @@ namespace ECFMPTest::Plugin {
     class ConcreteSdkTest : public testing::Test
     {
         public:
-        ConcreteSdkTest()
-            : eventBus(ECFMP::EventBus::MakeEventBus()), testPtr(std::make_shared<int>(5)),
-              instance(std::shared_ptr<void>(testPtr), eventBus)
+        ConcreteSdkTest() : eventBus(ECFMP::EventBus::MakeEventBus()), instance(eventBus)
         {}
 
         std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
-        std::shared_ptr<int> testPtr;
         ECFMP::Plugin::ConcreteSdk instance;
     };
 

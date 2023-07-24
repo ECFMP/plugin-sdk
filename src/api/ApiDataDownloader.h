@@ -1,6 +1,8 @@
 #pragma once
+#include "ECFMP/eventbus/EventListener.h"
 #include "eventbus/InternalEventBus.h"
 #include "nlohmann/json_fwd.hpp"
+#include "plugin/InternalSdkEvents.h"
 
 namespace ECFMP {
     namespace EventBus {
@@ -19,7 +21,7 @@ namespace ECFMP::Api {
     /**
      * Downloads API data and disseminates it to any listeners.
      */
-    class ApiDataDownloader
+    class ApiDataDownloader : public EventBus::EventListener<Plugin::ApiDataDownloadRequiredEvent>
     {
         public:
         explicit ApiDataDownloader(
@@ -28,7 +30,7 @@ namespace ECFMP::Api {
         );
 
         ~ApiDataDownloader();
-        void DownloadData();
+        void OnEvent(const Plugin::ApiDataDownloadRequiredEvent& event) override;
 
         private:
         // HTTP client for getting data

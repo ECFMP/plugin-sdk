@@ -64,7 +64,7 @@ namespace ECFMPTest::Api {
 
         EXPECT_CALL(*logger, Error).Times(1);
 
-        MakeDownloader().DownloadData();
+        MakeDownloader().OnEvent({});
 
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
@@ -77,7 +77,7 @@ namespace ECFMPTest::Api {
 
         EXPECT_CALL(*logger, Error).Times(1);
 
-        MakeDownloader().DownloadData();
+        MakeDownloader().OnEvent({});
 
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
@@ -90,7 +90,7 @@ namespace ECFMPTest::Api {
 
         EXPECT_CALL(*logger, Error).Times(1);
 
-        MakeDownloader().DownloadData();
+        MakeDownloader().OnEvent({});
 
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
@@ -105,7 +105,7 @@ namespace ECFMPTest::Api {
 
         EXPECT_CALL(*logger, Error).Times(0);
 
-        MakeDownloader().DownloadData();
+        MakeDownloader().OnEvent({});
 
         EXPECT_EQ(1, mockEventHandler->GetCallCount());
     }

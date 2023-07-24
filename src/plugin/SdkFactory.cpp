@@ -20,7 +20,7 @@
 
 namespace ECFMP::Plugin {
     struct SdkFactory::SdkFactoryImpl {
-        auto CreateApiDataScheduler() -> std::shared_ptr<Api::ApiDataScheduler>
+        void CreateApiDataScheduler()
         {
             // Set up data listeners
             auto apiDataParser = std::make_shared<Api::ApiDataParser>(
@@ -34,9 +34,14 @@ namespace ECFMP::Plugin {
             );
             GetEventBus()->SubscribeAsync<Api::ApiDataDownloadedEvent>(apiDataParser);
 
-            return std::make_shared<Api::ApiDataScheduler>(
-                    std::make_unique<Api::ApiDataDownloader>(std::move(httpClient), GetEventBus(), GetLogger())
-            );
+            // Set up data downloader
+            auto dataDownloader =
+                    std::make_shared<Api::ApiDataDownloader>(std::move(httpClient), GetEventBus(), GetLogger());
+            GetEventBus()->SubscribeAsync<Plugin::ApiDataDownloadRequiredEvent>(dataDownloader);
+
+            // Set up data scheduler
+            auto dataScheduler = std::make_shared<Api::ApiDataScheduler>(GetEventBus());
+            GetEventBus()->SubscribeSync<Plugin::EuroscopeTimerTickEvent>(dataScheduler);
         }
 
         auto CreateLogger() -> std::shared_ptr<Log::Logger>
@@ -115,12 +120,16 @@ namespace ECFMP::Plugin {
             throw SdkConfigurationException("No http client provided");
         }
 
-        auto sdk = std::make_shared<ConcreteSdk>(
-                std::shared_ptr<void>(impl->CreateApiDataScheduler()), impl->GetEventBus()
-        );
+        // Set up other event listeners
+        impl->CreateApiDataScheduler();
+
+        // Set up the SDK
+        auto sdk = std::make_shared<ConcreteSdk>(impl->GetEventBus());
         impl->GetEventBus()->SubscribeAsync<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
         impl->GetEventBus()->SubscribeAsync<Plugin::EventsUpdatedEvent>(sdk);
         impl->GetEventBus()->SubscribeAsync<Plugin::FlowMeasuresUpdatedEvent>(sdk);
+
+        // TODO: Create listeners that process the update events and turn them into user-facing events
 
         return std::move(sdk);
     }

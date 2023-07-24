@@ -3,6 +3,10 @@
 
 namespace ECFMP::Plugin {
 
+    // API
+    using ApiDataDownloadRequiredEvent = struct ApiDataDownloadRequiredEvent {
+    };
+
     // FIRs
     using FlightInformationRegionsUpdatedEvent = struct FlightInformationRegionsUpdatedEvent {
         std::shared_ptr<Api::InternalFlightInformationRegionCollection> firs;

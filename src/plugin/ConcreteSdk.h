@@ -23,7 +23,7 @@ namespace ECFMP::Plugin {
                         public EventBus::EventListener<Plugin::FlowMeasuresUpdatedEvent>
     {
         public:
-        ConcreteSdk(std::shared_ptr<void> apiScheduler, std::shared_ptr<EventBus::InternalEventBus> eventBus);
+        ConcreteSdk(std::shared_ptr<EventBus::InternalEventBus> eventBus);
         ~ConcreteSdk() override = default;
 
         [[nodiscard]] auto FlightInformationRegions() const noexcept
@@ -40,10 +40,6 @@ namespace ECFMP::Plugin {
         void Destroy() override;
 
         private:
-        // Schedules API downloads - this kinda keeps itself to itself, so we dont need to enforce types here
-        // which makes things easier for testing
-        std::shared_ptr<void> apiScheduler;
-
         // The event bus for the SDK, which can be used to subscribe to events.
         std::shared_ptr<EventBus::InternalEventBus> eventBus;
 

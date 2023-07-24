@@ -2,7 +2,9 @@
 #include "ECFMP/SdkEvents.h"
 #include "ECFMP/eventbus/EventBus.h"
 #include "api/ApiDataDownloadedEvent.h"
+#include "api/ApiDataDownloader.h"
 #include "api/ApiDataParser.h"
+#include "api/ApiDataScheduler.h"
 #include "eventbus/InternalEventBus.h"
 #include "eventbus/PendingEuroscopeEvents.h"
 #include "eventbus/SubscriptionFlags.h"
@@ -22,7 +24,7 @@ namespace ECFMPTest::Plugin {
               http2(std::make_unique<testing::NiceMock<Http::MockHttpClient>>())
         {}
 
-        [[nodiscard]] auto InternalBus(const std::shared_ptr<ECFMP::Plugin::Sdk> sdk)
+        [[nodiscard]] static auto InternalBus(const std::shared_ptr<ECFMP::Plugin::Sdk> sdk)
                 -> ECFMP::EventBus::InternalEventBus&
         {
             return const_cast<ECFMP::EventBus::InternalEventBus&>(
@@ -139,6 +141,30 @@ namespace ECFMPTest::Plugin {
                                 ECFMP::EventBus::PendingEuroscopeEvents, ECFMP::Plugin::EuroscopeTimerTickEvent>(
                                 {ECFMP::EventBus::EventDispatchMode::Sync, false}
                         );
+        EXPECT_TRUE(hasListener);
+        instance->Destroy();
+    }
+
+    TEST_F(SdkFactoryTest, ItRegistersApiDataSchedulerForTimerTickEvents)
+    {
+        const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
+        auto hasListener = InternalBus(instance)
+                                   .HasListenerForSubscription<
+                                           ECFMP::Api::ApiDataScheduler, ECFMP::Plugin::EuroscopeTimerTickEvent>(
+                                           {ECFMP::EventBus::EventDispatchMode::Sync, false}
+                                   );
+        EXPECT_TRUE(hasListener);
+        instance->Destroy();
+    }
+
+    TEST_F(SdkFactoryTest, ItRegistersApiDataDownloaderForDownloadRequiredEvents)
+    {
+        const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
+        auto hasListener = InternalBus(instance)
+                                   .HasListenerForSubscription<
+                                           ECFMP::Api::ApiDataDownloader, ECFMP::Plugin::ApiDataDownloadRequiredEvent>(
+                                           {ECFMP::EventBus::EventDispatchMode::Async, false}
+                                   );
         EXPECT_TRUE(hasListener);
         instance->Destroy();
     }

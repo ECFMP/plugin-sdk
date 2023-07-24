@@ -194,7 +194,6 @@ namespace ECFMPTest::Api {
         EXPECT_EQ("EGTT", fir1->Identifier());
         EXPECT_EQ("London", fir1->Name());
 
-        // TODO: This test is failing
         // Check event handler is called
         EXPECT_EQ(1, mockEventHandler->GetCallCount());
     }
