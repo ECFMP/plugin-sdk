@@ -1,6 +1,7 @@
 #include "FlowMeasureStatusUpdates.h"
 #include "ECFMP/SdkEvents.h"
 #include "ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h"
+#include "ECFMP/log/Logger.h"
 #include "eventbus/InternalEventBus.h"
 
 namespace ECFMP::FlowMeasure {
@@ -48,17 +49,26 @@ namespace ECFMP::FlowMeasure {
     {
         switch (measure->Status()) {
         case MeasureStatus::Notified:
+            WriteLogMessage(*measure, "Notified");
             eventBus->OnEvent<Plugin::FlowMeasureNotifiedEvent>({measure});
-            return;
+            break;
         case MeasureStatus::Active:
+            WriteLogMessage(*measure, "Activated");
             eventBus->OnEvent<Plugin::FlowMeasureActivatedEvent>({measure});
-            return;
+            break;
         case MeasureStatus::Withdrawn:
+            WriteLogMessage(*measure, "Withdrawn");
             eventBus->OnEvent<Plugin::FlowMeasureWithdrawnEvent>({measure});
-            return;
+            break;
         case MeasureStatus::Expired:
+            WriteLogMessage(*measure, "Expired");
             eventBus->OnEvent<Plugin::FlowMeasureExpiredEvent>({measure});
-            return;
+            break;
         }
+    }
+
+    void FlowMeasureStatusUpdates::WriteLogMessage(const FlowMeasure& measure, const std::string& status)
+    {
+        logger->Info("Flow measure " + measure.Identifier() + " now has a status of " + status + ".");
     }
 }// namespace ECFMP::FlowMeasure

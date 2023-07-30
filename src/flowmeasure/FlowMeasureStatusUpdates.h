@@ -28,6 +28,7 @@ namespace ECFMP::FlowMeasure {
 
         private:
         void BroadcastStatusUpdate(const std::shared_ptr<const FlowMeasure>& measure);
+        void WriteLogMessage(const FlowMeasure& measure, const std::string& status);
 
         // The event bus
         std::shared_ptr<EventBus::InternalEventBus> eventBus;
