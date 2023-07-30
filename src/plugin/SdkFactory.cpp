@@ -1,9 +1,9 @@
 #include "ECFMP/SdkFactory.h"
-#include "ConcreteSdk.h"
 #include "ECFMP/SdkEvents.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/http/HttpClient.h"
 #include "ECFMP/log/Logger.h"
+#include "InternalSdk.h"
 #include "InternalSdkEvents.h"
 #include "api/ApiDataDownloadedEvent.h"
 #include "api/ApiDataDownloader.h"
@@ -136,7 +136,7 @@ namespace ECFMP::Plugin {
         impl->RegisterEventListeners();
 
         // Set up the SDK
-        auto sdk = std::make_shared<ConcreteSdk>(impl->GetEventBus());
+        auto sdk = std::make_shared<InternalSdk>(impl->GetEventBus());
         impl->GetEventBus()->SubscribeAsync<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
         impl->GetEventBus()->SubscribeAsync<Plugin::EventsUpdatedEvent>(sdk);
         impl->GetEventBus()->SubscribeAsync<Plugin::FlowMeasuresUpdatedEvent>(sdk);

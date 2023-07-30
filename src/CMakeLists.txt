@@ -30,8 +30,8 @@ set(src_pch
         pch.h pch.cpp)
 
 set(src_plugin
-        plugin/ConcreteSdk.h
-        plugin/ConcreteSdk.cpp
+        plugin/InternalSdk.h
+        plugin/InternalSdk.cpp
         plugin/SdkFactory.cpp ../include/ECFMP/SdkEvents.h plugin/InternalSdkEvents.h)
 
 set(src_time time/Clock.cpp time/Clock.h)

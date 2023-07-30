@@ -11,7 +11,7 @@
 #include "flowmeasure/FlowMeasureStatusUpdates.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
-#include "plugin/ConcreteSdk.h"
+#include "plugin/InternalSdk.h"
 #include "plugin/InternalSdkEvents.h"
 
 namespace ECFMPTest::Plugin {
@@ -102,7 +102,7 @@ namespace ECFMPTest::Plugin {
         auto hasListener =
                 InternalBus(instance)
                         .HasListenerForSubscription<
-                                ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::FlightInformationRegionsUpdatedEvent>(
+                                ECFMP::Plugin::InternalSdk, ECFMP::Plugin::FlightInformationRegionsUpdatedEvent>(
                                 {ECFMP::EventBus::EventDispatchMode::Async, false}
                         );
         EXPECT_TRUE(hasListener);
@@ -114,7 +114,7 @@ namespace ECFMPTest::Plugin {
         const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
         auto hasListener =
                 InternalBus(instance)
-                        .HasListenerForSubscription<ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::EventsUpdatedEvent>(
+                        .HasListenerForSubscription<ECFMP::Plugin::InternalSdk, ECFMP::Plugin::EventsUpdatedEvent>(
                                 {ECFMP::EventBus::EventDispatchMode::Async, false}
                         );
         EXPECT_TRUE(hasListener);
@@ -126,7 +126,7 @@ namespace ECFMPTest::Plugin {
         const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
         auto hasListener = InternalBus(instance)
                                    .HasListenerForSubscription<
-                                           ECFMP::Plugin::ConcreteSdk, ECFMP::Plugin::FlowMeasuresUpdatedEvent>(
+                                           ECFMP::Plugin::InternalSdk, ECFMP::Plugin::FlowMeasuresUpdatedEvent>(
                                            {ECFMP::EventBus::EventDispatchMode::Async, false}
                                    );
         EXPECT_TRUE(hasListener);

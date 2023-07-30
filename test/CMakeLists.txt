@@ -60,7 +60,7 @@ set(test__pch
 
 set(test__plugin
         plugin/SdkFactoryTest.cpp
-        plugin/ConcreteSdkTest.cpp)
+        plugin/InternalSdkTest.cpp)
 
 set(test__other
         main.cpp

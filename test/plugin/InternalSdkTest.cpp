@@ -1,7 +1,7 @@
-#include "plugin/ConcreteSdk.h"
 #include "ECFMP/eventbus/EventListener.h"
 #include "eventbus/InternalEventBusFactory.h"
 #include "mock/MockHttpClient.h"
+#include "plugin/InternalSdk.h"
 
 namespace ECFMPTest::Plugin {
 
@@ -24,7 +24,7 @@ namespace ECFMPTest::Plugin {
         {}
 
         std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
-        ECFMP::Plugin::ConcreteSdk instance;
+        ECFMP::Plugin::InternalSdk instance;
     };
 
     TEST_F(ConcreteSdkTest, OnEuroscopeTimerTickTriggersEvent)

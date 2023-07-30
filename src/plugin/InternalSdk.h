@@ -17,14 +17,14 @@ namespace ECFMP {
 
 namespace ECFMP::Plugin {
 
-    class ConcreteSdk : public Sdk,
+    class InternalSdk : public Sdk,
                         public EventBus::EventListener<Plugin::FlightInformationRegionsUpdatedEvent>,
                         public EventBus::EventListener<Plugin::EventsUpdatedEvent>,
                         public EventBus::EventListener<Plugin::FlowMeasuresUpdatedEvent>
     {
         public:
-        ConcreteSdk(std::shared_ptr<EventBus::InternalEventBus> eventBus);
-        ~ConcreteSdk() override = default;
+        InternalSdk(std::shared_ptr<EventBus::InternalEventBus> eventBus);
+        ~InternalSdk() override = default;
 
         [[nodiscard]] auto FlightInformationRegions() const noexcept
                 -> std::shared_ptr<const Api::FlightInformationRegionCollection> override;
