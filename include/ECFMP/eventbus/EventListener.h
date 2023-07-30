@@ -6,6 +6,6 @@ namespace ECFMP::EventBus {
     {
         public:
         virtual ~EventListener() = default;
-        virtual void OnEvent(const EventType&) = 0;
+        virtual void OnEvent(const EventType& event) = 0;
     };
 }// namespace ECFMP::EventBus

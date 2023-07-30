@@ -13,6 +13,7 @@ namespace ECFMP {
 namespace ECFMP::FlowMeasure {
     class FlowMeasureFilters;
     class Measure;
+    class CanonicalFlowMeasureInfo;
 
     /**
      * Represents the status of the flow measure
@@ -111,5 +112,8 @@ namespace ECFMP::FlowMeasure {
          * Returns a collection of filters that apply to the flow measure.
          */
         [[nodiscard]] virtual auto Filters() const noexcept -> const FlowMeasureFilters& = 0;
+
+        // Information about the canonical nature of the flow measure
+        [[nodiscard]] virtual auto CanonicalInformation() const noexcept -> const CanonicalFlowMeasureInfo& = 0;
     };
 }// namespace ECFMP::FlowMeasure

@@ -1,4 +1,5 @@
 #pragma once
+#include "api/ElementCollectionTypes.h"
 
 namespace ECFMP {
     namespace EventBus {
@@ -18,6 +19,23 @@ namespace ECFMP::Plugin {
     {
         public:
         virtual ~Sdk() = default;
+
+        /**
+         * All the flight information regions that are currently loaded.
+         */
+        [[nodiscard]] virtual auto FlightInformationRegions() const noexcept
+                -> std::shared_ptr<const Api::FlightInformationRegionCollection> = 0;
+
+        /**
+         * All the events that are currently loaded.
+         */
+        [[nodiscard]] virtual auto Events() const noexcept -> std::shared_ptr<const Api::EventCollection> = 0;
+
+        /**
+         * All the flow measures that are currently loaded.
+         */
+        [[nodiscard]] virtual auto FlowMeasures() const noexcept
+                -> std::shared_ptr<const Api::FlowMeasureCollection> = 0;
 
         /**
          * The event bus for the SDK, which can be used to subscribe to events.

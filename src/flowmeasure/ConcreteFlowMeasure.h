@@ -22,6 +22,7 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto Id() const noexcept -> int override;
         [[nodiscard]] auto Event() const noexcept -> std::shared_ptr<const Event::Event> override;
         [[nodiscard]] auto Identifier() const noexcept -> const std::string& override;
+        [[nodiscard]] auto CanonicalInformation() const noexcept -> const CanonicalFlowMeasureInfo& override;
         [[nodiscard]] auto Reason() const noexcept -> const std::string& override;
         [[nodiscard]] auto StartTime() const noexcept -> const std::chrono::system_clock::time_point& override;
         [[nodiscard]] auto EndTime() const noexcept -> const std::chrono::system_clock::time_point& override;
@@ -48,6 +49,9 @@ namespace ECFMP::FlowMeasure {
         // Identifier for the measure
         std::string identifier;
 
+        // Canonical identifier for the measure
+        std::unique_ptr<CanonicalFlowMeasureInfo> canonicalInformation;
+
         // Why the measure was enacted
         std::string reason;
 
@@ -72,5 +76,4 @@ namespace ECFMP::FlowMeasure {
         // The filters
         std::unique_ptr<FlowMeasureFilters> filters;
     };
-
 }// namespace ECFMP::FlowMeasure

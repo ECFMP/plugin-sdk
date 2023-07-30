@@ -5,6 +5,9 @@
 #include "nlohmann/json_fwd.hpp"
 
 namespace ECFMP {
+    namespace EventBus {
+        class InternalEventBus;
+    }// namespace EventBus
     namespace Log {
         class Logger;
     }// namespace Log
@@ -17,7 +20,9 @@ namespace ECFMP::Api {
     class FlightInformationRegionDataParser : public FlightInformationRegionDataParserInterface
     {
         public:
-        FlightInformationRegionDataParser(std::shared_ptr<Log::Logger> logger);
+        FlightInformationRegionDataParser(
+                std::shared_ptr<Log::Logger> logger, std::shared_ptr<EventBus::InternalEventBus> eventBus
+        );
         [[nodiscard]] auto ParseFirs(const nlohmann::json& data)
                 -> std::shared_ptr<InternalFlightInformationRegionCollection> override;
 
@@ -27,5 +32,8 @@ namespace ECFMP::Api {
 
         // A logger, for logging things
         std::shared_ptr<Log::Logger> logger;
+
+        // EventBus
+        std::shared_ptr<EventBus::InternalEventBus> eventBus;
     };
 }// namespace ECFMP::Api

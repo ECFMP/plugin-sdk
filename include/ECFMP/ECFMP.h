@@ -9,6 +9,7 @@
 #include "ECFMP/eventbus/EventListener.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/flowmeasure/AirportFilter.h"
+#include "ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h"
 #include "ECFMP/flowmeasure/EventFilter.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "ECFMP/flowmeasure/FlowMeasureFilters.h"

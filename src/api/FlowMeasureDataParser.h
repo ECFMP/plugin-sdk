@@ -1,6 +1,7 @@
 #pragma once
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "FlowMeasureDataParserInterface.h"
+#include "eventbus/InternalEventBus.h"
 #include "nlohmann/json_fwd.hpp"
 
 namespace ECFMP::Log {
@@ -17,7 +18,8 @@ namespace ECFMP::Api {
         public:
         FlowMeasureDataParser(
                 std::unique_ptr<FlowMeasureFilterParserInterface> filterParser,
-                std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser, std::shared_ptr<Log::Logger> logger
+                std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser, std::shared_ptr<Log::Logger> logger,
+                std::shared_ptr<EventBus::InternalEventBus> eventBus
         );
         ~FlowMeasureDataParser() override = default;
         [[nodiscard]] auto ParseFlowMeasures(
@@ -45,6 +47,9 @@ namespace ECFMP::Api {
 
         // Logger
         std::shared_ptr<Log::Logger> logger;
+
+        // Event bus
+        std::shared_ptr<EventBus::InternalEventBus> eventBus;
     };
 
 }// namespace ECFMP::Api

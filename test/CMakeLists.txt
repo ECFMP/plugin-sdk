@@ -15,7 +15,7 @@ set(test__api
         api/ApiDataDownloaderTest.cpp
         api/FlightInformationRegionDataParserTest.cpp
         api/ApiElementIteratorTest.cpp api/InternalApiElementCollectionTest.cpp api/FlowMeasureMeasureParserTest.cpp api/FlowMeasureFilterParserTest.cpp
-        api/ApiDataParserTest.cpp api/InternalStringIdentifierApiElementCollectionTest.cpp)
+        api/ApiDataParserTest.cpp api/InternalStringIdentifierApiElementCollectionTest.cpp api/ApiDataSchedulerTest.cpp)
 
 set(test__date
         
@@ -27,8 +27,8 @@ set(test__event
         api/EventDataParserTest.cpp)
 
 set(test__eventbus
-        eventbus/InternalEventStreamTest.cpp
-        eventbus/InternalEventBusTest.cpp)
+        eventbus/EventStreamTest.cpp
+        eventbus/InternalEventBusTest.cpp ../src/eventbus/InternalEventBusFactory.h eventbus/EventDispatcherFactoryTest.cpp)
 
 set(test__flightinformationregion
         flightinformationregion/ConcreteFlightInformationRegionTest.cpp
@@ -42,7 +42,7 @@ set(test__flowmeasure
         flowmeasure/ConcreteMeasureTest.cpp
         flowmeasure/ConcreteFlowMeasureTest.cpp
         flowmeasure/ConcreteFlowMeasureFiltersTest.cpp
-        api/FlowMeasureDataParserTest.cpp flowmeasure/ConcreteRangeToDestinationFilterTest.cpp)
+        api/FlowMeasureDataParserTest.cpp flowmeasure/ConcreteRangeToDestinationFilterTest.cpp flowmeasure/CanonicalFlowMeasureInfoTest.cpp flowmeasure/FlowMeasureStatusUpdatesTest.cpp)
 
 set(test__log
         log/LogDecoratorTest.cpp
@@ -60,7 +60,7 @@ set(test__pch
 
 set(test__plugin
         plugin/SdkFactoryTest.cpp
-        plugin/ConcreteSdkTest.cpp)
+        plugin/InternalSdkTest.cpp)
 
 set(test__other
         main.cpp

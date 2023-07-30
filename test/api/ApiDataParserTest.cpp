@@ -7,9 +7,7 @@
 #include "api/InternalElementCollectionTypes.h"
 #include "log/NullLogger.h"
 #include "gmock/gmock.h"
-#include <ECFMP/event/Event.h>
 #include <ECFMP/flightinformationregion/FlightInformationRegion.h>
-#include <ECFMP/flowmeasure/FlowMeasure.h>
 
 namespace ECFMPTest::Api {
     class MockEventDataParser : public ECFMP::Api::EventDataParserInterface

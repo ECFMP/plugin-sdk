@@ -1,4 +1,5 @@
 #include "EventDataParser.h"
+#include "ECFMP/SdkEvents.h"
 #include "ECFMP/event/EventParticipant.h"
 #include "ECFMP/log/Logger.h"
 #include "InternalApiElementCollection.h"
@@ -9,9 +10,13 @@
 
 namespace ECFMP::Api {
 
-    EventDataParser::EventDataParser(std::shared_ptr<Log::Logger> logger) : logger(std::move(logger))
+    EventDataParser::EventDataParser(
+            std::shared_ptr<Log::Logger> logger, std::shared_ptr<EventBus::InternalEventBus> eventBus
+    )
+        : logger(std::move(logger)), eventBus(std::move(eventBus))
     {
         assert(this->logger != nullptr && "Logger cannot be null");
+        assert(this->eventBus != nullptr && "EventBus cannot be null");
     }
 
     auto EventDataParser::ParseEvents(const nlohmann::json& data, const InternalFlightInformationRegionCollection& firs)
@@ -52,6 +57,7 @@ namespace ECFMP::Api {
         }
 
         logger->Debug("Finished updating events");
+        eventBus->OnEvent<ECFMP::Plugin::EventsUpdatedEvent>({events});
         return events;
     }
 

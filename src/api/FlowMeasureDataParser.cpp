@@ -1,4 +1,5 @@
 #include "FlowMeasureDataParser.h"
+#include "ECFMP/SdkEvents.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "ECFMP/log/Logger.h"
@@ -9,17 +10,21 @@
 #include "date/ParseDateStrings.h"
 #include "flowmeasure/ConcreteFlowMeasure.h"
 #include "nlohmann/json.hpp"
+#include "plugin/InternalSdkEvents.h"
 
 namespace ECFMP::Api {
     FlowMeasureDataParser::FlowMeasureDataParser(
             std::unique_ptr<FlowMeasureFilterParserInterface> filterParser,
-            std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser, std::shared_ptr<Log::Logger> logger
+            std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser, std::shared_ptr<Log::Logger> logger,
+            std::shared_ptr<EventBus::InternalEventBus> eventBus
     )
-        : filterParser(std::move(filterParser)), measureParser(std::move(measureParser)), logger(std::move(logger))
+        : filterParser(std::move(filterParser)), measureParser(std::move(measureParser)), logger(std::move(logger)),
+          eventBus(std::move(eventBus))
     {
         assert(this->filterParser != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: filterParser is null");
         assert(this->measureParser != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: measureParser is null");
         assert(this->logger != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: logger is null");
+        assert(this->eventBus != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: eventBus is null");
     }
 
     auto FlowMeasureDataParser::ParseFlowMeasures(
@@ -88,6 +93,10 @@ namespace ECFMP::Api {
             );
             flowMeasures->Add(flowMeasure);
         }
+
+        logger->Debug("FlowMeasureDataParser::OnEvent: parsed flow measures");
+        eventBus->OnEvent<Plugin::FlowMeasuresUpdatedEvent>({flowMeasures});
+        eventBus->OnEvent<Plugin::InternalFlowMeasuresUpdatedEvent>({flowMeasures});
 
         return flowMeasures;
     }

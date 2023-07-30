@@ -55,7 +55,7 @@ namespace ECFMP::Plugin {
          *
          * Throws an SdkConfigurationException if the configuration is bad.
          */
-        [[nodiscard]] auto Instance() -> std::unique_ptr<Sdk>;
+        [[nodiscard]] auto Instance() -> std::shared_ptr<Sdk>;
 
         private:
         SdkFactory();

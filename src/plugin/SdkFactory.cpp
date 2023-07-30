@@ -1,8 +1,10 @@
 #include "ECFMP/SdkFactory.h"
-#include "ConcreteSdk.h"
+#include "ECFMP/SdkEvents.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/http/HttpClient.h"
 #include "ECFMP/log/Logger.h"
+#include "InternalSdk.h"
+#include "InternalSdkEvents.h"
 #include "api/ApiDataDownloadedEvent.h"
 #include "api/ApiDataDownloader.h"
 #include "api/ApiDataParser.h"
@@ -12,29 +14,45 @@
 #include "api/FlowMeasureDataParser.h"
 #include "api/FlowMeasureFilterParser.h"
 #include "api/FlowMeasureMeasureParser.h"
-#include "eventbus/InternalEventBus.h"
+#include "eventbus/InternalEventBusFactory.h"
+#include "flowmeasure/FlowMeasureStatusUpdates.h"
 #include "log/LogDecorator.h"
 #include "log/NullLogger.h"
 
 namespace ECFMP::Plugin {
     struct SdkFactory::SdkFactoryImpl {
-        auto CreateApiDataScheduler() -> std::shared_ptr<Api::ApiDataScheduler>
+        void CreateApiDataScheduler()
         {
             // Set up data listeners
-            // TODO: Test for checking the registration.
             auto apiDataParser = std::make_shared<Api::ApiDataParser>(
-                    std::make_shared<Api::EventDataParser>(GetLogger()),
-                    std::make_shared<Api::FlightInformationRegionDataParser>(GetLogger()),
+                    std::make_shared<Api::EventDataParser>(GetLogger(), GetEventBus()),
+                    std::make_shared<Api::FlightInformationRegionDataParser>(GetLogger(), GetEventBus()),
                     std::make_shared<Api::FlowMeasureDataParser>(
                             std::make_unique<Api::FlowMeasureFilterParser>(GetLogger()),
-                            std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetLogger()
+                            std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetLogger(), GetEventBus()
                     ),
                     GetLogger()
             );
-            GetEventBus()->Subscribe<Api::ApiDataDownloadedEvent>(apiDataParser);
+            GetEventBus()->SubscribeAsync<Api::ApiDataDownloadedEvent>(apiDataParser);
 
-            return std::make_shared<Api::ApiDataScheduler>(
-                    std::make_unique<Api::ApiDataDownloader>(std::move(httpClient), GetEventBus(), GetLogger())
+            // Set up data downloader
+            auto dataDownloader =
+                    std::make_shared<Api::ApiDataDownloader>(std::move(httpClient), GetEventBus(), GetLogger());
+            GetEventBus()->SubscribeAsync<Plugin::ApiDataDownloadRequiredEvent>(dataDownloader);
+
+            // Set up data scheduler
+            auto dataScheduler = std::make_shared<Api::ApiDataScheduler>(GetEventBus());
+            GetEventBus()->SubscribeSync<Plugin::EuroscopeTimerTickEvent>(dataScheduler);
+        }
+
+        void RegisterEventListeners()
+        {
+            // Create the API data scheduler
+            this->CreateApiDataScheduler();
+
+            // Flow measure status updates - powers the event-driven nature.
+            GetEventBus()->SubscribeAsync<Plugin::InternalFlowMeasuresUpdatedEvent>(
+                    std::make_shared<FlowMeasure::FlowMeasureStatusUpdates>(GetEventBus(), GetLogger())
             );
         }
 
@@ -59,7 +77,7 @@ namespace ECFMP::Plugin {
         auto GetEventBus() -> std::shared_ptr<EventBus::InternalEventBus>
         {
             if (!eventBus) {
-                eventBus = std::make_shared<EventBus::InternalEventBus>();
+                eventBus = EventBus::MakeEventBus();
             }
 
             return eventBus;
@@ -108,14 +126,21 @@ namespace ECFMP::Plugin {
         return *this;
     }
 
-    auto SdkFactory::Instance() -> std::unique_ptr<Sdk>
+    auto SdkFactory::Instance() -> std::shared_ptr<Sdk>
     {
         if (!impl->httpClient) {
             throw SdkConfigurationException("No http client provided");
         }
 
-        return std::make_unique<ConcreteSdk>(
-                std::shared_ptr<void>(impl->CreateApiDataScheduler()), impl->GetEventBus()
-        );
+        // Set up other event listeners
+        impl->RegisterEventListeners();
+
+        // Set up the SDK
+        auto sdk = std::make_shared<InternalSdk>(impl->GetEventBus());
+        impl->GetEventBus()->SubscribeAsync<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
+        impl->GetEventBus()->SubscribeAsync<Plugin::EventsUpdatedEvent>(sdk);
+        impl->GetEventBus()->SubscribeAsync<Plugin::FlowMeasuresUpdatedEvent>(sdk);
+
+        return std::move(sdk);
     }
 }// namespace ECFMP::Plugin

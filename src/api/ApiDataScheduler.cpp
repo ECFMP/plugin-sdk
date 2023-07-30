@@ -1,79 +1,37 @@
 #include "ApiDataScheduler.h"
-#include "ApiDataDownloader.h"
-#include <chrono>
-#include <condition_variable>
-#include <mutex>
-#include <thread>
+#include "time/Clock.h"
 
 namespace ECFMP::Api {
 
     struct ApiDataScheduler::Impl {
 
-        explicit Impl(std::unique_ptr<ApiDataDownloader> downloader)
-            : downloader(std::move(downloader)), schedulerThread(std::make_unique<std::thread>(&Impl::Scheduler, this))
+        explicit Impl(std::shared_ptr<EventBus::InternalEventBus> eventBus) : eventBus(std::move(eventBus))
         {}
-
-        void Scheduler()
-        {
-            std::unique_lock lock(conditionMutex);
-            std::chrono::system_clock::time_point lastRuntime = std::chrono::system_clock::time_point::min();
-            while (true) {
-                // Wait until the next runtime, or until we are interrupted
-                conditionVariable.wait_until(lock, lastRuntime + runInterval, [this]() {
-                    return !running;
-                });
-
-                // Check we are still running
-                if (!running) {
-                    break;
-                }
-
-                // Do a download
-                downloader->DownloadData();
-                lastRuntime = std::chrono::system_clock::now();
-            }
-        }
-
-        /**
-         * Notify the thread that we're done, and stop.
-         */
-        void Stop()
-        {
-            std::unique_lock lock(conditionMutex);
-            running = false;
-            lock.unlock();
-
-            conditionVariable.notify_one();
-            schedulerThread->join();
-        }
 
         // The interval for downloading
         const std::chrono::seconds runInterval = std::chrono::seconds(90);
 
-        // Are we running
-        bool running = true;
+        // The last time we ran
+        std::chrono::system_clock::time_point lastRuntime = std::chrono::system_clock::time_point::min();
 
-        // Used for waiting the thread when required
-        std::condition_variable conditionVariable;
-
-        // Used to grant access to the condition variable
-        std::mutex conditionMutex;
-
-        // Does the scheduling
-        std::unique_ptr<std::thread> schedulerThread;
-
-        // For downloading data.
-        std::unique_ptr<ApiDataDownloader> downloader;
+        // For publishing events
+        std::shared_ptr<EventBus::InternalEventBus> eventBus;
     };
 
-    ApiDataScheduler::ApiDataScheduler(std::unique_ptr<ApiDataDownloader> downloader)
-        : impl(std::make_unique<Impl>(std::move(downloader)))
+    ApiDataScheduler::ApiDataScheduler(std::shared_ptr<EventBus::InternalEventBus> eventBus)
+        : impl(std::make_unique<Impl>(std::move(eventBus)))
     {
-        assert(impl->downloader && "Downloader not set in ApiDataScheduler");
+        assert(impl->eventBus && "Event bus not set in ApiDataScheduler");
     }
 
-    ApiDataScheduler::~ApiDataScheduler()
+    ApiDataScheduler::~ApiDataScheduler() = default;
+
+    void ApiDataScheduler::OnEvent(const Plugin::EuroscopeTimerTickEvent& event)
     {
-        impl->Stop();
-    };
+        const auto now = Time::TimeNow();
+        if (impl->lastRuntime + impl->runInterval < now) {
+            impl->lastRuntime = now;
+            impl->eventBus->OnEvent<Plugin::ApiDataDownloadRequiredEvent>({});
+        }
+    }
 }// namespace ECFMP::Api

@@ -1,17 +1,53 @@
 #include "api/FlightInformationRegionDataParser.h"
-#include "ECFMP/flightinformationregion/FlightInformationRegion.h"
+#include "ECFMP/eventbus/EventListener.h"
 #include "api/InternalElementCollectionTypes.h"
+#include "eventbus/InternalEventBusFactory.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
+#include "plugin/InternalSdkEvents.h"
+#include <memory>
 
 namespace ECFMPTest::Api {
+
+    class MockFlightInformationRegionsUpdatedEventHandler
+        : public ECFMP::EventBus::EventListener<ECFMP::Plugin::FlightInformationRegionsUpdatedEvent>
+    {
+        public:
+        explicit MockFlightInformationRegionsUpdatedEventHandler(int expectedItemCount)
+            : expectedItemCount(expectedItemCount)
+        {}
+
+        void OnEvent(const ECFMP::Plugin::FlightInformationRegionsUpdatedEvent& event) override
+        {
+            callCount++;
+            EXPECT_EQ(expectedItemCount, event.firs->Count());
+        }
+
+        [[nodiscard]] auto GetCallCount() const -> int
+        {
+            return callCount;
+        }
+
+        private:
+        int expectedItemCount;
+
+        int callCount = 0;
+    };
+
     class FlightInformationRegionDataParserTest : public testing::Test
     {
         public:
         FlightInformationRegionDataParserTest()
-            : mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(mockLogger)
-        {}
+            : mockEventHandler(std::make_shared<MockFlightInformationRegionsUpdatedEventHandler>(2)),
+              eventBus(ECFMP::EventBus::MakeEventBus()),
+              mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(mockLogger, eventBus)
+        {
+            // Add mock listener to event bus
+            eventBus->SubscribeSync<ECFMP::Plugin::FlightInformationRegionsUpdatedEvent>(mockEventHandler);
+        }
 
+        std::shared_ptr<MockFlightInformationRegionsUpdatedEventHandler> mockEventHandler;
+        std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
         ECFMP::Api::FlightInformationRegionDataParser parser;
     };
@@ -19,16 +55,19 @@ namespace ECFMPTest::Api {
     TEST_F(FlightInformationRegionDataParserTest, ItReturnsNullptrIfDataNotObject)
     {
         EXPECT_EQ(nullptr, parser.ParseFirs(nlohmann::json::array()));
+        EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(FlightInformationRegionDataParserTest, ItReturnsNullptrIfDataDoesNotContainFirs)
     {
         EXPECT_EQ(nullptr, parser.ParseFirs(nlohmann::json{{"not_flight_information_regions", "abc"}}));
+        EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(FlightInformationRegionDataParserTest, ItReturnsNullptrIfFirsNotArray)
     {
         EXPECT_EQ(nullptr, parser.ParseFirs(nlohmann::json{{"flight_information_regions", "abc"}}));
+        EXPECT_EQ(0, mockEventHandler->GetCallCount());
     }
 
     TEST_F(FlightInformationRegionDataParserTest, ItParsesFirs)
@@ -60,6 +99,9 @@ namespace ECFMPTest::Api {
         EXPECT_EQ(2, fir2->Id());
         EXPECT_EQ("EGPX", fir2->Identifier());
         EXPECT_EQ("Scottish", fir2->Name());
+
+        // Check event handler is called
+        EXPECT_EQ(1, mockEventHandler->GetCallCount());
     }
 
     using BadFlightInformationRegionDataCheck = struct BadFlightInformationRegionDataCheck {
@@ -75,9 +117,16 @@ namespace ECFMPTest::Api {
     {
         public:
         FlightInformationRegionDataParserBadDataTest()
-            : mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(mockLogger)
-        {}
+            : mockEventHandler(std::make_shared<MockFlightInformationRegionsUpdatedEventHandler>(1)),
+              eventBus(ECFMP::EventBus::MakeEventBus()),
+              mockLogger(std::make_shared<testing::NiceMock<Log::MockLogger>>()), parser(mockLogger, eventBus)
+        {
+            // Add mock listener to event bus
+            eventBus->SubscribeSync<ECFMP::Plugin::FlightInformationRegionsUpdatedEvent>(mockEventHandler);
+        }
 
+        std::shared_ptr<MockFlightInformationRegionsUpdatedEventHandler> mockEventHandler;
+        std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
         std::shared_ptr<testing::NiceMock<Log::MockLogger>> mockLogger;
         ECFMP::Api::FlightInformationRegionDataParser parser;
     };
@@ -144,5 +193,8 @@ namespace ECFMPTest::Api {
         EXPECT_EQ(1, fir1->Id());
         EXPECT_EQ("EGTT", fir1->Identifier());
         EXPECT_EQ("London", fir1->Name());
+
+        // Check event handler is called
+        EXPECT_EQ(1, mockEventHandler->GetCallCount());
     }
 }// namespace ECFMPTest::Api

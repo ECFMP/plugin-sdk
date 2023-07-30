@@ -21,7 +21,7 @@ namespace ECFMP::Api {
     }
     ApiDataDownloader::~ApiDataDownloader() = default;
 
-    void ApiDataDownloader::DownloadData()
+    void ApiDataDownloader::OnEvent(const Plugin::ApiDataDownloadRequiredEvent& event)
     {
         // Get the API response
         logger->Info("Downloading data");

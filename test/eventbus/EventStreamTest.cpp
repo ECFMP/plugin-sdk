@@ -1,5 +1,7 @@
-#include "eventbus/InternalEventStream.h"
+#include "eventbus/EventStream.h"
 #include "ECFMP/eventbus/EventListener.h"
+#include "eventbus/SubscriptionFlags.h"
+#include "eventbus/SynchronousEventDispatcher.h"
 
 namespace ECFMP::EventBus {
 
@@ -38,72 +40,67 @@ namespace ECFMP::EventBus {
         bool shouldProcess;
     };
 
-    class InternalEventStreamTest : public testing::Test
+    class EventStreamTest : public testing::Test
     {
         public:
-        InternalEventStream<int> eventStream;
+        EventStream<int> eventStream;
     };
 
-    TEST_F(InternalEventStreamTest, OnEventWithNoSubscriptionsDoesNotThrow)
+    TEST_F(EventStreamTest, OnEventWithNoSubscriptionsDoesNotThrow)
     {
         ASSERT_NO_THROW(eventStream.OnEvent(1));
     }
 
-    TEST_F(InternalEventStreamTest, ItThrowsOnSubscribeIfListenerIsNull)
-    {
-        ASSERT_THROW(eventStream.Subscribe(nullptr), std::invalid_argument);
-    }
-
-    TEST_F(InternalEventStreamTest, ItThrowsOnSubscribeOnceIfListenerIsNull)
-    {
-        ASSERT_THROW(eventStream.SubscribeOnce(nullptr), std::invalid_argument);
-    }
-
-    TEST_F(InternalEventStreamTest, OnEventWithOneSubscriptionCallsListener)
+    TEST_F(EventStreamTest, OnEventWithOneSubscriptionCallsListener)
     {
         auto listener = std::make_shared<MockEventListener>(1);
-        eventStream.Subscribe(listener);
+        auto dispatcher = std::make_shared<SynchronousEventDispatcher<int>>(listener);
+        eventStream.Subscribe({dispatcher, listener, nullptr, {ECFMP::EventBus::EventDispatchMode::Sync, false}});
         eventStream.OnEvent(1);
 
         EXPECT_EQ(1, listener->callCount);
     }
 
-    TEST_F(InternalEventStreamTest, OnEventWithOneSubscriptionCallsListenerMultipleTimes)
+    TEST_F(EventStreamTest, OnEventWithOneSubscriptionCallsListenerMultipleTimes)
     {
         auto listener = std::make_shared<MockEventListener>(1);
-        eventStream.Subscribe(listener);
+        auto dispatcher = std::make_shared<SynchronousEventDispatcher<int>>(listener);
+        eventStream.Subscribe({dispatcher, listener, nullptr, {ECFMP::EventBus::EventDispatchMode::Sync, false}});
         eventStream.OnEvent(1);
         eventStream.OnEvent(1);
 
         EXPECT_EQ(2, listener->callCount);
     }
 
-    TEST_F(InternalEventStreamTest, OnEventWithOneSubscriptionOnceCallsListenerOnce)
+    TEST_F(EventStreamTest, OnEventWithOneSubscriptionOnceCallsListenerOnce)
     {
         auto listener = std::make_shared<MockEventListener>(1);
-        eventStream.SubscribeOnce(listener);
+        auto dispatcher = std::make_shared<SynchronousEventDispatcher<int>>(listener);
+        eventStream.Subscribe({dispatcher, listener, nullptr, {ECFMP::EventBus::EventDispatchMode::Sync, true}});
         eventStream.OnEvent(1);
         eventStream.OnEvent(1);
 
         EXPECT_EQ(1, listener->callCount);
     }
 
-    TEST_F(InternalEventStreamTest, OnEventWithOneSubscriptionAndFilterCallsListener)
+    TEST_F(EventStreamTest, OnEventWithOneSubscriptionAndFilterCallsListener)
     {
         auto listener = std::make_shared<MockEventListener>(1);
+        auto dispatcher = std::make_shared<SynchronousEventDispatcher<int>>(listener);
         auto filter = std::make_shared<MockEventFilter>(1, true);
-        eventStream.Subscribe(listener, filter);
+        eventStream.Subscribe({dispatcher, listener, filter, {ECFMP::EventBus::EventDispatchMode::Sync, false}});
         eventStream.OnEvent(1);
 
         EXPECT_EQ(1, listener->callCount);
         EXPECT_EQ(1, filter->callCount);
     }
 
-    TEST_F(InternalEventStreamTest, OnEventWithOneSubscriptionAndFilterCallsListenerMultipleTimes)
+    TEST_F(EventStreamTest, OnEventWithOneSubscriptionAndFilterCallsListenerMultipleTimes)
     {
         auto listener = std::make_shared<MockEventListener>(1);
+        auto dispatcher = std::make_shared<SynchronousEventDispatcher<int>>(listener);
         auto filter = std::make_shared<MockEventFilter>(1, true);
-        eventStream.Subscribe(listener, filter);
+        eventStream.Subscribe({dispatcher, listener, filter, {ECFMP::EventBus::EventDispatchMode::Sync, false}});
         eventStream.OnEvent(1);
         eventStream.OnEvent(1);
 
@@ -111,22 +108,24 @@ namespace ECFMP::EventBus {
         EXPECT_EQ(2, filter->callCount);
     }
 
-    TEST_F(InternalEventStreamTest, OnEventWithOneSubscriptionAndFilterDoesNotCallListener)
+    TEST_F(EventStreamTest, OnEventWithOneSubscriptionAndFilterDoesNotCallListener)
     {
         auto listener = std::make_shared<MockEventListener>(1);
+        auto dispatcher = std::make_shared<SynchronousEventDispatcher<int>>(listener);
         auto filter = std::make_shared<MockEventFilter>(1, false);
-        eventStream.Subscribe(listener, filter);
+        eventStream.Subscribe({dispatcher, listener, filter, {ECFMP::EventBus::EventDispatchMode::Sync, false}});
         eventStream.OnEvent(1);
 
         EXPECT_EQ(0, listener->callCount);
         EXPECT_EQ(1, filter->callCount);
     }
 
-    TEST_F(InternalEventStreamTest, OnEventWithOneSubscriptionAndFilterDoesNotCallListenerMultipleTimes)
+    TEST_F(EventStreamTest, OnEventWithOneSubscriptionAndFilterDoesNotCallListenerMultipleTimes)
     {
         auto listener = std::make_shared<MockEventListener>(1);
+        auto dispatcher = std::make_shared<SynchronousEventDispatcher<int>>(listener);
         auto filter = std::make_shared<MockEventFilter>(1, false);
-        eventStream.Subscribe(listener, filter);
+        eventStream.Subscribe({dispatcher, listener, filter, {ECFMP::EventBus::EventDispatchMode::Sync, false}});
         eventStream.OnEvent(1);
         eventStream.OnEvent(1);
 
@@ -134,11 +133,12 @@ namespace ECFMP::EventBus {
         EXPECT_EQ(2, filter->callCount);
     }
 
-    TEST_F(InternalEventStreamTest, OnEventWithOneOnceSubscriptionAndFilterCallsListenerOnce)
+    TEST_F(EventStreamTest, OnEventWithOneOnceSubscriptionAndFilterCallsListenerOnce)
     {
         auto listener = std::make_shared<MockEventListener>(1);
+        auto dispatcher = std::make_shared<SynchronousEventDispatcher<int>>(listener);
         auto filter = std::make_shared<MockEventFilter>(1, true);
-        eventStream.SubscribeOnce(listener, filter);
+        eventStream.Subscribe({dispatcher, listener, filter, {ECFMP::EventBus::EventDispatchMode::Sync, true}});
         eventStream.OnEvent(1);
         eventStream.OnEvent(1);
 
@@ -146,11 +146,12 @@ namespace ECFMP::EventBus {
         EXPECT_EQ(1, filter->callCount);
     }
 
-    TEST_F(InternalEventStreamTest, OnEventWithOneOnceSubscriptionAndFilterDoesNotCallListenerOnce)
+    TEST_F(EventStreamTest, OnEventWithOneOnceSubscriptionAndFilterDoesNotCallListenerOnce)
     {
         auto listener = std::make_shared<MockEventListener>(1);
+        auto dispatcher = std::make_shared<SynchronousEventDispatcher<int>>(listener);
         auto filter = std::make_shared<MockEventFilter>(1, false);
-        eventStream.SubscribeOnce(listener, filter);
+        eventStream.Subscribe({dispatcher, listener, filter, {ECFMP::EventBus::EventDispatchMode::Sync, true}});
         eventStream.OnEvent(1);
         eventStream.OnEvent(1);
 
