@@ -17,6 +17,7 @@
 #include "flowmeasure/ConcreteMeasure.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
+#include "plugin/InternalSdkEvents.h"
 
 namespace ECFMPTest::Api {
 
@@ -69,6 +70,31 @@ namespace ECFMPTest::Api {
         int callCount = 0;
     };
 
+    class MockInternalFlowMeasuresUpdatedEventHandler
+        : public ECFMP::EventBus::EventListener<ECFMP::Plugin::InternalFlowMeasuresUpdatedEvent>
+    {
+        public:
+        explicit MockInternalFlowMeasuresUpdatedEventHandler(int expectedItemCount)
+            : expectedItemCount(expectedItemCount)
+        {}
+
+        void OnEvent(const ECFMP::Plugin::InternalFlowMeasuresUpdatedEvent& event) override
+        {
+            callCount++;
+            EXPECT_EQ(expectedItemCount, event.flowMeasures->Count());
+        }
+
+        [[nodiscard]] auto GetCallCount() const -> int
+        {
+            return callCount;
+        }
+
+        private:
+        int expectedItemCount;
+
+        int callCount = 0;
+    };
+
     struct FlowMeasureDataParserTestCase {
         std::string description;
         nlohmann::json data;
@@ -96,7 +122,9 @@ namespace ECFMPTest::Api {
 
             eventBus = ECFMP::EventBus::MakeEventBus();
             mockEventHandler = std::make_shared<MockFlowMeasuresUpdatedEventHandler>(1);
+            mockEventHandlerInternal = std::make_shared<MockInternalFlowMeasuresUpdatedEventHandler>(1);
             eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasuresUpdatedEvent>(mockEventHandler);
+            eventBus->SubscribeSync<ECFMP::Plugin::InternalFlowMeasuresUpdatedEvent>(mockEventHandlerInternal);
 
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
                     std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus
@@ -116,6 +144,7 @@ namespace ECFMPTest::Api {
         }
 
         std::shared_ptr<MockFlowMeasuresUpdatedEventHandler> mockEventHandler;
+        std::shared_ptr<MockInternalFlowMeasuresUpdatedEventHandler> mockEventHandlerInternal;
         std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
@@ -179,6 +208,7 @@ namespace ECFMPTest::Api {
 
         // Check that the event was published
         EXPECT_EQ(1, mockEventHandler->GetCallCount());
+        EXPECT_EQ(1, mockEventHandlerInternal->GetCallCount());
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -310,7 +340,9 @@ namespace ECFMPTest::Api {
 
             eventBus = ECFMP::EventBus::MakeEventBus();
             mockEventHandler = std::make_shared<MockFlowMeasuresUpdatedEventHandler>(0);
+            mockEventHandlerInternal = std::make_shared<MockInternalFlowMeasuresUpdatedEventHandler>(0);
             eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasuresUpdatedEvent>(mockEventHandler);
+            eventBus->SubscribeSync<ECFMP::Plugin::InternalFlowMeasuresUpdatedEvent>(mockEventHandlerInternal);
 
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
                     std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus
@@ -330,6 +362,7 @@ namespace ECFMPTest::Api {
         }
 
         std::shared_ptr<MockFlowMeasuresUpdatedEventHandler> mockEventHandler;
+        std::shared_ptr<MockInternalFlowMeasuresUpdatedEventHandler> mockEventHandlerInternal;
         std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
@@ -375,6 +408,7 @@ namespace ECFMPTest::Api {
 
         // Check that the event handler was called
         EXPECT_EQ(1, mockEventHandler->GetCallCount());
+        EXPECT_EQ(1, mockEventHandlerInternal->GetCallCount());
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -766,7 +800,9 @@ namespace ECFMPTest::Api {
 
             eventBus = ECFMP::EventBus::MakeEventBus();
             mockEventHandler = std::make_shared<MockFlowMeasuresUpdatedEventHandler>(0);
+            mockEventHandlerInternal = std::make_shared<MockInternalFlowMeasuresUpdatedEventHandler>(0);
             eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasuresUpdatedEvent>(mockEventHandler);
+            eventBus->SubscribeSync<ECFMP::Plugin::InternalFlowMeasuresUpdatedEvent>(mockEventHandlerInternal);
 
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
                     std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus
@@ -786,6 +822,7 @@ namespace ECFMPTest::Api {
         }
 
         std::shared_ptr<MockFlowMeasuresUpdatedEventHandler> mockEventHandler;
+        std::shared_ptr<MockInternalFlowMeasuresUpdatedEventHandler> mockEventHandlerInternal;
         std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
         MockFlowMeasureFilterParser* filterParserRaw;
         MockFlowMeasureMeasureParser* measureParserRaw;
@@ -799,6 +836,7 @@ namespace ECFMPTest::Api {
         auto result = parser->ParseFlowMeasures(nlohmann::json::array(), events, firs);
         ASSERT_EQ(nullptr, result);
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
+        EXPECT_EQ(0, mockEventHandlerInternal->GetCallCount());
     }
 
     TEST_F(FlowMeasureDataParserBizarreDataTest, ItReturnsNullptrIfJsonDoesntContainFlowMeasuresKey)
@@ -806,6 +844,7 @@ namespace ECFMPTest::Api {
         auto result = parser->ParseFlowMeasures(nlohmann::json{{"foo", "bar"}}, events, firs);
         ASSERT_EQ(nullptr, result);
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
+        EXPECT_EQ(0, mockEventHandlerInternal->GetCallCount());
     }
 
     TEST_F(FlowMeasureDataParserBizarreDataTest, ItReturnsNullptrIfFlowMeasuresKeyIsNotArray)
@@ -813,5 +852,6 @@ namespace ECFMPTest::Api {
         auto result = parser->ParseFlowMeasures(nlohmann::json{{"flow_measures", "bar"}}, events, firs);
         ASSERT_EQ(nullptr, result);
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
+        EXPECT_EQ(0, mockEventHandlerInternal->GetCallCount());
     }
 }// namespace ECFMPTest::Api

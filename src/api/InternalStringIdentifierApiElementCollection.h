@@ -13,5 +13,11 @@ namespace ECFMP::Api {
             const auto uniqueLock = std::unique_lock(this->lock);
             this->elements[static_cast<std::shared_ptr<T>>(element)->Id()] = element;
         }
+
+        [[nodiscard]] auto GetUnderlyingCollection() const noexcept
+                -> const std::unordered_map<int, std::shared_ptr<const T>>&
+        {
+            return this->elements;
+        }
     };
 }// namespace ECFMP::Api

@@ -12,6 +12,10 @@ namespace ECFMP::Plugin {
         std::shared_ptr<Api::InternalFlightInformationRegionCollection> firs;
     };
 
+    using InternalFlowMeasuresUpdatedEvent = struct InternalFlowMeasuresUpdatedEvent {
+        std::shared_ptr<Api::InternalFlowMeasureCollection> flowMeasures;
+    };
+
     // EuroScope
     using EuroscopeTimerTickEvent = struct EuroscopeTimerTickEvent {
     };

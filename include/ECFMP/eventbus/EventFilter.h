@@ -7,6 +7,6 @@ namespace ECFMP::EventBus {
     {
         public:
         virtual ~EventFilter() = default;
-        virtual bool ShouldProcess(const EventType&) = 0;
+        virtual bool ShouldProcess(const EventType& event) = 0;
     };
 }// namespace ECFMP::EventBus

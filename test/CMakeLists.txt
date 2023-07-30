@@ -42,7 +42,7 @@ set(test__flowmeasure
         flowmeasure/ConcreteMeasureTest.cpp
         flowmeasure/ConcreteFlowMeasureTest.cpp
         flowmeasure/ConcreteFlowMeasureFiltersTest.cpp
-        api/FlowMeasureDataParserTest.cpp flowmeasure/ConcreteRangeToDestinationFilterTest.cpp)
+        api/FlowMeasureDataParserTest.cpp flowmeasure/ConcreteRangeToDestinationFilterTest.cpp flowmeasure/CanonicalFlowMeasureInfoTest.cpp flowmeasure/FlowMeasureStatusUpdatesTest.cpp)
 
 set(test__log
         log/LogDecoratorTest.cpp

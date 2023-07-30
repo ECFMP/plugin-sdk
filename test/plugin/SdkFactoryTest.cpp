@@ -8,6 +8,7 @@
 #include "eventbus/InternalEventBus.h"
 #include "eventbus/PendingEuroscopeEvents.h"
 #include "eventbus/SubscriptionFlags.h"
+#include "flowmeasure/FlowMeasureStatusUpdates.h"
 #include "mock/MockHttpClient.h"
 #include "mock/MockLogger.h"
 #include "plugin/ConcreteSdk.h"
@@ -163,6 +164,19 @@ namespace ECFMPTest::Plugin {
         auto hasListener = InternalBus(instance)
                                    .HasListenerForSubscription<
                                            ECFMP::Api::ApiDataDownloader, ECFMP::Plugin::ApiDataDownloadRequiredEvent>(
+                                           {ECFMP::EventBus::EventDispatchMode::Async, false}
+                                   );
+        EXPECT_TRUE(hasListener);
+        instance->Destroy();
+    }
+
+    TEST_F(SdkFactoryTest, ItRegistersFlowMeasureStatusUpdatesForUpdatedEvent)
+    {
+        const auto instance = ECFMP::Plugin::SdkFactory::Build().WithHttpClient(std::move(http)).Instance();
+        auto hasListener = InternalBus(instance)
+                                   .HasListenerForSubscription<
+                                           ECFMP::FlowMeasure::FlowMeasureStatusUpdates,
+                                           ECFMP::Plugin::InternalFlowMeasuresUpdatedEvent>(
                                            {ECFMP::EventBus::EventDispatchMode::Async, false}
                                    );
         EXPECT_TRUE(hasListener);

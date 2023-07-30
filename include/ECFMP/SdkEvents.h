@@ -18,23 +18,23 @@ namespace ECFMP::Plugin {
     };
 
     using FlowMeasureNotifiedEvent = struct FlowMeasureNotifiedEvent {
-        std::shared_ptr<FlowMeasure::FlowMeasure> flowMeasure;
+        std::shared_ptr<const FlowMeasure::FlowMeasure> flowMeasure;
     };
 
     using FlowMeasureActivatedEvent = struct FlowMeasureActivatedEvent {
-        std::shared_ptr<FlowMeasure::FlowMeasure> flowMeasure;
+        std::shared_ptr<const FlowMeasure::FlowMeasure> flowMeasure;
     };
 
     using FlowMeasureExpiredEvent = struct FlowMeasureExpiredEvent {
-        std::shared_ptr<FlowMeasure::FlowMeasure> flowMeasure;
+        std::shared_ptr<const FlowMeasure::FlowMeasure> flowMeasure;
     };
 
     using FlowMeasureWithdrawnEvent = struct FlowMeasureWithdrawnEvent {
-        std::shared_ptr<FlowMeasure::FlowMeasure> flowMeasure;
+        std::shared_ptr<const FlowMeasure::FlowMeasure> flowMeasure;
     };
 
     using FlowMeasureReissuedEvent = struct FlowMeasureReissuedEvent {
-        std::shared_ptr<FlowMeasure::FlowMeasure> original;
-        std::shared_ptr<FlowMeasure::FlowMeasure> reissued;
+        std::shared_ptr<const FlowMeasure::FlowMeasure> original;
+        std::shared_ptr<const FlowMeasure::FlowMeasure> reissued;
     };
 }// namespace ECFMP::Plugin

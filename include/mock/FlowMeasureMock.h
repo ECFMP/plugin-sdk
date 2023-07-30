@@ -11,6 +11,10 @@ namespace ECFMP::Mock::FlowMeasure {
         MOCK_METHOD(std::shared_ptr<const ECFMP::Event::Event>, Event, (), (const, noexcept, override));
         MOCK_METHOD(const std::string&, Identifier, (), (const, noexcept, override));
         MOCK_METHOD(const std::string&, Reason, (), (const, noexcept, override));
+        MOCK_METHOD(
+                const ECFMP::FlowMeasure::CanonicalFlowMeasureInfo&, CanonicalInformation, (),
+                (const, noexcept, override)
+        );
         MOCK_METHOD(const std::chrono::system_clock::time_point&, StartTime, (), (const, noexcept, override));
         MOCK_METHOD(const std::chrono::system_clock::time_point&, EndTime, (), (const, noexcept, override));
         MOCK_METHOD(const std::chrono::system_clock::time_point&, WithdrawnAt, (), (const, override));

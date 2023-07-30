@@ -10,6 +10,7 @@
 #include "date/ParseDateStrings.h"
 #include "flowmeasure/ConcreteFlowMeasure.h"
 #include "nlohmann/json.hpp"
+#include "plugin/InternalSdkEvents.h"
 
 namespace ECFMP::Api {
     FlowMeasureDataParser::FlowMeasureDataParser(
@@ -95,6 +96,7 @@ namespace ECFMP::Api {
 
         logger->Debug("FlowMeasureDataParser::OnEvent: parsed flow measures");
         eventBus->OnEvent<Plugin::FlowMeasuresUpdatedEvent>({flowMeasures});
+        eventBus->OnEvent<Plugin::InternalFlowMeasuresUpdatedEvent>({flowMeasures});
 
         return flowMeasures;
     }

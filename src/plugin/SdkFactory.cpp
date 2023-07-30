@@ -15,6 +15,7 @@
 #include "api/FlowMeasureFilterParser.h"
 #include "api/FlowMeasureMeasureParser.h"
 #include "eventbus/InternalEventBusFactory.h"
+#include "flowmeasure/FlowMeasureStatusUpdates.h"
 #include "log/LogDecorator.h"
 #include "log/NullLogger.h"
 
@@ -42,6 +43,17 @@ namespace ECFMP::Plugin {
             // Set up data scheduler
             auto dataScheduler = std::make_shared<Api::ApiDataScheduler>(GetEventBus());
             GetEventBus()->SubscribeSync<Plugin::EuroscopeTimerTickEvent>(dataScheduler);
+        }
+
+        void RegisterEventListeners()
+        {
+            // Create the API data scheduler
+            this->CreateApiDataScheduler();
+
+            // Flow measure status updates - powers the event-driven nature.
+            GetEventBus()->SubscribeAsync<Plugin::InternalFlowMeasuresUpdatedEvent>(
+                    std::make_shared<FlowMeasure::FlowMeasureStatusUpdates>(GetEventBus(), GetLogger())
+            );
         }
 
         auto CreateLogger() -> std::shared_ptr<Log::Logger>
@@ -121,15 +133,13 @@ namespace ECFMP::Plugin {
         }
 
         // Set up other event listeners
-        impl->CreateApiDataScheduler();
+        impl->RegisterEventListeners();
 
         // Set up the SDK
         auto sdk = std::make_shared<ConcreteSdk>(impl->GetEventBus());
         impl->GetEventBus()->SubscribeAsync<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
         impl->GetEventBus()->SubscribeAsync<Plugin::EventsUpdatedEvent>(sdk);
         impl->GetEventBus()->SubscribeAsync<Plugin::FlowMeasuresUpdatedEvent>(sdk);
-
-        // TODO: Create listeners that process the update events and turn them into user-facing events
 
         return std::move(sdk);
     }

@@ -1,5 +1,6 @@
 #include "ConcreteFlowMeasure.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
+#include "ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h"
 #include "ECFMP/flowmeasure/FlowMeasureFilters.h"
 #include "ECFMP/flowmeasure/Measure.h"
 
@@ -12,7 +13,8 @@ namespace ECFMP::FlowMeasure {
             const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>& notifiedFirs,
             std::unique_ptr<struct Measure> measure, std::unique_ptr<FlowMeasureFilters> filters
     )
-        : id(id), event(std::move(event)), identifier(std::move(identifier)), reason(std::move(reason)),
+        : id(id), event(std::move(event)), identifier(std::move(identifier)),
+          canonicalInformation(std::make_unique<CanonicalFlowMeasureInfo>(this->identifier)), reason(std::move(reason)),
           startTime(startTime), endTime(endTime), withdrawnTime(withdrawnTime), status(status),
           notifiedFirs(notifiedFirs), measure(std::move(measure)), filters(std::move(filters))
     {
@@ -104,5 +106,10 @@ namespace ECFMP::FlowMeasure {
                            return fir->Identifier() == flightInformationRegion;
                        }
                ) != notifiedFirs.end();
+    }
+
+    auto ConcreteFlowMeasure::CanonicalInformation() const noexcept -> const CanonicalFlowMeasureInfo&
+    {
+        return *canonicalInformation;
     }
 }// namespace ECFMP::FlowMeasure

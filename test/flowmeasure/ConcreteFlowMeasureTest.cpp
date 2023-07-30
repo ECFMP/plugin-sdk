@@ -1,5 +1,6 @@
 #include "flowmeasure/ConcreteFlowMeasure.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
+#include "ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h"
 #include "ECFMP/flowmeasure/MultipleLevelFilter.h"
 #include "ECFMP/flowmeasure/RangeToDestinationFilter.h"
 #include "event/ConcreteEvent.h"
@@ -103,6 +104,29 @@ namespace ECFMPTest::FlowMeasure {
     TEST_F(ConcreteFlowMeasureTest, ItHasAnIdentifier)
     {
         EXPECT_EQ("EGTT01A", measure1.Identifier());
+    }
+
+    TEST_F(ConcreteFlowMeasureTest, ItHasACanonicalIdentifierForRevisedMeasure)
+    {
+        auto measure2 = ECFMP::FlowMeasure::ConcreteFlowMeasure(
+                1, event, "EGTT02B-5", "Reason", startTime, endTime, withdrawnTime,
+                ECFMP::FlowMeasure::MeasureStatus::Active, {fir1},
+                std::make_unique<ECFMP::FlowMeasure::ConcreteMeasure>(ECFMP::FlowMeasure::MeasureType::Prohibit),
+                std::make_unique<ECFMP::FlowMeasure::ConcreteFlowMeasureFilters>(
+                        std::list<std::shared_ptr<ECFMP::FlowMeasure::AirportFilter>>{
+                                std::make_shared<ECFMP::FlowMeasure::ConcreteAirportFilter>(
+                                        std::set<std::string>{"EGLL"}, ECFMP::FlowMeasure::AirportFilterType::Departure
+                                )},
+                        std::list<std::shared_ptr<ECFMP::FlowMeasure::EventFilter>>{},
+                        std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>{},
+                        std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>{},
+                        std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
+                        std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{}
+                )
+        );
+
+        EXPECT_EQ("EGTT02B", measure2.CanonicalInformation().Identifier());
+        EXPECT_EQ(5, measure2.CanonicalInformation().Revision());
     }
 
     TEST_F(ConcreteFlowMeasureTest, ItHasAReason)
