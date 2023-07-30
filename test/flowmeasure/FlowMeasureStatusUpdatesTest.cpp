@@ -100,6 +100,9 @@ namespace ECFMPTest::FlowMeasure {
                             }
                     ));
             ON_CALL(*measure, Status).WillByDefault(testing::Return(status));
+            ON_CALL(*measure, Identifier).WillByDefault(testing::Invoke([identifier]() -> const std::string& {
+                return identifier;
+            }));
 
             return measure;
         }
