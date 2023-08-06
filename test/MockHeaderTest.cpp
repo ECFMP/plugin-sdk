@@ -18,6 +18,7 @@ namespace ECFMPTest {
         testing::NiceMock<ECFMP::Mock::FlowMeasure::MultipleLevelFilterMock> mutliLevelFilter;
         testing::NiceMock<ECFMP::Mock::FlowMeasure::MeasureMock> measure;
         testing::NiceMock<ECFMP::Mock::FlowMeasure::RouteFilterMock> routeFilter;
+        testing::NiceMock<ECFMP::Mock::FlowMeasure::RangeToDestinationFilterMock> rangeFilter;
 
         // Dummy expectation, the purpose of this test is to make sure the header compiles properly.
         EXPECT_TRUE(true);

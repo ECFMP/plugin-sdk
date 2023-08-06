@@ -1,10 +1,11 @@
 #pragma once
+#include "ChecksAircraftApplicability.h"
 
 namespace ECFMP::FlowMeasure {
     /**
      * A filter that pertains to arrival or departure airports
      */
-    class RangeToDestinationFilter
+    class RangeToDestinationFilter : public ChecksAircraftApplicability
     {
         public:
         virtual ~RangeToDestinationFilter() = default;
