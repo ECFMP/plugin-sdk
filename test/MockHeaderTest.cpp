@@ -1,4 +1,4 @@
-#include "mock/flow-sdk-mock.h"
+#include "mock/ecfmp-sdk-mock.h"
 
 namespace ECFMPTest {
     class FlowSdkHeaderMockTest : public testing::Test
