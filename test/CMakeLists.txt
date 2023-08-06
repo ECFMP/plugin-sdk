@@ -164,5 +164,5 @@ target_link_options(${PROJECT_NAME} PRIVATE
 # Post-build copy the EuroScope binary
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../lib/EuroScopePlugInDll.dll" "${PROJECT_BINARY_DIR}/EuroScopePlugInDll.dll"
-        COMMENT "Copied EuroScope shared library to ${PROJECT_BINARY_DIR}/bin/EuroScopePlugInDll.dll"
+        COMMENT "Copied EuroScope shared library to ${PROJECT_BINARY_DIR}/EuroScopePlugInDll.dll"
         )
