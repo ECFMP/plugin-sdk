@@ -137,10 +137,10 @@ target_compile_options(${PROJECT_NAME} PRIVATE
         /W4;
         /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-        ${DEFAULT_CXX_EXCEPTION_HANDLING}
-        -Wno-unused-parameter # Lots of interfaces don't use everything
-        -Wno-missing-field-initializers # Windows has loads of this sadly
-        /EHa
+        ${DEFAULT_CXX_EXCEPTION_HANDLING};
+        -Wno-unused-parameter; # Lots of interfaces don't use everything
+        -Wno-missing-field-initializers; # Windows has loads of this sadly
+        /EHa;
         )
 
 #### LINK OPTIONS

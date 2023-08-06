@@ -66,5 +66,21 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
         )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Debug>:
+        /Od
+        /Zi;
+        >
+        $<$<CONFIG:Release>:
+        /O2;
+        >
+        /std:c++20;
+        /sdl;
         /EHa
+        ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+        /Zm200;
+        ${DEFAULT_CXX_EXCEPTION_HANDLING}
+        /W4;
+        /WX;
+        -Wno-unused-parameter; # Lots of interfaces don't use everything
+        -Wno-missing-field-initializers; # Windows has loads of this sadly
         )
