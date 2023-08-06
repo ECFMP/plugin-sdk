@@ -1,5 +1,6 @@
 #pragma once
-#include <assert.h>
+#include <Windows.h>
+#include <cassert>
 #include <chrono>
 #include <functional>
 #include <map>
