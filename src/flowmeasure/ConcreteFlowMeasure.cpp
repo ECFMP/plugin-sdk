@@ -11,7 +11,7 @@ namespace ECFMP::FlowMeasure {
             std::chrono::system_clock::time_point startTime, std::chrono::system_clock::time_point endTime,
             std::chrono::system_clock::time_point withdrawnTime, MeasureStatus status,
             const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>& notifiedFirs,
-            std::unique_ptr<struct Measure> measure, std::unique_ptr<FlowMeasureFilters> filters
+            std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters
     )
         : id(id), event(std::move(event)), identifier(std::move(identifier)),
           canonicalInformation(std::make_unique<CanonicalFlowMeasureInfo>(this->identifier)), reason(std::move(reason)),
@@ -111,5 +111,12 @@ namespace ECFMP::FlowMeasure {
     auto ConcreteFlowMeasure::CanonicalInformation() const noexcept -> const CanonicalFlowMeasureInfo&
     {
         return *canonicalInformation;
+    }
+
+    bool ConcreteFlowMeasure::ApplicableToAircraft(
+            const EuroScopePlugIn::CFlightPlan& flightplan, const EuroScopePlugIn::CRadarTarget& radarTarget
+    ) const
+    {
+        return filters->ApplicableToAircraft(flightplan, radarTarget);
     }
 }// namespace ECFMP::FlowMeasure
