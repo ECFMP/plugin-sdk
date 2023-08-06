@@ -1,4 +1,5 @@
 #include "flowmeasure/ConcreteMultipleLevelFilter.h"
+#include "mock/MockEuroscopeAircraft.h"
 
 namespace ECFMPTest::FlowMeasure {
 
@@ -14,42 +15,56 @@ namespace ECFMPTest::FlowMeasure {
     TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsLevels)
     {
         auto expected = std::vector<int>{340, 360, 390};
-        ASSERT_EQ(filter.Levels().size(), 3);
-        ASSERT_EQ(filter.Levels(), expected);
+        EXPECT_EQ(filter.Levels().size(), 3);
+        EXPECT_EQ(filter.Levels(), expected);
     }
 
     TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsAltitudes)
     {
         auto expected = std::vector<int>{34000, 36000, 39000};
-        ASSERT_EQ(filter.Altitudes().size(), 3);
-        ASSERT_EQ(filter.Altitudes(), expected);
+        EXPECT_EQ(filter.Altitudes().size(), 3);
+        EXPECT_EQ(filter.Altitudes(), expected);
     }
 
     TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsTrueForApplicableLevel)
     {
-        ASSERT_TRUE(filter.ApplicableToLevel(340));
-        ASSERT_TRUE(filter.ApplicableToLevel(360));
-        ASSERT_TRUE(filter.ApplicableToLevel(390));
+        EXPECT_TRUE(filter.ApplicableToLevel(340));
+        EXPECT_TRUE(filter.ApplicableToLevel(360));
+        EXPECT_TRUE(filter.ApplicableToLevel(390));
     }
 
     TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsFalseForNonApplicableLevel)
     {
-        ASSERT_FALSE(filter.ApplicableToLevel(350));
-        ASSERT_FALSE(filter.ApplicableToLevel(370));
-        ASSERT_FALSE(filter.ApplicableToLevel(380));
+        EXPECT_FALSE(filter.ApplicableToLevel(350));
+        EXPECT_FALSE(filter.ApplicableToLevel(370));
+        EXPECT_FALSE(filter.ApplicableToLevel(380));
     }
 
     TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsTrueForApplicableAltitude)
     {
-        ASSERT_TRUE(filter.ApplicableToAltitude(34000));
-        ASSERT_TRUE(filter.ApplicableToAltitude(36000));
-        ASSERT_TRUE(filter.ApplicableToAltitude(39000));
+        EXPECT_TRUE(filter.ApplicableToAltitude(34000));
+        EXPECT_TRUE(filter.ApplicableToAltitude(36000));
+        EXPECT_TRUE(filter.ApplicableToAltitude(39000));
     }
 
     TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsFalseForNonApplicableAltitude)
     {
-        ASSERT_FALSE(filter.ApplicableToAltitude(35000));
-        ASSERT_FALSE(filter.ApplicableToAltitude(37000));
-        ASSERT_FALSE(filter.ApplicableToAltitude(38000));
+        EXPECT_FALSE(filter.ApplicableToAltitude(35000));
+        EXPECT_FALSE(filter.ApplicableToAltitude(37000));
+        EXPECT_FALSE(filter.ApplicableToAltitude(38000));
+    }
+    
+    TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsTrueForApplicableAltitudeForAircraft)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        ON_CALL(aircraft, CruiseAltitude).WillByDefault(testing::Return(34000));
+        EXPECT_TRUE(filter.ApplicableToAircraft(aircraft));
+    }
+    
+    TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsFalseForNonApplicableAltitudeForAircraft)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        ON_CALL(aircraft, CruiseAltitude).WillByDefault(testing::Return(35000));
+        EXPECT_FALSE(filter.ApplicableToAircraft(aircraft));
     }
 }// namespace ECFMPTest::FlowMeasure
