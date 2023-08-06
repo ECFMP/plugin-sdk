@@ -100,18 +100,25 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/nlohmann;"
         )
 
+# Treat Euroscope as a system include directory to suppress warning, because they have lots
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/euroscope;"
+        )
+
 #### LINKS
 target_link_directories(
         ${PROJECT_NAME} PUBLIC
         "${CMAKE_BINARY_DIR}/src/"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../lib"
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
         gmock
         flow_plugin_sdk_src
+        "EuroScopePlugInDll;"
         )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" JSON_MultipleHeaders "ON")
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS " -m32" LINK_FLAGS "-m32" JSON_MultipleHeaders "ON ")
 
 #### COMPILE OPTIONS
 target_compile_options(${PROJECT_NAME} PRIVATE
@@ -151,4 +158,10 @@ target_link_options(${PROJECT_NAME} PRIVATE
         >
         /NODEFAULTLIB:LIBCMT;
         /SUBSYSTEM:CONSOLE;
+        )
+
+# Post-build copy the EuroScope binary
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../lib/EuroScopePlugInDll.dll" "${PROJECT_BINARY_DIR}/EuroScopePlugInDll.dll"
+        COMMENT "Copied EuroScope shared library to ${PROJECT_BINARY_DIR}/bin/EuroScopePlugInDll.dll"
         )
