@@ -1,6 +1,13 @@
 #include "ConcreteFlowMeasureFilters.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/flowmeasure/AirportFilter.h"
+#include "ECFMP/flowmeasure/EventFilter.h"
+#include "ECFMP/flowmeasure/LevelRangeFilter.h"
+#include "ECFMP/flowmeasure/MultipleLevelFilter.h"
+#include "ECFMP/flowmeasure/RangeToDestinationFilter.h"
+#include "ECFMP/flowmeasure/RouteFilter.h"
+#include "euroscope/EuroscopeAircraftFactory.h"
+#include <algorithm>
 
 namespace ECFMP::FlowMeasure {
 
@@ -9,13 +16,16 @@ namespace ECFMP::FlowMeasure {
             std::list<std::shared_ptr<EventFilter>> eventFilters, std::list<std::shared_ptr<RouteFilter>> routeFilters,
             std::list<std::shared_ptr<LevelRangeFilter>> levelFilters,
             std::list<std::shared_ptr<MultipleLevelFilter>> multipleLevelFilters,
-            std::list<std::shared_ptr<RangeToDestinationFilter>> rangeToDestinationFilters
+            std::list<std::shared_ptr<RangeToDestinationFilter>> rangeToDestinationFilters,
+            std::shared_ptr<const Euroscope::EuroscopeAircraftFactory> aircraftFactory
     )
         : airportFilters(std::move(airportFilters)), eventFilters(std::move(eventFilters)),
           routeFilters(std::move(routeFilters)), levelFilters(std::move(levelFilters)),
           multipleLevelFilters(std::move(multipleLevelFilters)),
-          rangeToDestinationFilters(std::move(rangeToDestinationFilters))
-    {}
+          rangeToDestinationFilters(std::move(rangeToDestinationFilters)), aircraftFactory(std::move(aircraftFactory))
+    {
+        assert(this->aircraftFactory != nullptr && "The aircraft factory cannot be null.");
+    }
 
     auto ConcreteFlowMeasureFilters::ApplicableToAirport(const std::string& airport) const noexcept -> bool
     {
@@ -166,5 +176,79 @@ namespace ECFMP::FlowMeasure {
             -> const std::list<std::shared_ptr<RangeToDestinationFilter>>&
     {
         return rangeToDestinationFilters;
+    }
+
+    /**
+     * The logic between different filters is logical AND, with values within filters being logical OR.
+     * @return
+     */
+    bool ConcreteFlowMeasureFilters::ApplicableToAircraft(
+            const EuroScopePlugIn::CFlightPlan& flightplan, const EuroScopePlugIn::CRadarTarget& radarTarget
+    ) const
+    {
+        const auto euroscopeAircraft = aircraftFactory->Make(flightplan, radarTarget);
+
+        // Check if the aircraft is not applicable to any of the airport filters
+        const auto passesAirportFilters =
+                std::all_of(airportFilters.cbegin(), airportFilters.cend(), [&euroscopeAircraft](const auto& filter) {
+                    return filter->ApplicableToAircraft(*euroscopeAircraft);
+                });
+
+        if (!passesAirportFilters) {
+            return false;
+        }
+
+        // Check if the aircraft is not applicable to any of the event filters
+        const auto passesEventFilters =
+                std::all_of(eventFilters.cbegin(), eventFilters.cend(), [&euroscopeAircraft](const auto& filter) {
+                    return filter->ApplicableToAircraft(*euroscopeAircraft);
+                });
+
+        if (!passesEventFilters) {
+            return false;
+        }
+
+        // Check if the aircraft is not applicable to any of the level filters
+
+        const auto passesLevelFilters =
+                std::all_of(levelFilters.cbegin(), levelFilters.cend(), [&euroscopeAircraft](const auto& filter) {
+                    return filter->ApplicableToAircraft(*euroscopeAircraft);
+                });
+
+        if (!passesLevelFilters) {
+            return false;
+        }
+
+        // Check if the aircraft is not applicable to any of the multiple level filters
+        const auto passesMultipleLevelFilters = std::all_of(
+                multipleLevelFilters.cbegin(), multipleLevelFilters.cend(),
+                [&euroscopeAircraft](const auto& filter) {
+                    return filter->ApplicableToAircraft(*euroscopeAircraft);
+                }
+        );
+
+        if (!passesMultipleLevelFilters) {
+            return false;
+        }
+
+        // Check if the aircraft is not applicable to any of the route filters
+        const auto passesRouteFilters =
+                std::all_of(routeFilters.cbegin(), routeFilters.cend(), [&euroscopeAircraft](const auto& filter) {
+                    return filter->ApplicableToAircraft(*euroscopeAircraft);
+                });
+
+        if (!passesRouteFilters) {
+            return false;
+        }
+
+        // Check if the aircraft is not applicable to any of the range to destination filters
+        const auto passesRangeToDestinationFilters = std::all_of(
+                rangeToDestinationFilters.cbegin(), rangeToDestinationFilters.cend(),
+                [&euroscopeAircraft](const auto& filter) {
+                    return filter->ApplicableToAircraft(*euroscopeAircraft);
+                }
+        );
+
+        return passesRangeToDestinationFilters;
     }
 }// namespace ECFMP::FlowMeasure

@@ -4,6 +4,11 @@ namespace ECFMP::FlightInformationRegion {
     class FlightInformationRegion;
 }// namespace ECFMP::FlightInformationRegion
 
+namespace EuroScopePlugIn {
+    class CFlightPlan;
+    class CRadarTarget;
+}// namespace EuroScopePlugIn
+
 namespace ECFMP::FlowMeasure {
 
     class AirportFilter;
@@ -26,6 +31,14 @@ namespace ECFMP::FlowMeasure {
          * the given airport.
          */
         [[nodiscard]] virtual auto ApplicableToAirport(const std::string& airfield) const noexcept -> bool = 0;
+
+        /**
+         * Returns true if the flow measure is applicable to the given aircraft. It will be applicable if all
+         * of the filters are applicable.
+         */
+        [[nodiscard]] virtual auto ApplicableToAircraft(
+                const EuroScopePlugIn::CFlightPlan& flightplan, const EuroScopePlugIn::CRadarTarget& radarTarget
+        ) const -> bool = 0;
 
         /**
          * Methods that allow for iteration of the filters.
