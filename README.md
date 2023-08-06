@@ -54,6 +54,13 @@ auto eventListener = std::make_shared<MyListener<ECFMP::Plugin::FlowMeasureActiv
 ecfmp.EventBus().Subscribe<ECFMP::Plugin::FlowMeasureActivatedEvent>(eventListener);
 ```
 
+## Testing Your Integration
+
+You can test your integration by making use of the mocks provided by the SDK. These mocks will allow you to simulate
+events that would be sent by the ECFMP SDK.
+
+You can find the mocks in `include/mock`.
+
 ## Known Limitations
 
 At the moment, the SDK has the following limitations:
