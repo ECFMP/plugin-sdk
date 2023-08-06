@@ -53,14 +53,14 @@ namespace ECFMPTest::FlowMeasure {
         EXPECT_FALSE(filter.ApplicableToAltitude(37000));
         EXPECT_FALSE(filter.ApplicableToAltitude(38000));
     }
-    
+
     TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsTrueForApplicableAltitudeForAircraft)
     {
         const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
         ON_CALL(aircraft, CruiseAltitude).WillByDefault(testing::Return(34000));
         EXPECT_TRUE(filter.ApplicableToAircraft(aircraft));
     }
-    
+
     TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsFalseForNonApplicableAltitudeForAircraft)
     {
         const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
