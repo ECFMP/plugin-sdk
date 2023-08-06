@@ -1,4 +1,5 @@
 #include "ConcreteAirportFilter.h"
+#include "euroscope/EuroscopeAircraft.h"
 
 namespace ECFMP::FlowMeasure {
     ConcreteAirportFilter::ConcreteAirportFilter(std::set<std::string> airportStrings, AirportFilterType type) noexcept
@@ -30,5 +31,12 @@ namespace ECFMP::FlowMeasure {
     auto ConcreteAirportFilter::Type() const noexcept -> AirportFilterType
     {
         return type;
+    }
+
+    bool ConcreteAirportFilter::ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept
+    {
+        return ApplicableToAirport(
+                type == AirportFilterType::Departure ? aircraft.DepartureAirport() : aircraft.DestinationAirport()
+        );
     }
 }// namespace ECFMP::FlowMeasure

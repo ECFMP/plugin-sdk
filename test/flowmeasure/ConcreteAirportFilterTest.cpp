@@ -1,4 +1,5 @@
 #include "flowmeasure/ConcreteAirportFilter.h"
+#include "mock/MockEuroscopeAircraft.h"
 
 namespace ECFMPTest::FlowMeasure {
 
@@ -33,18 +34,41 @@ namespace ECFMPTest::FlowMeasure {
     class ConcreteAirportFilterApplicabilityTest : public testing::TestWithParam<AirportFilterCheck>
     {
         public:
-        ConcreteAirportFilterApplicabilityTest()
-            : airportFilter(
-                    std::set<std::string>{"EGKK", "LF", "EDD", "K"}, ECFMP::FlowMeasure::AirportFilterType::Destination
-            )
-        {}
-
-        ECFMP::FlowMeasure::ConcreteAirportFilter airportFilter;
+        [[nodiscard]] static auto GetFilter(ECFMP::FlowMeasure::AirportFilterType type)
+                -> ECFMP::FlowMeasure::ConcreteAirportFilter
+        {
+            return ECFMP::FlowMeasure::ConcreteAirportFilter(std::set<std::string>{"EGKK", "LF", "EDD", "K"}, type);
+        }
     };
 
     TEST_P(ConcreteAirportFilterApplicabilityTest, ItChecksAirportApplicability)
     {
-        EXPECT_EQ(GetParam().expected, airportFilter.ApplicableToAirport(GetParam().airport));
+        EXPECT_EQ(
+                GetParam().expected,
+                GetFilter(ECFMP::FlowMeasure::AirportFilterType::Destination).ApplicableToAirport(GetParam().airport)
+        );
+    }
+
+    TEST_P(ConcreteAirportFilterApplicabilityTest, ItChecksDepartureAirportApplicabilityForAircraft)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        EXPECT_CALL(aircraft, DepartureAirport).WillRepeatedly(testing::Return(GetParam().airport));
+
+        EXPECT_EQ(
+                GetParam().expected,
+                GetFilter(ECFMP::FlowMeasure::AirportFilterType::Departure).ApplicableToAirport(GetParam().airport)
+        );
+    }
+
+    TEST_P(ConcreteAirportFilterApplicabilityTest, ItChecksDestinationAirportApplicabilityForAircraft)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        EXPECT_CALL(aircraft, DepartureAirport).WillRepeatedly(testing::Return(GetParam().airport));
+
+        EXPECT_EQ(
+                GetParam().expected,
+                GetFilter(ECFMP::FlowMeasure::AirportFilterType::Destination).ApplicableToAirport(GetParam().airport)
+        );
     }
 
     INSTANTIATE_TEST_SUITE_P(

@@ -1,4 +1,5 @@
 #pragma once
+#include "ChecksAircraftApplicability.h"
 
 namespace ECFMP::FlowMeasure {
 
@@ -11,7 +12,7 @@ namespace ECFMP::FlowMeasure {
     /**
      * A filter that pertains to arrival or departure airports
      */
-    class AirportFilter
+    class AirportFilter : public ChecksAircraftApplicability
     {
         public:
         virtual ~AirportFilter() = default;
