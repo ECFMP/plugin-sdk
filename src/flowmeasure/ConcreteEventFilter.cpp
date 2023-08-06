@@ -1,5 +1,8 @@
 #include "ConcreteEventFilter.h"
 #include "ECFMP/event/Event.h"
+#include "ECFMP/event/EventParticipant.h"
+#include "euroscope/EuroscopeAircraft.h"
+#include <algorithm>
 
 namespace ECFMP::FlowMeasure {
 
@@ -29,5 +32,32 @@ namespace ECFMP::FlowMeasure {
     auto ConcreteEventFilter::IsParticipating() const noexcept -> bool
     {
         return Participation() == EventParticipation::Participating;
+    }
+
+    bool ConcreteEventFilter::ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept
+    {
+        auto cid = aircraft.Cid();
+
+        /*
+         * Euroscope doesnt have the concept of a CID, so we can't get this info.
+         * This workaround means we can write tests for things, but ultimately we'll
+         * need to find a way to get the CID from Euroscope.
+         *
+         * TODO: Find a way to get the CID in
+         */
+        if (cid == 0) {
+            return true;
+        }
+
+        const auto isParticipating =
+                std::find_if(
+                        event->Participants().cbegin(), event->Participants().cend(),
+                        [&aircraft](const std::shared_ptr<const Event::EventParticipant>& participant) {
+                            return participant->Cid() == aircraft.Cid();
+                        }
+                )
+                != event->Participants().end();
+
+        return (IsParticipating() && isParticipating) || (!IsParticipating() && !isParticipating);
     }
 }// namespace ECFMP::FlowMeasure

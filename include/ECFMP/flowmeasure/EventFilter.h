@@ -1,4 +1,5 @@
 #pragma once
+#include "ChecksAircraftApplicability.h"
 
 namespace ECFMP::Event {
     class Event;
@@ -19,7 +20,7 @@ namespace ECFMP::FlowMeasure {
     /**
      * A filter that pertains to participation in an event.
      */
-    class EventFilter
+    class EventFilter : public ChecksAircraftApplicability
     {
         public:
         virtual ~EventFilter() = default;
