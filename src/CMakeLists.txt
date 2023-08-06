@@ -16,6 +16,8 @@ set(src_events
         event/ConcreteEventParticipant.cpp "event/ConcreteEventParticipant.h"
         event/Event.cpp eventbus/EventStream.h ../include/ECFMP/eventbus/EventListener.h ../include/ECFMP/eventbus/EventFilter.h)
 
+set(src_euroscope euroscope/EuroscopeAircraft.h euroscope/EuroscopeAircraftFactory.h euroscope/EuroscopeAircraftFactoryImpl.cpp euroscope/EuroscopeAircraftFactoryImpl.h euroscope/EuroscopeAircraftImpl.cpp euroscope/EuroscopeAircraftImpl.h ../include/ECFMP/flowmeasure/ChecksAircraftApplicability.h)
+
 set(src_eventbus
         eventbus/EventStream.h
         ../include/ECFMP/eventbus/EventListener.h
@@ -40,6 +42,7 @@ set(ALL_FILES
         ${src_api}
         ${src_date}
         ${src_events}
+        ${src_euroscope}
         ${src_eventbus}
         ${src_flowmeasures}
         ${src_flight_information_regions}

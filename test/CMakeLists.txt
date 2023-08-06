@@ -49,9 +49,10 @@ set(test__log
         )
 
 set(test__mock
+        mock/MockEuroscopeAircraft.h
         mock/MockLogger.h
         mock/MockHttpClient.h
-        )
+        mock/MockEuroscopeAircraftFactory.h)
 
 set(test__pch
         pch/pch.cpp
