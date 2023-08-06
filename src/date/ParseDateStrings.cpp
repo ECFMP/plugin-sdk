@@ -20,7 +20,7 @@ namespace ECFMP::Date {
         std::istringstream inputStream(date);
         inputStream >> std::chrono::parse(timeFormat, timePoint);
 
-        return static_cast<bool>(inputStream) ? timePoint : std::chrono::system_clock::time_point::max();
+        return static_cast<bool>(inputStream) ? timePoint : (std::chrono::system_clock::time_point::max)();
     }
 
     auto DateStringFromTimePoint(const std::chrono::system_clock::time_point& timePoint) -> std::string
