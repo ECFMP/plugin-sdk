@@ -10,6 +10,10 @@ namespace ECFMP::Mock::FlowMeasure {
         public:
         MOCK_METHOD(bool, ApplicableToAirport, (const std::string&), (const, noexcept, override));
         MOCK_METHOD(
+                bool, ApplicableToAircraft, (const EuroScopePlugIn::CFlightPlan&, const EuroScopePlugIn::CRadarTarget&),
+                (const, noexcept, override)
+        );
+        MOCK_METHOD(
                 void, ForEachAirportFilter, (const std::function<void(const ECFMP::FlowMeasure::AirportFilter&)>&),
                 (const, noexcept, override)
         );

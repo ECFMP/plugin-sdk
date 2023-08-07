@@ -1,10 +1,14 @@
 #pragma once
 #include "ECFMP/flowmeasure/FlowMeasureFilters.h"
-#include "ECFMP/flowmeasure/MultipleLevelFilter.h"
 
-namespace ECFMP::FlightInformationRegion {
-    class FlightInformationRegion;
-}// namespace ECFMP::FlightInformationRegion
+namespace ECFMP {
+    namespace Euroscope {
+        class EuroscopeAircraftFactory;
+    }// namespace Euroscope
+    namespace FlightInformationRegion {
+        class FlightInformationRegion;
+    }// namespace FlightInformationRegion
+}// namespace ECFMP
 
 namespace ECFMP::FlowMeasure {
     /**
@@ -19,7 +23,8 @@ namespace ECFMP::FlowMeasure {
                 std::list<std::shared_ptr<RouteFilter>> routeFilters,
                 std::list<std::shared_ptr<LevelRangeFilter>> levelFilters,
                 std::list<std::shared_ptr<MultipleLevelFilter>> multipleLevelFilters,
-                std::list<std::shared_ptr<RangeToDestinationFilter>> rangeToDestinationFilters
+                std::list<std::shared_ptr<RangeToDestinationFilter>> rangeToDestinationFilters,
+                std::shared_ptr<const Euroscope::EuroscopeAircraftFactory> aircraftFactory
         );
         [[nodiscard]] auto AirportFilters() const noexcept -> const std::list<std::shared_ptr<AirportFilter>>&;
         [[nodiscard]] auto EventFilters() const noexcept -> const std::list<std::shared_ptr<EventFilter>>&;
@@ -30,6 +35,9 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto RangeToDestinationFilters() const noexcept
                 -> const std::list<std::shared_ptr<RangeToDestinationFilter>>&;
         [[nodiscard]] auto ApplicableToAirport(const std::string& airfield) const noexcept -> bool override;
+        auto ApplicableToAircraft(
+                const EuroScopePlugIn::CFlightPlan& flightplan, const EuroScopePlugIn::CRadarTarget& radarTarget
+        ) const -> bool override;
         void ForEachAirportFilter(const std::function<void(const AirportFilter&)>& callback) const noexcept override;
         void ForEachEventFilter(const std::function<void(const EventFilter&)>& callback) const noexcept override;
         void ForEachLevelFilter(const std::function<void(const LevelRangeFilter&)>& callback) const noexcept override;
@@ -70,5 +78,8 @@ namespace ECFMP::FlowMeasure {
 
         // All the range to destination filters
         std::list<std::shared_ptr<RangeToDestinationFilter>> rangeToDestinationFilters;
+
+        // For wrapping euroscope classes for testing
+        std::shared_ptr<const Euroscope::EuroscopeAircraftFactory> aircraftFactory;
     };
 }// namespace ECFMP::FlowMeasure

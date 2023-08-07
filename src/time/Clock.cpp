@@ -2,15 +2,16 @@
 
 namespace ECFMP::Time {
 
-    std::chrono::system_clock::time_point testNow = std::chrono::system_clock::time_point::min();
+    auto DefaultTime() -> std::chrono::system_clock::time_point
+    {
+        return (std::chrono::system_clock::time_point::min)();
+    }
+
+    std::chrono::system_clock::time_point testNow = DefaultTime();
 
     auto TimeNow() -> std::chrono::system_clock::time_point
     {
-        if (testNow != std::chrono::system_clock::time_point::min()) {
-            return testNow;
-        }
-
-        return std::chrono::system_clock::now();
+        return testNow != DefaultTime() ? testNow : std::chrono::system_clock::now();
     }
 
     void SetTestNow(const std::chrono::system_clock::time_point& now)
@@ -20,6 +21,6 @@ namespace ECFMP::Time {
 
     void UnsetTestNow()
     {
-        testNow = std::chrono::system_clock::time_point::min();
+        testNow = DefaultTime();
     }
 }// namespace ECFMP::Time

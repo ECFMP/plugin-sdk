@@ -10,4 +10,5 @@
 #include "LevelRangeFilterMock.h"
 #include "MeasureMock.h"
 #include "MultipleLevelFilterMock.h"
+#include "RangeToDestinationFilterMock.h"
 #include "RouteFilterMock.h"

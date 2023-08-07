@@ -31,6 +31,10 @@ namespace ECFMP::Mock::FlowMeasure {
                 (const ECFMP::FlightInformationRegion::FlightInformationRegion&), (const, noexcept, override)
         );
         MOCK_METHOD(bool, IsApplicableToFlightInformationRegion, (const std::string&), (const, noexcept, override));
+        MOCK_METHOD(
+                bool, ApplicableToAircraft, (const EuroScopePlugIn::CFlightPlan&, const EuroScopePlugIn::CRadarTarget&),
+                (const, override)
+        );
     };
 
 }// namespace ECFMP::Mock::FlowMeasure

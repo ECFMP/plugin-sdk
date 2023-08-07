@@ -12,7 +12,7 @@ namespace ECFMP::Api {
         const std::chrono::seconds runInterval = std::chrono::seconds(90);
 
         // The last time we ran
-        std::chrono::system_clock::time_point lastRuntime = std::chrono::system_clock::time_point::min();
+        std::chrono::system_clock::time_point lastRuntime = (std::chrono::system_clock::time_point::min)();
 
         // For publishing events
         std::shared_ptr<EventBus::InternalEventBus> eventBus;

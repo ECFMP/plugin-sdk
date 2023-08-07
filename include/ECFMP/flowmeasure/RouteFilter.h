@@ -1,10 +1,11 @@
 #pragma once
+#include "ChecksAircraftApplicability.h"
 
 namespace ECFMP::FlowMeasure {
     /**
      * A filter that pertains to aircraft on particular routes.
      */
-    class RouteFilter
+    class RouteFilter : public ChecksAircraftApplicability
     {
         public:
         virtual ~RouteFilter() = default;

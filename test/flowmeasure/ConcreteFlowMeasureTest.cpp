@@ -8,6 +8,7 @@
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "flowmeasure/ConcreteMeasure.h"
+#include "mock/MockEuroscopeAircraftFactory.h"
 
 namespace ECFMPTest::FlowMeasure {
     class ConcreteFlowMeasureTest : public testing::Test
@@ -44,7 +45,8 @@ namespace ECFMPTest::FlowMeasure {
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>{},
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>{},
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
-                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{}
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{},
+                              std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
                       )
               ),
               measureWithNoEvent(
@@ -57,7 +59,8 @@ namespace ECFMPTest::FlowMeasure {
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>{},
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>{},
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
-                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{}
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{},
+                              std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
                       )
               ),
               withdrawnMeasure(
@@ -70,7 +73,8 @@ namespace ECFMPTest::FlowMeasure {
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>{},
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>{},
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
-                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{}
+                              std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{},
+                              std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
                       )
               )
         {}
@@ -121,7 +125,8 @@ namespace ECFMPTest::FlowMeasure {
                         std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>{},
                         std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>{},
                         std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
-                        std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{}
+                        std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{},
+                        std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
                 )
         );
 

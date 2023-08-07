@@ -1,10 +1,11 @@
 #pragma once
+#include "ChecksAircraftApplicability.h"
 
 namespace ECFMP::FlowMeasure {
     /**
      * A filter that pertains to the cruising level of the aircraft.
      */
-    class MultipleLevelFilter
+    class MultipleLevelFilter : public ChecksAircraftApplicability
     {
         public:
         virtual ~MultipleLevelFilter() = default;

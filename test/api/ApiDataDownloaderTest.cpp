@@ -17,7 +17,7 @@ namespace ECFMPTest::Api {
         void OnEvent(const ECFMP::Api::ApiDataDownloadedEvent& event) override
         {
             callCount++;
-            ASSERT_EQ(event.data, expectedJson);
+            EXPECT_EQ(event.data, expectedJson);
         }
 
         [[nodiscard]] auto GetCallCount() const -> int

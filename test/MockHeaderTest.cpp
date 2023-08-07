@@ -1,4 +1,4 @@
-#include "mock/flow-sdk-mock.h"
+#include "mock/ecfmp-sdk-mock.h"
 
 namespace ECFMPTest {
     class FlowSdkHeaderMockTest : public testing::Test
@@ -18,6 +18,7 @@ namespace ECFMPTest {
         testing::NiceMock<ECFMP::Mock::FlowMeasure::MultipleLevelFilterMock> mutliLevelFilter;
         testing::NiceMock<ECFMP::Mock::FlowMeasure::MeasureMock> measure;
         testing::NiceMock<ECFMP::Mock::FlowMeasure::RouteFilterMock> routeFilter;
+        testing::NiceMock<ECFMP::Mock::FlowMeasure::RangeToDestinationFilterMock> rangeFilter;
 
         // Dummy expectation, the purpose of this test is to make sure the header compiles properly.
         EXPECT_TRUE(true);

@@ -16,13 +16,15 @@ set(src_events
         event/ConcreteEventParticipant.cpp "event/ConcreteEventParticipant.h"
         event/Event.cpp eventbus/EventStream.h ../include/ECFMP/eventbus/EventListener.h ../include/ECFMP/eventbus/EventFilter.h)
 
+set(src_euroscope euroscope/EuroscopeAircraft.h euroscope/EuroscopeAircraftFactory.h euroscope/EuroscopeAircraftFactoryImpl.cpp euroscope/EuroscopeAircraftFactoryImpl.h euroscope/EuroscopeAircraftImpl.cpp euroscope/EuroscopeAircraftImpl.h)
+
 set(src_eventbus
         eventbus/EventStream.h
         ../include/ECFMP/eventbus/EventListener.h
         ../include/ECFMP/eventbus/EventFilter.h ../include/ECFMP/eventbus/EventBus.h eventbus/InternalEventBus.h eventbus/EventDispatcher.h eventbus/SynchronousEventDispatcher.h eventbus/AsynchronousEventDispatcher.h eventbus/EuroscopeEventDispatcher.h eventbus/PendingEuroscopeEvents.cpp eventbus/PendingEuroscopeEvents.h eventbus/EventDispatcherFactory.h eventbus/SubscriptionFlags.h)
 
 set(src_flowmeasures
-        flowmeasure/ConcreteFlowMeasure.cpp flowmeasure/ConcreteFlowMeasure.h flowmeasure/ConcreteAirportFilter.cpp flowmeasure/ConcreteAirportFilter.h flowmeasure/ConcreteEventFilter.cpp flowmeasure/ConcreteEventFilter.h flowmeasure/ConcreteLevelRangeFilter.cpp flowmeasure/ConcreteLevelRangeFilter.h flowmeasure/ConcreteRouteFilter.cpp flowmeasure/ConcreteRouteFilter.h flowmeasure/ConcreteMeasure.cpp flowmeasure/ConcreteMeasure.h flowmeasure/ConcreteMeasureFactory.cpp flowmeasure/ConcreteMeasureFactory.h flowmeasure/ConcreteFlowMeasureFilters.cpp flowmeasure/ConcreteFlowMeasureFilters.h api/FlowMeasureFilterParserInterface.h ../include/ECFMP/flowmeasure/MultipleLevelFilter.h flowmeasure/ConcreteMultipleLevelFilter.cpp flowmeasure/ConcreteMultipleLevelFilter.h ../include/mock/MultipleLevelFilterMock.h ../include/ECFMP/flowmeasure/RangeToDestinationFilter.h flowmeasure/ConcreteRangeToDestinationFilter.cpp flowmeasure/ConcreteRangeToDestinationFilter.h flowmeasure/CanonicalFlowMeasureInfo.cpp ../include/ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h flowmeasure/FlowMeasureStatusUpdates.cpp flowmeasure/FlowMeasureStatusUpdates.h)
+        flowmeasure/ConcreteFlowMeasure.cpp flowmeasure/ConcreteFlowMeasure.h flowmeasure/ConcreteAirportFilter.cpp flowmeasure/ConcreteAirportFilter.h flowmeasure/ConcreteEventFilter.cpp flowmeasure/ConcreteEventFilter.h flowmeasure/ConcreteLevelRangeFilter.cpp flowmeasure/ConcreteLevelRangeFilter.h flowmeasure/ConcreteRouteFilter.cpp flowmeasure/ConcreteRouteFilter.h flowmeasure/ConcreteMeasure.cpp flowmeasure/ConcreteMeasure.h flowmeasure/ConcreteMeasureFactory.cpp flowmeasure/ConcreteMeasureFactory.h flowmeasure/ConcreteFlowMeasureFilters.cpp flowmeasure/ConcreteFlowMeasureFilters.h api/FlowMeasureFilterParserInterface.h ../include/ECFMP/flowmeasure/MultipleLevelFilter.h flowmeasure/ConcreteMultipleLevelFilter.cpp flowmeasure/ConcreteMultipleLevelFilter.h ../include/mock/MultipleLevelFilterMock.h ../include/ECFMP/flowmeasure/RangeToDestinationFilter.h flowmeasure/ConcreteRangeToDestinationFilter.cpp flowmeasure/ConcreteRangeToDestinationFilter.h flowmeasure/CanonicalFlowMeasureInfo.cpp ../include/ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h flowmeasure/FlowMeasureStatusUpdates.cpp flowmeasure/FlowMeasureStatusUpdates.h ../include/ECFMP/flowmeasure/ChecksAircraftApplicability.h)
 
 set(src_log log/LogDecorator.cpp log/LogDecorator.h log/LogDecorator.h log/NullLogger.cpp log/NullLogger.h)
 
@@ -40,6 +42,7 @@ set(ALL_FILES
         ${src_api}
         ${src_date}
         ${src_events}
+        ${src_euroscope}
         ${src_eventbus}
         ${src_flowmeasures}
         ${src_flight_information_regions}
@@ -57,8 +60,30 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR};"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/nlohmann;"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/euroscope;"
+        )
+
+# Treat Euroscope as a system include directory to suppress warning, because they have lots
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/euroscope;"
         )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Debug>:
+        /Od
+        /Zi;
+        >
+        $<$<CONFIG:Release>:
+        /O2;
+        >
+        /std:c++20;
+        /sdl;
         /EHa
+        ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+        /Zm200;
+        ${DEFAULT_CXX_EXCEPTION_HANDLING}
+        /W4;
+        /WX;
+        -Wno-unused-parameter; # Lots of interfaces don't use everything
+        -Wno-missing-field-initializers; # Windows has loads of this sadly
         )

@@ -7,6 +7,7 @@
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "mock/EventMock.h"
+#include "mock/MockEuroscopeAircraftFactory.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
 
@@ -15,7 +16,8 @@ namespace ECFMPTest::Api {
     class FlowMeasureFilterParserNoDataTest : public ::testing::Test
     {
         public:
-        FlowMeasureFilterParserNoDataTest() : parser(std::make_shared<Log::MockLogger>())
+        FlowMeasureFilterParserNoDataTest()
+            : parser(std::make_shared<Log::MockLogger>(), std::make_shared<Euroscope::MockEuroscopeAircraftFactory>())
         {}
 
         ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
@@ -30,12 +32,12 @@ namespace ECFMPTest::Api {
 
         auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
-        ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
-        ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.EventFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
+        EXPECT_EQ(castedFilters.AirportFilters().size(), 0);
+        EXPECT_EQ(castedFilters.LevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.EventFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RouteFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
     }
 
     struct FlowMeasureFilterParserAirportFilterTestCase {
@@ -48,7 +50,8 @@ namespace ECFMPTest::Api {
         : public ::testing::TestWithParam<FlowMeasureFilterParserAirportFilterTestCase>
     {
         public:
-        FlowMeasureFilterParserAirportFilterTest() : parser(std::make_shared<Log::MockLogger>())
+        FlowMeasureFilterParserAirportFilterTest()
+            : parser(std::make_shared<Log::MockLogger>(), std::make_shared<Euroscope::MockEuroscopeAircraftFactory>())
         {}
 
         ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
@@ -64,19 +67,19 @@ namespace ECFMPTest::Api {
 
         auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
-        ASSERT_EQ(castedFilters.AirportFilters().size(), 1);
-        ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.EventFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
+        EXPECT_EQ(castedFilters.AirportFilters().size(), 1);
+        EXPECT_EQ(castedFilters.LevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.EventFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RouteFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         auto expectedFilterType = GetParam().filterType == "ADES" ? ECFMP::FlowMeasure::AirportFilterType::Destination
                                                                   : ECFMP::FlowMeasure::AirportFilterType::Departure;
         const auto& airportFilter = castedFilters.AirportFilters().front();
-        ASSERT_EQ(airportFilter->Type(), expectedFilterType);
-        ASSERT_EQ(airportFilter->AirportStrings().size(), GetParam().airports.size());
-        ASSERT_EQ(airportFilter->AirportStrings(), GetParam().airports);
+        EXPECT_EQ(airportFilter->Type(), expectedFilterType);
+        EXPECT_EQ(airportFilter->AirportStrings().size(), GetParam().airports.size());
+        EXPECT_EQ(airportFilter->AirportStrings(), GetParam().airports);
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -102,7 +105,8 @@ namespace ECFMPTest::Api {
         : public ::testing::TestWithParam<FlowMeasureFilterParserLevelRangeTestCase>
     {
         public:
-        FlowMeasureFilterParserLevelRangeFilterTest() : parser(std::make_shared<Log::MockLogger>())
+        FlowMeasureFilterParserLevelRangeFilterTest()
+            : parser(std::make_shared<Log::MockLogger>(), std::make_shared<Euroscope::MockEuroscopeAircraftFactory>())
         {}
 
         ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
@@ -118,16 +122,16 @@ namespace ECFMPTest::Api {
 
         auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
-        ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
-        ASSERT_EQ(castedFilters.LevelFilters().size(), 1);
-        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.EventFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
+        EXPECT_EQ(castedFilters.AirportFilters().size(), 0);
+        EXPECT_EQ(castedFilters.LevelFilters().size(), 1);
+        EXPECT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.EventFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RouteFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         const auto& levelFilter = castedFilters.LevelFilters().front();
-        ASSERT_EQ(GetParam().expectedFilterType, levelFilter->Type());
-        ASSERT_EQ(GetParam().expectedLevel, levelFilter->Level());
+        EXPECT_EQ(GetParam().expectedFilterType, levelFilter->Type());
+        EXPECT_EQ(GetParam().expectedLevel, levelFilter->Level());
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -154,7 +158,8 @@ namespace ECFMPTest::Api {
         : public ::testing::TestWithParam<FlowMeasureFilterParserSpecificLevelTestCase>
     {
         public:
-        FlowMeasureFilterParserSpecificLevelFilterTest() : parser(std::make_shared<Log::MockLogger>())
+        FlowMeasureFilterParserSpecificLevelFilterTest()
+            : parser(std::make_shared<Log::MockLogger>(), std::make_shared<Euroscope::MockEuroscopeAircraftFactory>())
         {}
 
         ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
@@ -170,15 +175,15 @@ namespace ECFMPTest::Api {
 
         auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
-        ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
-        ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 1);
-        ASSERT_EQ(castedFilters.EventFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
+        EXPECT_EQ(castedFilters.AirportFilters().size(), 0);
+        EXPECT_EQ(castedFilters.LevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.MultipleLevelFilters().size(), 1);
+        EXPECT_EQ(castedFilters.EventFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RouteFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         const auto& levelFilter = castedFilters.MultipleLevelFilters().front();
-        ASSERT_EQ(GetParam().expectedLevels, levelFilter->Levels());
+        EXPECT_EQ(GetParam().expectedLevels, levelFilter->Levels());
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -202,7 +207,8 @@ namespace ECFMPTest::Api {
         : public ::testing::TestWithParam<FlowMeasureFilterParserEventParticipationTestCase>
     {
         public:
-        FlowMeasureFilterParserEventParticipationFilterTest() : parser(std::make_shared<Log::MockLogger>())
+        FlowMeasureFilterParserEventParticipationFilterTest()
+            : parser(std::make_shared<Log::MockLogger>(), std::make_shared<Euroscope::MockEuroscopeAircraftFactory>())
         {
             auto event1 = std::make_shared<ECFMP::Mock::Event::EventMock>();
             ON_CALL(*event1, Id).WillByDefault(testing::Return(100));
@@ -226,16 +232,16 @@ namespace ECFMPTest::Api {
 
         auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
-        ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
-        ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.EventFilters().size(), 1);
-        ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
+        EXPECT_EQ(castedFilters.AirportFilters().size(), 0);
+        EXPECT_EQ(castedFilters.LevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.EventFilters().size(), 1);
+        EXPECT_EQ(castedFilters.RouteFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         const auto& eventFilter = castedFilters.EventFilters().front();
-        ASSERT_EQ(GetParam().expectedFilterType, eventFilter->Participation());
-        ASSERT_EQ(GetParam().expectedEventId, eventFilter->Event().Id());
+        EXPECT_EQ(GetParam().expectedFilterType, eventFilter->Participation());
+        EXPECT_EQ(GetParam().expectedEventId, eventFilter->Event().Id());
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -263,7 +269,8 @@ namespace ECFMPTest::Api {
         : public ::testing::TestWithParam<FlowMeasureFilterParserRouteFilterTestCase>
     {
         public:
-        FlowMeasureFilterParserRouteFilterTest() : parser(std::make_shared<Log::MockLogger>())
+        FlowMeasureFilterParserRouteFilterTest()
+            : parser(std::make_shared<Log::MockLogger>(), std::make_shared<Euroscope::MockEuroscopeAircraftFactory>())
         {}
 
         ECFMP::Api::InternalApiElementCollection<ECFMP::Event::Event> events;
@@ -279,15 +286,15 @@ namespace ECFMPTest::Api {
 
         auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
-        ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
-        ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.EventFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RouteFilters().size(), 1);
-        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
+        EXPECT_EQ(castedFilters.AirportFilters().size(), 0);
+        EXPECT_EQ(castedFilters.LevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.EventFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RouteFilters().size(), 1);
+        EXPECT_EQ(castedFilters.RangeToDestinationFilters().size(), 0);
 
         const auto& routeFilter = castedFilters.RouteFilters().front();
-        ASSERT_EQ(GetParam().expectedWaypoints, routeFilter->RouteStrings());
+        EXPECT_EQ(GetParam().expectedWaypoints, routeFilter->RouteStrings());
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -310,7 +317,8 @@ namespace ECFMPTest::Api {
         : public ::testing::TestWithParam<FlowMeasureFilterParserRangeToDestinationTestCase>
     {
         public:
-        FlowMeasureFilterParserRangeToDestinationTest() : parser(std::make_shared<Log::MockLogger>())
+        FlowMeasureFilterParserRangeToDestinationTest()
+            : parser(std::make_shared<Log::MockLogger>(), std::make_shared<Euroscope::MockEuroscopeAircraftFactory>())
         {
             auto event1 = std::make_shared<ECFMP::Mock::Event::EventMock>();
             ON_CALL(*event1, Id).WillByDefault(testing::Return(100));
@@ -334,15 +342,15 @@ namespace ECFMPTest::Api {
 
         auto castedFilters = static_cast<const ECFMP::FlowMeasure::ConcreteFlowMeasureFilters&>(*filters.get());
 
-        ASSERT_EQ(castedFilters.AirportFilters().size(), 0);
-        ASSERT_EQ(castedFilters.LevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
-        ASSERT_EQ(castedFilters.EventFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RouteFilters().size(), 0);
-        ASSERT_EQ(castedFilters.RangeToDestinationFilters().size(), 1);
+        EXPECT_EQ(castedFilters.AirportFilters().size(), 0);
+        EXPECT_EQ(castedFilters.LevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.MultipleLevelFilters().size(), 0);
+        EXPECT_EQ(castedFilters.EventFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RouteFilters().size(), 0);
+        EXPECT_EQ(castedFilters.RangeToDestinationFilters().size(), 1);
 
         const auto& rangeFilter = castedFilters.RangeToDestinationFilters().front();
-        ASSERT_EQ(GetParam().range, rangeFilter->Range());
+        EXPECT_EQ(GetParam().range, rangeFilter->Range());
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -362,7 +370,8 @@ namespace ECFMPTest::Api {
         : public ::testing::TestWithParam<FlowMeasureFilterParserInvalidDataTestCase>
     {
         public:
-        FlowMeasureFilterParserInvalidDataTest() : parser(std::make_shared<Log::MockLogger>())
+        FlowMeasureFilterParserInvalidDataTest()
+            : parser(std::make_shared<Log::MockLogger>(), std::make_shared<Euroscope::MockEuroscopeAircraftFactory>())
         {
             auto event1 = std::make_shared<ECFMP::Mock::Event::EventMock>();
             ON_CALL(*event1, Id()).WillByDefault(testing::Return(100));

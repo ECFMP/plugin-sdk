@@ -15,6 +15,7 @@
 #include "flowmeasure/ConcreteAirportFilter.h"
 #include "flowmeasure/ConcreteFlowMeasureFilters.h"
 #include "flowmeasure/ConcreteMeasure.h"
+#include "mock/MockEuroscopeAircraftFactory.h"
 #include "mock/MockLogger.h"
 #include "nlohmann/json.hpp"
 #include "plugin/InternalSdkEvents.h"
@@ -167,7 +168,8 @@ namespace ECFMPTest::Api {
                             std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>(),
                             std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>(),
                             std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>(),
-                            std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>()
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>(),
+                            std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
                     );
                 }));
 
@@ -385,7 +387,8 @@ namespace ECFMPTest::Api {
                             std::list<std::shared_ptr<ECFMP::FlowMeasure::RouteFilter>>(),
                             std::list<std::shared_ptr<ECFMP::FlowMeasure::LevelRangeFilter>>(),
                             std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>(),
-                            std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>()
+                            std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>(),
+                            std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
                     );
                 }));
 
@@ -834,7 +837,7 @@ namespace ECFMPTest::Api {
     TEST_F(FlowMeasureDataParserBizarreDataTest, ItReturnsNullptrIfJsonNotObject)
     {
         auto result = parser->ParseFlowMeasures(nlohmann::json::array(), events, firs);
-        ASSERT_EQ(nullptr, result);
+        EXPECT_EQ(nullptr, result);
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
         EXPECT_EQ(0, mockEventHandlerInternal->GetCallCount());
     }
@@ -842,7 +845,7 @@ namespace ECFMPTest::Api {
     TEST_F(FlowMeasureDataParserBizarreDataTest, ItReturnsNullptrIfJsonDoesntContainFlowMeasuresKey)
     {
         auto result = parser->ParseFlowMeasures(nlohmann::json{{"foo", "bar"}}, events, firs);
-        ASSERT_EQ(nullptr, result);
+        EXPECT_EQ(nullptr, result);
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
         EXPECT_EQ(0, mockEventHandlerInternal->GetCallCount());
     }
@@ -850,7 +853,7 @@ namespace ECFMPTest::Api {
     TEST_F(FlowMeasureDataParserBizarreDataTest, ItReturnsNullptrIfFlowMeasuresKeyIsNotArray)
     {
         auto result = parser->ParseFlowMeasures(nlohmann::json{{"flow_measures", "bar"}}, events, firs);
-        ASSERT_EQ(nullptr, result);
+        EXPECT_EQ(nullptr, result);
         EXPECT_EQ(0, mockEventHandler->GetCallCount());
         EXPECT_EQ(0, mockEventHandlerInternal->GetCallCount());
     }

@@ -1,4 +1,5 @@
 #include "ConcreteMultipleLevelFilter.h"
+#include "euroscope/EuroscopeAircraft.h"
 
 namespace ECFMP::FlowMeasure {
     ConcreteMultipleLevelFilter::ConcreteMultipleLevelFilter(std::vector<int> levels) : levels(std::move(levels))
@@ -26,5 +27,10 @@ namespace ECFMP::FlowMeasure {
     auto ConcreteMultipleLevelFilter::ApplicableToAltitude(int altitude) const noexcept -> bool
     {
         return std::find(this->altitudes.begin(), this->altitudes.end(), altitude) != this->altitudes.end();
+    }
+
+    bool ConcreteMultipleLevelFilter::ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept
+    {
+        return ApplicableToAltitude(aircraft.CruiseAltitude());
     }
 }// namespace ECFMP::FlowMeasure

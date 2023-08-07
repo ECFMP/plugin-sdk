@@ -38,6 +38,9 @@ namespace ECFMP::FlowMeasure {
         ) const noexcept -> bool override;
         [[nodiscard]] auto IsApplicableToFlightInformationRegion(const std::string& flightInformationRegion
         ) const noexcept -> bool override;
+        auto ApplicableToAircraft(
+                const EuroScopePlugIn::CFlightPlan& flightplan, const EuroScopePlugIn::CRadarTarget& radarTarget
+        ) const -> bool override;
 
         private:
         // Id of the measure

@@ -14,7 +14,7 @@ namespace ECFMP::FlowMeasure {
     {}
 
     ConcreteMeasure::ConcreteMeasure(MeasureType type, std::set<std::string> value)
-        : type(MeasureType::MandatoryRoute), setValue(std::move(value)), valueType(MeasureValueType::Set)
+        : type(MeasureType::MandatoryRoute), valueType(MeasureValueType::Set), setValue(std::move(value))
     {}
 
     auto ConcreteMeasure::Type() const noexcept -> MeasureType

@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: windows-latest
+    runs-on: windows-2019
     concurrency:
       group: flow-sdk-build-${{ github.ref }}
       cancel-in-progress: true

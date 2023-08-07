@@ -1,6 +1,8 @@
 #include "flowmeasure/ConcreteEventFilter.h"
 #include "event/ConcreteEvent.h"
+#include "event/ConcreteEventParticipant.h"
 #include "flightinformationregion/ConcreteFlightInformationRegion.h"
+#include "mock/MockEuroscopeAircraft.h"
 
 namespace ECFMPTest::FlowMeasure {
 
@@ -12,7 +14,8 @@ namespace ECFMPTest::FlowMeasure {
             ),
               event(std::make_shared<ECFMP::Event::ConcreteEvent>(
                       1, "TEST", std::chrono::system_clock::now(), std::chrono::system_clock::now(), fir, "ABC",
-                      std::vector<std::shared_ptr<ECFMP::Event::EventParticipant>>{}
+                      std::vector<std::shared_ptr<ECFMP::Event::EventParticipant>>{
+                              std::make_shared<ECFMP::Event::ConcreteEventParticipant>(1, "EGGD", "EGLL")}
               )),
               eventFilter(event, ECFMP::FlowMeasure::EventParticipation::NotParticipating)
         {}
@@ -47,5 +50,71 @@ namespace ECFMPTest::FlowMeasure {
         );
         EXPECT_TRUE(eventFilter.ApplicableToEvent(*event));
         EXPECT_FALSE(eventFilter.ApplicableToEvent(event2));
+    }
+
+    TEST_F(ConcreteEventFilterTest, ItsApplicableToAircraftIfParticipatingFilterAndCidIsZero)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        ON_CALL(aircraft, Cid).WillByDefault(testing::Return(0));
+
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter2(
+                event, ECFMP::FlowMeasure::EventParticipation::Participating
+        );
+        EXPECT_TRUE(eventFilter2.ApplicableToAircraft(aircraft));
+    }
+
+    TEST_F(ConcreteEventFilterTest, ItsApplicableToAircraftIfNotParticipatingFilterAndCidIsZero)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        ON_CALL(aircraft, Cid).WillByDefault(testing::Return(0));
+
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter2(
+                event, ECFMP::FlowMeasure::EventParticipation::NotParticipating
+        );
+        EXPECT_TRUE(eventFilter2.ApplicableToAircraft(aircraft));
+    }
+
+    TEST_F(ConcreteEventFilterTest, ItsApplicableToAircraftIfParticipatingFilterAndAircraftParticipating)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        ON_CALL(aircraft, Cid).WillByDefault(testing::Return(1));
+
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter2(
+                event, ECFMP::FlowMeasure::EventParticipation::Participating
+        );
+        EXPECT_TRUE(eventFilter2.ApplicableToAircraft(aircraft));
+    }
+
+    TEST_F(ConcreteEventFilterTest, ItsApplicableToAircraftIfNotParticipatingFilterAndAircraftNotParticipating)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        ON_CALL(aircraft, Cid).WillByDefault(testing::Return(2));
+
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter2(
+                event, ECFMP::FlowMeasure::EventParticipation::NotParticipating
+        );
+        EXPECT_TRUE(eventFilter2.ApplicableToAircraft(aircraft));
+    }
+
+    TEST_F(ConcreteEventFilterTest, ItsNotApplicableToAircraftIfParticipatingFilterAndAircraftNotParticipating)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        ON_CALL(aircraft, Cid).WillByDefault(testing::Return(2));
+
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter2(
+                event, ECFMP::FlowMeasure::EventParticipation::Participating
+        );
+        EXPECT_FALSE(eventFilter2.ApplicableToAircraft(aircraft));
+    }
+
+    TEST_F(ConcreteEventFilterTest, ItsNotApplicableToAircraftIfNotParticipatingFilterAndAircraftParticipating)
+    {
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        ON_CALL(aircraft, Cid).WillByDefault(testing::Return(1));
+
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter2(
+                event, ECFMP::FlowMeasure::EventParticipation::NotParticipating
+        );
+        EXPECT_FALSE(eventFilter2.ApplicableToAircraft(aircraft));
     }
 }// namespace ECFMPTest::FlowMeasure

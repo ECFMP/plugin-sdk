@@ -8,6 +8,7 @@ namespace ECFMP::Mock::FlowMeasure {
     {
         public:
         MOCK_METHOD(const std::set<std::string>&, RouteStrings, (), (const, noexcept, override));
+        MOCK_METHOD(bool, ApplicableToAircraft, (const Euroscope::EuroscopeAircraft&), (const, noexcept, override));
     };
 
 }// namespace ECFMP::Mock::FlowMeasure

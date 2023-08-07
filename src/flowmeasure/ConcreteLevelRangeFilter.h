@@ -12,6 +12,7 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto Altitude() const noexcept -> int override;
         [[nodiscard]] auto ApplicableToLevel(int level) const noexcept -> bool override;
         [[nodiscard]] auto ApplicableToAltitude(int level) const noexcept -> bool override;
+        auto ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept -> bool override;
 
         private:
         // The type of level filter this is

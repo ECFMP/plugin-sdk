@@ -16,9 +16,14 @@
 #include "nlohmann/json.hpp"
 
 namespace ECFMP::Api {
-    FlowMeasureFilterParser::FlowMeasureFilterParser(const std::shared_ptr<ECFMP::Log::Logger>& logger) : logger(logger)
+    FlowMeasureFilterParser::FlowMeasureFilterParser(
+            const std::shared_ptr<ECFMP::Log::Logger>& logger,
+            std::shared_ptr<const Euroscope::EuroscopeAircraftFactory> aircraftFactory
+    )
+        : logger(logger), aircraftFactory(std::move(aircraftFactory))
     {
         assert(this->logger && "Logger cannot be null");
+        assert(this->aircraftFactory && "Aircraft factory cannot be null");
     }
 
     auto FlowMeasureFilterParser::Parse(const nlohmann::json& data, const InternalEventCollection& events) const
@@ -130,7 +135,7 @@ namespace ECFMP::Api {
 
         return std::make_unique<FlowMeasure::ConcreteFlowMeasureFilters>(
                 std::move(airportFilters), std::move(eventFilters), std::move(routeFilters),
-                std::move(levelRangeFilters), std::move(multipleLevelFilters), std::move(rangeFilters)
+                std::move(levelRangeFilters), std::move(multipleLevelFilters), std::move(rangeFilters), aircraftFactory
         );
     }
 

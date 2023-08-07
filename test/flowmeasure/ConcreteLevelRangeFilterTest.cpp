@@ -1,4 +1,5 @@
 #include "flowmeasure/ConcreteLevelRangeFilter.h"
+#include "mock/MockEuroscopeAircraft.h"
 
 namespace ECFMPTest::FlowMeasure {
 
@@ -53,7 +54,7 @@ namespace ECFMPTest::FlowMeasure {
     {
     };
 
-    TEST_P(ConcreteLevelFilterApplicabilityTest, ItChecksAirportApplicability)
+    TEST_P(ConcreteLevelFilterApplicabilityTest, ItChecksApplicability)
     {
         ECFMP::FlowMeasure::ConcreteLevelRangeFilter filter(GetParam().filterType, GetParam().filterLevel);
         if (GetParam().checkType == ApplicabilityCheckType::Level) {
@@ -113,6 +114,63 @@ namespace ECFMPTest::FlowMeasure {
                 else {
                     name += "altitude_";
                 }
+                name += std::to_string(info.param.checkLevel);
+
+                return name;
+            }
+    );
+
+    using LevelFilterAircraftApplicabilityCheck = struct LevelFilterAircraftApplicabilityCheck {
+        // The filter type
+        ECFMP::FlowMeasure::LevelRangeFilterType filterType;
+
+        // The level for the filter
+        int filterLevel;
+
+        // The level to check against
+        int checkLevel;
+
+        // Expected applicability
+        bool expectedApplicability;
+    };
+
+    class ConcreteLevelFilterAircraftApplicabilityTest
+        : public testing::TestWithParam<LevelFilterAircraftApplicabilityCheck>
+    {
+    };
+
+    TEST_P(ConcreteLevelFilterAircraftApplicabilityTest, ItChecksApplicabilityForAircraft)
+    {
+        ECFMP::FlowMeasure::ConcreteLevelRangeFilter filter(GetParam().filterType, GetParam().filterLevel);
+        const auto aircraft = testing::NiceMock<Euroscope::MockEuroscopeAircraft>();
+        ON_CALL(aircraft, CruiseAltitude).WillByDefault(testing::Return(GetParam().checkLevel));
+        EXPECT_EQ(GetParam().expectedApplicability, filter.ApplicableToAircraft(aircraft));
+    }
+
+    INSTANTIATE_TEST_SUITE_P(
+            ConcreteLevelFilterAircraftApplicabilityTestCases, ConcreteLevelFilterAircraftApplicabilityTest,
+            testing::Values(
+                    LevelFilterAircraftApplicabilityCheck{ECFMP::FlowMeasure::AtOrBelow, 350, 35000, true},
+                    LevelFilterAircraftApplicabilityCheck{ECFMP::FlowMeasure::AtOrBelow, 350, 34000, true},
+                    LevelFilterAircraftApplicabilityCheck{ECFMP::FlowMeasure::AtOrBelow, 350, 36000, false},
+                    LevelFilterAircraftApplicabilityCheck{ECFMP::FlowMeasure::AtOrAbove, 350, 35000, true},
+                    LevelFilterAircraftApplicabilityCheck{ECFMP::FlowMeasure::AtOrAbove, 350, 36000, true},
+                    LevelFilterAircraftApplicabilityCheck{ECFMP::FlowMeasure::AtOrAbove, 350, 34000, false}
+            ),
+            [](const ::testing::TestParamInfo<ConcreteLevelFilterAircraftApplicabilityTest::ParamType>& info) {
+                std::string name;
+                switch (info.param.filterType) {
+                case ECFMP::FlowMeasure::AtOrBelow: {
+                    name += "AtOrBelow_";
+                    break;
+                }
+                case ECFMP::FlowMeasure::AtOrAbove: {
+                    name += "AtOrAbove_";
+                    break;
+                }
+                }
+
+                name += std::to_string(info.param.filterLevel) + "_with_altitude_";
                 name += std::to_string(info.param.checkLevel);
 
                 return name;

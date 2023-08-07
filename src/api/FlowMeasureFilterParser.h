@@ -6,6 +6,9 @@
 #include "FlowMeasureFilterParserInterface.h"
 
 namespace ECFMP {
+    namespace Euroscope {
+        class EuroscopeAircraftFactory;
+    }// namespace Euroscope
     namespace FlowMeasure {
         class AirportFilter;
         class EventFilter;
@@ -20,7 +23,10 @@ namespace ECFMP::Api {
     class FlowMeasureFilterParser : public FlowMeasureFilterParserInterface
     {
         public:
-        explicit FlowMeasureFilterParser(const std::shared_ptr<ECFMP::Log::Logger>& logger);
+        explicit FlowMeasureFilterParser(
+                const std::shared_ptr<ECFMP::Log::Logger>& logger,
+                std::shared_ptr<const Euroscope::EuroscopeAircraftFactory> aircraftFactory
+        );
         [[nodiscard]] auto Parse(const nlohmann::json& data, const InternalEventCollection& events) const
                 -> std::unique_ptr<FlowMeasure::FlowMeasureFilters> override;
 
@@ -46,5 +52,8 @@ namespace ECFMP::Api {
 
         // Logger
         std::shared_ptr<ECFMP::Log::Logger> logger;
+
+        // For wrapping EuroScope aircraft classes
+        std::shared_ptr<const Euroscope::EuroscopeAircraftFactory> aircraftFactory;
     };
 }// namespace ECFMP::Api

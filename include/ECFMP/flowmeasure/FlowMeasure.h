@@ -10,6 +10,11 @@ namespace ECFMP {
     }// namespace FlightInformationRegion
 }// namespace ECFMP
 
+namespace EuroScopePlugIn {
+    class CFlightPlan;
+    class CRadarTarget;
+}// namespace EuroScopePlugIn
+
 namespace ECFMP::FlowMeasure {
     class FlowMeasureFilters;
     class Measure;
@@ -115,5 +120,13 @@ namespace ECFMP::FlowMeasure {
 
         // Information about the canonical nature of the flow measure
         [[nodiscard]] virtual auto CanonicalInformation() const noexcept -> const CanonicalFlowMeasureInfo& = 0;
+
+        /**
+         * Returns true if the flow measure is applicable to the given aircraft. It will be applicable if all
+         * of the filters are applicable.
+         */
+        [[nodiscard]] virtual auto ApplicableToAircraft(
+                const EuroScopePlugIn::CFlightPlan& flightplan, const EuroScopePlugIn::CRadarTarget& radarTarget
+        ) const -> bool = 0;
     };
 }// namespace ECFMP::FlowMeasure

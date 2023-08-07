@@ -1,4 +1,5 @@
 #include "flowmeasure/ConcreteRangeToDestinationFilter.h"
+#include "mock/MockEuroscopeAircraft.h"
 
 namespace ECFMPTest::FlowMeasure {
     class ConcreteRangeToDestinationFilterTest : public ::testing::Test
@@ -9,6 +10,27 @@ namespace ECFMPTest::FlowMeasure {
 
     TEST_F(ConcreteRangeToDestinationFilterTest, RangeReturnsRange)
     {
-        ASSERT_EQ(filter.Range(), 123);
+        EXPECT_EQ(filter.Range(), 123);
+    }
+
+    TEST_F(ConcreteRangeToDestinationFilterTest, FilterReturnsTrueIfApplicableToAircraftEqual)
+    {
+        testing::NiceMock<Euroscope::MockEuroscopeAircraft> aircraft;
+        EXPECT_CALL(aircraft, RangeToDestination).WillOnce(testing::Return(123.0));
+        EXPECT_TRUE(filter.ApplicableToAircraft(aircraft));
+    }
+
+    TEST_F(ConcreteRangeToDestinationFilterTest, FilterReturnsTrueIfApplicableToAircraftLessThan)
+    {
+        testing::NiceMock<Euroscope::MockEuroscopeAircraft> aircraft;
+        EXPECT_CALL(aircraft, RangeToDestination).WillOnce(testing::Return(121.0));
+        EXPECT_TRUE(filter.ApplicableToAircraft(aircraft));
+    }
+
+    TEST_F(ConcreteRangeToDestinationFilterTest, FilterReturnsFalseIfApplicableToAircraftMoreThan)
+    {
+        testing::NiceMock<Euroscope::MockEuroscopeAircraft> aircraft;
+        EXPECT_CALL(aircraft, RangeToDestination).WillOnce(testing::Return(123.1));
+        EXPECT_FALSE(filter.ApplicableToAircraft(aircraft));
     }
 }// namespace ECFMPTest::FlowMeasure

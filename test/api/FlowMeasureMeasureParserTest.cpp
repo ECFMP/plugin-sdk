@@ -34,9 +34,9 @@ namespace ECFMPTest::Api {
         json["type"] = param.jsonType;
         json["value"] = param.jsonValue;
         auto measure = parser.Parse(json);
-        ASSERT_NE(measure, nullptr);
-        ASSERT_EQ(measure->Type(), param.expectedType);
-        ASSERT_EQ(measure->IntegerValue(), param.expectedValue);
+        EXPECT_NE(measure, nullptr);
+        EXPECT_EQ(measure->Type(), param.expectedType);
+        EXPECT_EQ(measure->IntegerValue(), param.expectedValue);
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -80,9 +80,9 @@ namespace ECFMPTest::Api {
         json["type"] = param.jsonType;
         json["value"] = param.jsonValue;
         auto measure = parser.Parse(json);
-        ASSERT_NE(measure, nullptr);
-        ASSERT_EQ(measure->Type(), param.expectedType);
-        ASSERT_DOUBLE_EQ(measure->DoubleValue(), param.expectedValue);
+        EXPECT_NE(measure, nullptr);
+        EXPECT_EQ(measure->Type(), param.expectedType);
+        EXPECT_DOUBLE_EQ(measure->DoubleValue(), param.expectedValue);
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -119,9 +119,9 @@ namespace ECFMPTest::Api {
         json["type"] = param.jsonType;
         json["value"] = param.jsonValue;
         auto measure = parser.Parse(json);
-        ASSERT_NE(measure, nullptr);
-        ASSERT_EQ(measure->Type(), param.expectedType);
-        ASSERT_EQ(measure->SetValue(), param.expectedValue);
+        EXPECT_NE(measure, nullptr);
+        EXPECT_EQ(measure->Type(), param.expectedType);
+        EXPECT_EQ(measure->SetValue(), param.expectedValue);
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -157,8 +157,8 @@ namespace ECFMPTest::Api {
         json["type"] = param.jsonType;
         json["value"] = param.jsonValue;
         auto measure = parser.Parse(json);
-        ASSERT_NE(measure, nullptr);
-        ASSERT_EQ(measure->Type(), param.expectedType);
+        EXPECT_NE(measure, nullptr);
+        EXPECT_EQ(measure->Type(), param.expectedType);
     }
 
     INSTANTIATE_TEST_SUITE_P(
@@ -195,7 +195,7 @@ namespace ECFMPTest::Api {
     TEST_P(FlowMeasureMeasureParserBadDataTest, ItReturnsNullptrBadData)
     {
         const auto& param = GetParam();
-        ASSERT_EQ(nullptr, parser.Parse(param.json));
+        EXPECT_EQ(nullptr, parser.Parse(param.json));
     }
 
     INSTANTIATE_TEST_SUITE_P(

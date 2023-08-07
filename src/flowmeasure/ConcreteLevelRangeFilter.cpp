@@ -1,4 +1,5 @@
 #include "ConcreteLevelRangeFilter.h"
+#include "euroscope/EuroscopeAircraft.h"
 
 namespace ECFMP::FlowMeasure {
     ConcreteLevelRangeFilter::ConcreteLevelRangeFilter(LevelRangeFilterType type, int filterLevel)
@@ -29,5 +30,10 @@ namespace ECFMP::FlowMeasure {
     {
         return type == LevelRangeFilterType::AtOrBelow ? altitude <= filterLevelAsAltitude
                                                        : altitude >= filterLevelAsAltitude;
+    }
+
+    bool ConcreteLevelRangeFilter::ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept
+    {
+        return ApplicableToAltitude(aircraft.CruiseAltitude());
     }
 }// namespace ECFMP::FlowMeasure

@@ -14,6 +14,7 @@
 #include "api/FlowMeasureDataParser.h"
 #include "api/FlowMeasureFilterParser.h"
 #include "api/FlowMeasureMeasureParser.h"
+#include "euroscope/EuroscopeAircraftFactoryImpl.h"
 #include "eventbus/InternalEventBusFactory.h"
 #include "flowmeasure/FlowMeasureStatusUpdates.h"
 #include "log/LogDecorator.h"
@@ -28,7 +29,9 @@ namespace ECFMP::Plugin {
                     std::make_shared<Api::EventDataParser>(GetLogger(), GetEventBus()),
                     std::make_shared<Api::FlightInformationRegionDataParser>(GetLogger(), GetEventBus()),
                     std::make_shared<Api::FlowMeasureDataParser>(
-                            std::make_unique<Api::FlowMeasureFilterParser>(GetLogger()),
+                            std::make_unique<Api::FlowMeasureFilterParser>(
+                                    GetLogger(), std::make_shared<Euroscope::EuroscopeAircraftFactoryImpl>()
+                            ),
                             std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetLogger(), GetEventBus()
                     ),
                     GetLogger()
