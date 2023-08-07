@@ -50,6 +50,7 @@ jobs:
           cd test
           dir
           cd ..
+          dir
           ctest -C Release --output-on-failure --no-tests=error
 
   format:
