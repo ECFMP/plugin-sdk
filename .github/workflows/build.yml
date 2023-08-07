@@ -47,7 +47,9 @@ jobs:
       - name: Run Tests
         working-directory: build
         run: |
+          cd test
           dir
+          cd ..
           ctest -C Release --output-on-failure --no-tests=error
 
   format:
