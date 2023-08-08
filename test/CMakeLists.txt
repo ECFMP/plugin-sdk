@@ -87,7 +87,7 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 #### DEPENDENCIES
 add_dependencies(${PROJECT_NAME}
-        flow_plugin_sdk_src
+        ecfmp_sdk
         gtest
         gmock
         )

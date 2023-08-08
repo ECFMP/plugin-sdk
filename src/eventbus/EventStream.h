@@ -1,8 +1,8 @@
 #pragma once
 #include "ECFMP/eventbus/EventFilter.h"
 #include "ECFMP/eventbus/EventListener.h"
-#include "SubscriptionFlags.h"
 #include "EventDispatcher.h"
+#include "SubscriptionFlags.h"
 #include <memory>
 #include <mutex>
 #include <utility>
