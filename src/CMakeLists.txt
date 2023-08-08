@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
-project(flow_plugin_sdk_src)
-SET(PROJECT_NAME flow_plugin_sdk_src)
+project(ecfmp_sdk)
+SET(PROJECT_NAME ecfmp_sdk)
 
 set(CMAKE_CXX_STANDARD 20)
 
