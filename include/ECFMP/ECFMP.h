@@ -1,4 +1,5 @@
 #pragma once
+#include "../../src/pch.h"
 
 #include "api/ApiElementCollection.h"
 #include "api/StringIdentifierApiElementCollection.h"

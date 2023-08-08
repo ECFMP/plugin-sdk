@@ -2,7 +2,7 @@
 #include "ECFMP/eventbus/EventFilter.h"
 #include "ECFMP/eventbus/EventListener.h"
 #include "SubscriptionFlags.h"
-#include "eventbus/EventDispatcher.h"
+#include "EventDispatcher.h"
 #include <memory>
 #include <mutex>
 #include <utility>

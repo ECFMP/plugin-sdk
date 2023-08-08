@@ -57,11 +57,14 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "pch.h")
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR};"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/nlohmann;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/euroscope;"
         )
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+        "${CMAKE_CURRENT_SOURCE_DIR};"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
+)
 
 # Treat Euroscope as a system include directory to suppress warning, because they have lots
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
