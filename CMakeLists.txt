@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project(flow_plugin_sdk)
+project(ecfmp_plugin_sdk)
 
 set(CMAKE_CXX_STANDARD 20)
 enable_testing()
