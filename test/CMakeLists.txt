@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
-project(flow_plugin_sdk_tests)
-SET(PROJECT_NAME flow_plugin_sdk_tests)
+project(ecfmp_sdk_tests)
+SET(PROJECT_NAME ecfmp_sdk_tests)
 
 set(CMAKE_CXX_STANDARD 20)
 enable_testing()
@@ -115,7 +115,7 @@ target_link_directories(
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
         gmock
-        flow_plugin_sdk_src
+        ecfmp_sdk
         "EuroScopePlugInDll;"
         )
 
