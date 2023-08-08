@@ -21,4 +21,5 @@
 #include "http/HttpClient.h"
 #include "log/Logger.h"
 #include "Sdk.h"
+#include "SdkFactory.h"
 #include "SdkEvents.h"
