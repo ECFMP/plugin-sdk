@@ -52,7 +52,7 @@ set(test__mock
         mock/MockEuroscopeAircraft.h
         mock/MockLogger.h
         mock/MockHttpClient.h
-        mock/MockEuroscopeAircraftFactory.h)
+        mock/MockEuroscopeAircraftFactory.h ../include/mock/SdkMock.h)
 
 set(test__pch
         pch/pch.cpp
