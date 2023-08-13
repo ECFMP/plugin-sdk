@@ -21,8 +21,7 @@ and
 then create an instance of it.
 
 ```c++
-#include "ECFMP/SDKFactory.h"
-#include "ECFMP/SDK.h"
+#include "ECFMP.h"
 
 auto http = std::make_shared<MyHttpClient>();
 auto logger = std::make_shared<MyLogger>();
@@ -59,7 +58,8 @@ ecfmp.EventBus().Subscribe<ECFMP::Plugin::FlowMeasureActivatedEvent>(eventListen
 You can test your integration by making use of the mocks provided by the SDK. These mocks will allow you to simulate
 events that would be sent by the ECFMP SDK.
 
-You can find the mocks in `include/mock`.
+You can find the mocks in `include/mock`, just be sure to include the main include `ECFMP.h` as well as the mocks
+header `ecfmp-sdk-mock.h`.
 
 ## Known Limitations
 
