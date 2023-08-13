@@ -33,4 +33,14 @@ namespace ECFMP::FlowMeasure {
     {
         return ApplicableToAltitude(aircraft.CruiseAltitude());
     }
+
+    auto ConcreteMultipleLevelFilter::FilterDescription() const noexcept -> std::string
+    {
+        std::string description = "At Levels: ";
+        for (const auto& level: this->levels) {
+            description += std::to_string(level) + ", ";
+        }
+
+        return description.substr(0, description.size() - 2);
+    }
 }// namespace ECFMP::FlowMeasure
