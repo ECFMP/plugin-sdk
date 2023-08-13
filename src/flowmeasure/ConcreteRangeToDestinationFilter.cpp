@@ -15,4 +15,9 @@ namespace ECFMP::FlowMeasure {
     {
         return ((int) ceil(aircraft.RangeToDestination())) <= range;
     }
+
+    auto ConcreteRangeToDestinationFilter::FilterDescription() const noexcept -> std::string
+    {
+        return "Range to Destination Less Than: " + std::to_string(range) + "nm";
+    }
 }// namespace ECFMP::FlowMeasure

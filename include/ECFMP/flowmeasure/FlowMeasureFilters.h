@@ -71,5 +71,10 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] virtual auto
         FirstRangeToDestinationFilter(const std::function<bool(const RangeToDestinationFilter&)>& callback
         ) const noexcept -> std::shared_ptr<RangeToDestinationFilter> = 0;
+
+        /**
+         * Convenience method to return string description of the filters.
+         */
+        [[nodiscard]] virtual auto FilterDescriptions() const noexcept -> std::vector<std::string> = 0;
     };
 }// namespace ECFMP::FlowMeasure

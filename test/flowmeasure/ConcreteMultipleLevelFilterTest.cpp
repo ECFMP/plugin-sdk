@@ -67,4 +67,9 @@ namespace ECFMPTest::FlowMeasure {
         ON_CALL(aircraft, CruiseAltitude).WillByDefault(testing::Return(35000));
         EXPECT_FALSE(filter.ApplicableToAircraft(aircraft));
     }
+
+    TEST_F(ConcreteMultipleFlowLevelFilterTest, ItReturnsDescription)
+    {
+        EXPECT_EQ(filter.FilterDescription(), "At Levels: 340, 360, 390");
+    }
 }// namespace ECFMPTest::FlowMeasure

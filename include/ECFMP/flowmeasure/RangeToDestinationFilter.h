@@ -8,11 +8,16 @@ namespace ECFMP::FlowMeasure {
     class RangeToDestinationFilter : public ChecksAircraftApplicability
     {
         public:
-        virtual ~RangeToDestinationFilter() = default;
+        ~RangeToDestinationFilter() override = default;
 
         /**
          * Returns the range to destination.
          */
         [[nodiscard]] virtual auto Range() const noexcept -> int = 0;
+
+        /**
+         * Description of the filter
+         */
+        [[nodiscard]] virtual auto FilterDescription() const noexcept -> std::string = 0;
     };
 }// namespace ECFMP::FlowMeasure

@@ -36,4 +36,10 @@ namespace ECFMP::FlowMeasure {
     {
         return ApplicableToAltitude(aircraft.CruiseAltitude());
     }
+
+    auto ConcreteLevelRangeFilter::FilterDescription() const noexcept -> std::string
+    {
+        return type == LevelRangeFilterType::AtOrBelow ? "At or below: FL" + std::to_string(filterLevel)
+                                                       : "At or above: FL" + std::to_string(filterLevel);
+    }
 }// namespace ECFMP::FlowMeasure

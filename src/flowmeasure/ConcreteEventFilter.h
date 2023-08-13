@@ -18,6 +18,7 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto Participation() const noexcept -> EventParticipation override;
         [[nodiscard]] auto IsParticipating() const noexcept -> bool override;
         auto ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept -> bool override;
+        [[nodiscard]] auto FilterDescription() const noexcept -> std::string override;
 
         private:
         // The event in question

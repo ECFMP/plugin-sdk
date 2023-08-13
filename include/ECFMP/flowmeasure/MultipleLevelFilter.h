@@ -29,5 +29,10 @@ namespace ECFMP::FlowMeasure {
          * Helper method to determine, given a particular altitude (e.g. 35000), does this filter apply.
          */
         [[nodiscard]] virtual auto ApplicableToAltitude(int level) const noexcept -> bool = 0;
+
+        /**
+         * Description of the filter
+         */
+        [[nodiscard]] virtual auto FilterDescription() const noexcept -> std::string = 0;
     };
 }// namespace ECFMP::FlowMeasure

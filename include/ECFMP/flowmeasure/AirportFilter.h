@@ -30,5 +30,10 @@ namespace ECFMP::FlowMeasure {
          * Returns the type of airport filter
          */
         [[nodiscard]] virtual auto Type() const noexcept -> AirportFilterType = 0;
+
+        /**
+         * Returns a string representation of the filter.
+         */
+        [[nodiscard]] virtual auto FilterDescription() const noexcept -> std::string = 0;
     };
 }// namespace ECFMP::FlowMeasure

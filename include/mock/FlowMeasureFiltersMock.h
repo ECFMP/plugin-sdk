@@ -65,6 +65,7 @@ namespace ECFMP::Mock::FlowMeasure {
                 (const std::function<bool(const ECFMP::FlowMeasure::RangeToDestinationFilter&)>&),
                 (const, noexcept, override)
         );
+        MOCK_METHOD(std::vector<std::string>, FilterDescriptions, (), (const, noexcept, override));
     };
 
 }// namespace ECFMP::Mock::FlowMeasure

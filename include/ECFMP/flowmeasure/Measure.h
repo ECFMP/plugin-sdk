@@ -73,5 +73,10 @@ namespace ECFMP::FlowMeasure {
          * Throws an IllegalFlowMeasureValueException exception otherwise.
          */
         [[nodiscard]] virtual auto SetValue() const -> const std::set<std::string>& = 0;
+
+        /**
+         * Returns a string representation of the measure.
+         */
+        [[nodiscard]] virtual auto MeasureDescription() const noexcept -> std::string = 0;
     };
 }// namespace ECFMP::FlowMeasure

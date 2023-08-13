@@ -33,4 +33,9 @@ namespace ECFMPTest::FlowMeasure {
         EXPECT_CALL(aircraft, RangeToDestination).WillOnce(testing::Return(123.1));
         EXPECT_FALSE(filter.ApplicableToAircraft(aircraft));
     }
+
+    TEST_F(ConcreteRangeToDestinationFilterTest, FilterDescriptionReturnsCorrectString)
+    {
+        EXPECT_EQ(filter.FilterDescription(), "Range to Destination Less Than: 123nm");
+    }
 }// namespace ECFMPTest::FlowMeasure
