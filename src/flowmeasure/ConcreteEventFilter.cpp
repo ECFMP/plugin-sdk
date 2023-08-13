@@ -60,4 +60,9 @@ namespace ECFMP::FlowMeasure {
 
         return (IsParticipating() && isParticipating) || (!IsParticipating() && !isParticipating);
     }
+
+    auto ConcreteEventFilter::FilterDescription() const noexcept -> std::string
+    {
+        return (IsParticipating() ? "Participating in event: " : "Not participating in event: ") + event->Name();
+    }
 }// namespace ECFMP::FlowMeasure

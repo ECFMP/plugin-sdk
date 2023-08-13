@@ -117,4 +117,20 @@ namespace ECFMPTest::FlowMeasure {
         );
         EXPECT_FALSE(eventFilter2.ApplicableToAircraft(aircraft));
     }
+
+    TEST_F(ConcreteEventFilterTest, ItHasDescriptionParticipating)
+    {
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter2(
+                event, ECFMP::FlowMeasure::EventParticipation::Participating
+        );
+        EXPECT_EQ("Participating in event: TEST", eventFilter2.FilterDescription());
+    }
+
+    TEST_F(ConcreteEventFilterTest, ItHasDescriptionNotParticipating)
+    {
+        ECFMP::FlowMeasure::ConcreteEventFilter eventFilter2(
+                event, ECFMP::FlowMeasure::EventParticipation::NotParticipating
+        );
+        EXPECT_EQ("Not participating in event: TEST", eventFilter2.FilterDescription());
+    }
 }// namespace ECFMPTest::FlowMeasure
