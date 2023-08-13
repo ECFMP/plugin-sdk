@@ -302,4 +302,15 @@ namespace ECFMPTest::FlowMeasure {
         ON_CALL(*mockAircraft, RangeToDestination).WillByDefault(testing::Return(101.0));
         EXPECT_FALSE(filters.ApplicableToAircraft(EuroScopePlugIn::CFlightPlan(), EuroScopePlugIn::CRadarTarget()));
     }
+
+    TEST_F(ConcreteFlowMeasureFiltersTest, ItReturnsDescriptionsOfAllFilters)
+    {
+        EXPECT_EQ(
+                std::vector<std::string>(
+                        {"Departing: EGLL", "Participating in event: Test", "At or below: FL150", "At Levels: 150, 200",
+                         "On route(s): XAMAB", "Range to Destination Less Than: 100nm"}
+                ),
+                filters.FilterDescriptions()
+        );
+    }
 }// namespace ECFMPTest::FlowMeasure

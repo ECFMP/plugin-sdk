@@ -251,4 +251,52 @@ namespace ECFMP::FlowMeasure {
 
         return passesRangeToDestinationFilters;
     }
+
+    auto ConcreteFlowMeasureFilters::FilterDescriptions() const noexcept -> std::vector<std::string>
+    {
+        std::vector<std::string> descriptions;
+        descriptions.reserve(
+                airportFilters.size() + eventFilters.size() + levelFilters.size() + multipleLevelFilters.size()
+                + routeFilters.size() + rangeToDestinationFilters.size()
+        );
+
+        std::transform(
+                airportFilters.cbegin(), airportFilters.cend(), std::back_inserter(descriptions),
+                [](const auto& filter) {
+                    return filter->FilterDescription();
+                }
+        );
+        std::transform(
+                eventFilters.cbegin(), eventFilters.cend(), std::back_inserter(descriptions),
+                [](const auto& filter) {
+                    return filter->FilterDescription();
+                }
+        );
+        std::transform(
+                levelFilters.cbegin(), levelFilters.cend(), std::back_inserter(descriptions),
+                [](const auto& filter) {
+                    return filter->FilterDescription();
+                }
+        );
+        std::transform(
+                multipleLevelFilters.cbegin(), multipleLevelFilters.cend(), std::back_inserter(descriptions),
+                [](const auto& filter) {
+                    return filter->FilterDescription();
+                }
+        );
+        std::transform(
+                routeFilters.cbegin(), routeFilters.cend(), std::back_inserter(descriptions),
+                [](const auto& filter) {
+                    return filter->FilterDescription();
+                }
+        );
+        std::transform(
+                rangeToDestinationFilters.cbegin(), rangeToDestinationFilters.cend(), std::back_inserter(descriptions),
+                [](const auto& filter) {
+                    return filter->FilterDescription();
+                }
+        );
+
+        return descriptions;
+    }
 }// namespace ECFMP::FlowMeasure
