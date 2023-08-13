@@ -50,6 +50,17 @@ namespace ECFMPTest::FlowMeasure {
         EXPECT_EQ(ECFMP::FlowMeasure::LevelRangeFilterType::AtOrBelow, levelFilter.Type());
     }
 
+    TEST_F(ConcreteLevelFilterTest, ItReturnsFilterDescriptionAtOrBelow)
+    {
+        EXPECT_EQ("At or below: FL350", levelFilter.FilterDescription());
+    }
+
+    TEST_F(ConcreteLevelFilterTest, ItReturnsFilterDescriptionAtOrAbove)
+    {
+        ECFMP::FlowMeasure::ConcreteLevelRangeFilter filter(ECFMP::FlowMeasure::LevelRangeFilterType::AtOrAbove, 350);
+        EXPECT_EQ("At or above: FL350", filter.FilterDescription());
+    }
+
     class ConcreteLevelFilterApplicabilityTest : public testing::TestWithParam<LevelFilterApplicabilityCheck>
     {
     };
