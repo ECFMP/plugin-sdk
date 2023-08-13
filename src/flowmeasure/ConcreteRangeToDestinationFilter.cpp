@@ -18,6 +18,6 @@ namespace ECFMP::FlowMeasure {
 
     auto ConcreteRangeToDestinationFilter::FilterDescription() const noexcept -> std::string
     {
-        return "Range to Destination: <= " + std::to_string(range) + "nm";
+        return "Range to Destination Less Than: " + std::to_string(range) + "nm";
     }
 }// namespace ECFMP::FlowMeasure

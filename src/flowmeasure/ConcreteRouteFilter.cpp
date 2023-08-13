@@ -19,4 +19,14 @@ namespace ECFMP::FlowMeasure {
                        }
                ) != routes.end();
     }
+
+    auto ConcreteRouteFilter::FilterDescription() const noexcept -> std::string
+    {
+        std::string description = "On route(s): ";
+        for (const auto& route: routes) {
+            description += route + ", ";
+        }
+
+        return description.substr(0, description.size() - 2);
+    }
 }// namespace ECFMP::FlowMeasure

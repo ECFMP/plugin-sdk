@@ -36,6 +36,6 @@ namespace ECFMPTest::FlowMeasure {
 
     TEST_F(ConcreteRangeToDestinationFilterTest, FilterDescriptionReturnsCorrectString)
     {
-        EXPECT_EQ(filter.FilterDescription(), "Range to Destination: <= 123nm");
+        EXPECT_EQ(filter.FilterDescription(), "Range to Destination Less Than: 123nm");
     }
 }// namespace ECFMPTest::FlowMeasure

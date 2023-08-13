@@ -9,6 +9,7 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto RouteStrings() const noexcept -> const std::set<std::string>& override;
         [[nodiscard]] auto ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept
                 -> bool override;
+        [[nodiscard]] auto FilterDescription() const noexcept -> std::string override;
 
         private:
         // The route strings
