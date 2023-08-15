@@ -23,8 +23,11 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto IntegerValue() const -> int override;
         [[nodiscard]] auto DoubleValue() const -> double override;
         [[nodiscard]] auto SetValue() const -> const std::set<std::string>& override;
+        [[nodiscard]] auto MeasureDescription() const noexcept -> std::string override;
 
         private:
+        [[nodiscard]] static auto MeasureTypeToString(MeasureType type) -> std::string;
+        [[nodiscard]] auto MeasureValueToString(MeasureType type) const -> std::string;
         inline void AssertMeasureType(MeasureValueType allowedType) const;
 
         // Type of the measure

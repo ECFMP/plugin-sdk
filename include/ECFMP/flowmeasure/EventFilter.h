@@ -43,5 +43,10 @@ namespace ECFMP::FlowMeasure {
          * Returns true if the event participation is "Participating in"
          */
         [[nodiscard]] virtual auto IsParticipating() const noexcept -> bool = 0;
+
+        /**
+         * Returns a description of the filter.
+         */
+        [[nodiscard]] virtual auto FilterDescription() const noexcept -> std::string = 0;
     };
 }// namespace ECFMP::FlowMeasure

@@ -34,6 +34,11 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept
                 -> bool override;
 
+        /**
+         * Description of the filter
+         */
+        [[nodiscard]] auto FilterDescription() const noexcept -> std::string override;
+
         private:
         // The levels (e.g. 350) associated with this filter
         std::vector<int> levels;

@@ -11,6 +11,7 @@ namespace ECFMP::Mock::FlowMeasure {
         MOCK_METHOD(int, IntegerValue, (), (const, override));
         MOCK_METHOD(double, DoubleValue, (), (const, override));
         MOCK_METHOD(const std::set<std::string>&, SetValue, (), (const, override));
+        MOCK_METHOD(std::string, MeasureDescription, (), (const, noexcept, override));
     };
 
 }// namespace ECFMP::Mock::FlowMeasure

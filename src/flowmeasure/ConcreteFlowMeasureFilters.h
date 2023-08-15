@@ -59,6 +59,7 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto
         FirstRangeToDestinationFilter(const std::function<bool(const RangeToDestinationFilter&)>& callback
         ) const noexcept -> std::shared_ptr<RangeToDestinationFilter> override;
+        [[nodiscard]] auto FilterDescriptions() const noexcept -> std::vector<std::string> override;
 
         private:
         // All the airport filters

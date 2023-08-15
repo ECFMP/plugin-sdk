@@ -10,7 +10,9 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto AirportStrings() const noexcept -> const std::set<std::string>& override;
         [[nodiscard]] auto ApplicableToAirport(const std::string& airport) const noexcept -> bool override;
         [[nodiscard]] auto Type() const noexcept -> AirportFilterType override;
-        auto ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept -> bool override;
+        [[nodiscard]] auto ApplicableToAircraft(const Euroscope::EuroscopeAircraft& aircraft) const noexcept
+                -> bool override;
+        [[nodiscard]] auto FilterDescription() const noexcept -> std::string override;
 
         private:
         // The strings for the airport filter, may contain wildcards (*)

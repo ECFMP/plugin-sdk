@@ -13,6 +13,7 @@ namespace ECFMP::Mock::FlowMeasure {
         MOCK_METHOD(bool, ApplicableToAltitude, (int), (const, noexcept, override));
         MOCK_METHOD(bool, ApplicableToLevel, (int), (const, noexcept, override));
         MOCK_METHOD(bool, ApplicableToAircraft, (const Euroscope::EuroscopeAircraft&), (const, noexcept, override));
+        MOCK_METHOD(std::string, FilterDescription, (), (const, noexcept, override));
     };
 
 }// namespace ECFMP::Mock::FlowMeasure

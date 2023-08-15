@@ -39,4 +39,18 @@ namespace ECFMP::FlowMeasure {
                 type == AirportFilterType::Departure ? aircraft.DepartureAirport() : aircraft.DestinationAirport()
         );
     }
+
+    std::string ConcreteAirportFilter::FilterDescription() const noexcept
+    {
+        std::string description = type == AirportFilterType::Departure ? "Departing: " : "Arriving: ";
+
+        for (const auto& airportString: airportStrings) {
+            const auto isWildcard = airportString.find(WILDCARD_CHAR) != std::string::npos;
+            description += isWildcard ? "Any of: " + airportString : airportString;
+            description += ", ";
+        }
+
+        // Trim the trailing ", "
+        return description.substr(0, description.length() - 2);
+    }
 }// namespace ECFMP::FlowMeasure

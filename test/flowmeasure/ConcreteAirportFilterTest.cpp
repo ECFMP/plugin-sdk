@@ -14,7 +14,8 @@ namespace ECFMPTest::FlowMeasure {
         public:
         ConcreteAirportFilterTest()
             : airportFilter(
-                    std::set<std::string>{"EGKK", "LF", "EDD", "K"}, ECFMP::FlowMeasure::AirportFilterType::Destination
+                    std::set<std::string>{"EGKK", "LF**", "EDD*", "K***"},
+                    ECFMP::FlowMeasure::AirportFilterType::Destination
             )
         {}
 
@@ -23,12 +24,25 @@ namespace ECFMPTest::FlowMeasure {
 
     TEST_F(ConcreteAirportFilterTest, ItReturnsAirportStrings)
     {
-        EXPECT_EQ(std::set<std::string>({"EGKK", "LF", "EDD", "K"}), airportFilter.AirportStrings());
+        EXPECT_EQ(std::set<std::string>({"EGKK", "LF**", "EDD*", "K***"}), airportFilter.AirportStrings());
     }
 
     TEST_F(ConcreteAirportFilterTest, ItReturnsAirportFilterType)
     {
         EXPECT_EQ(ECFMP::FlowMeasure::AirportFilterType::Destination, airportFilter.Type());
+    }
+
+    TEST_F(ConcreteAirportFilterTest, ItHasADescriptionArrivingAt)
+    {
+        EXPECT_EQ("Arriving: Any of: EDD*, EGKK, Any of: K***, Any of: LF**", airportFilter.FilterDescription());
+    }
+
+    TEST_F(ConcreteAirportFilterTest, ItHasADescriptionDeparting)
+    {
+        ECFMP::FlowMeasure::ConcreteAirportFilter airportFilter2(
+                std::set<std::string>{"EGKK", "LF**", "EDD*", "K***"}, ECFMP::FlowMeasure::AirportFilterType::Departure
+        );
+        EXPECT_EQ("Departing: Any of: EDD*, EGKK, Any of: K***, Any of: LF**", airportFilter2.FilterDescription());
     }
 
     class ConcreteAirportFilterApplicabilityTest : public testing::TestWithParam<AirportFilterCheck>
