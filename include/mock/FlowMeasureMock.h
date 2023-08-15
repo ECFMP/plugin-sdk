@@ -21,7 +21,7 @@ namespace ECFMP::Mock::FlowMeasure {
         MOCK_METHOD(ECFMP::FlowMeasure::MeasureStatus, Status, (), (const, noexcept, override));
         MOCK_METHOD(bool, HasStatus, (ECFMP::FlowMeasure::MeasureStatus), (const, noexcept, override));
         MOCK_METHOD(
-                const std::vector<std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>>,
+                const std::vector<std::shared_ptr<const ECFMP::FlightInformationRegion::FlightInformationRegion>>&,
                 NotifiedFlightInformationRegions, (), (const, noexcept, override)
         );
         MOCK_METHOD(const ECFMP::FlowMeasure::Measure&, Measure, (), (const, noexcept, override));
