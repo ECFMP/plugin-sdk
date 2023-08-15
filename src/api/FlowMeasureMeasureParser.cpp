@@ -2,6 +2,7 @@
 #include "ECFMP/log/Logger.h"
 #include "flowmeasure/ConcreteMeasure.h"
 #include "nlohmann/json.hpp"
+#include <string>
 
 namespace ECFMP::Api {
 
@@ -50,10 +51,11 @@ namespace ECFMP::Api {
         // If the type is MaxMach, MachReduction, then the value must be a double
         if (type == FlowMeasure::MeasureType::MaxMach || type == FlowMeasure::MeasureType::MachReduction) {
 
-            if (!data["value"].is_number_float())
+            if (!data["value"].is_number_integer())
                 return nullptr;
 
-            return std::make_unique<FlowMeasure::ConcreteMeasure>(type, data["value"].get<double>());
+            // Machs in the API are stored as integers, so we need to divide by 100
+            return std::make_unique<FlowMeasure::ConcreteMeasure>(type, data["value"].get<double>() / 100);
         }
 
         // If the type is MandatoryRoute, then the value must be a set of strings

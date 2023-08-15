@@ -78,7 +78,7 @@ namespace ECFMPTest::Api {
         const auto& param = GetParam();
         nlohmann::json json;
         json["type"] = param.jsonType;
-        json["value"] = param.jsonValue;
+        json["value"] = (int) (param.jsonValue * 100);
         auto measure = parser.Parse(json);
         EXPECT_NE(measure, nullptr);
         EXPECT_EQ(measure->Type(), param.expectedType);
@@ -91,8 +91,13 @@ namespace ECFMPTest::Api {
                     FlowMeasureMeasureTestCase<double>{
                             "max_mach", "max_mach", 5.0, ECFMP::FlowMeasure::MeasureType::MaxMach, 5.0},
                     FlowMeasureMeasureTestCase<double>{
+                            "max_mach_less_than_1", "max_mach", 0.25, ECFMP::FlowMeasure::MeasureType::MaxMach, 0.25},
+                    FlowMeasureMeasureTestCase<double>{
                             "mach_reduction", "mach_reduction", 5.0, ECFMP::FlowMeasure::MeasureType::MachReduction,
-                            5.0}
+                            5.0},
+                    FlowMeasureMeasureTestCase<double>{
+                            "mach_reduction_less_than_1", "mach_reduction", 0.25,
+                            ECFMP::FlowMeasure::MeasureType::MachReduction, 0.25}
             ),
             [](const testing::TestParamInfo<FlowMeasureMeasureTestCase<double>>& info) {
                 return info.param.description;
