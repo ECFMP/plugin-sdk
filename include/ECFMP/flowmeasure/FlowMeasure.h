@@ -97,7 +97,7 @@ namespace ECFMP::FlowMeasure {
          * The flight information region(s) associated with the measure.
          */
         [[nodiscard]] virtual auto NotifiedFlightInformationRegions() const noexcept
-                -> const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> = 0;
+                -> const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>& = 0;
 
         /**
          *  Checks if the flow measure is applicable to the given flight information region.

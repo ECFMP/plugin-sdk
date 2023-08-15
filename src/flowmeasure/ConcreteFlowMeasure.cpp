@@ -10,7 +10,7 @@ namespace ECFMP::FlowMeasure {
             int id, std::shared_ptr<const Event::Event> event, std::string identifier, std::string reason,
             std::chrono::system_clock::time_point startTime, std::chrono::system_clock::time_point endTime,
             std::chrono::system_clock::time_point withdrawnTime, MeasureStatus status,
-            const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>& notifiedFirs,
+            const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> notifiedFirs,
             std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters
     )
         : id(id), event(std::move(event)), identifier(std::move(identifier)),
@@ -72,8 +72,8 @@ namespace ECFMP::FlowMeasure {
         return checkStatus == status;
     }
 
-    const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>
-    ConcreteFlowMeasure::NotifiedFlightInformationRegions() const noexcept
+    auto ConcreteFlowMeasure::NotifiedFlightInformationRegions() const noexcept
+            -> const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>&
     {
         return notifiedFirs;
     }

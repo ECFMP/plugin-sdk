@@ -89,7 +89,7 @@ namespace ECFMP::Api {
             auto flowMeasure = std::make_shared<FlowMeasure::ConcreteFlowMeasure>(
                     flowMeasureData.at("id").get<int>(), event, flowMeasureData.at("ident").get<std::string>(),
                     flowMeasureData.at("reason").get<std::string>(), startTime, endTime, withdrawnAt, measureStatus,
-                    notifiedFirs, std::move(measure), std::move(filters)
+                    std::move(notifiedFirs), std::move(measure), std::move(filters)
             );
             flowMeasures->Add(flowMeasure);
         }

@@ -14,8 +14,7 @@ namespace ECFMP::FlowMeasure {
                 int id, std::shared_ptr<const Event::Event> event, std::string identifier, std::string reason,
                 std::chrono::system_clock::time_point startTime, std::chrono::system_clock::time_point endTime,
                 std::chrono::system_clock::time_point withdrawnTime, MeasureStatus status,
-                const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>&
-                        notifiedFirs,
+                const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> notifiedFirs,
                 std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters
         );
         ~ConcreteFlowMeasure() override;
@@ -30,7 +29,7 @@ namespace ECFMP::FlowMeasure {
         [[nodiscard]] auto Status() const noexcept -> MeasureStatus override;
         [[nodiscard]] auto HasStatus(MeasureStatus checkStatus) const noexcept -> bool override;
         [[nodiscard]] auto NotifiedFlightInformationRegions() const noexcept
-                -> const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> override;
+                -> const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>>& override;
         [[nodiscard]] auto Measure() const noexcept -> const class Measure& override;
         [[nodiscard]] auto Filters() const noexcept -> const FlowMeasureFilters& override;
         [[nodiscard]] auto IsApplicableToFlightInformationRegion(
@@ -38,7 +37,7 @@ namespace ECFMP::FlowMeasure {
         ) const noexcept -> bool override;
         [[nodiscard]] auto IsApplicableToFlightInformationRegion(const std::string& flightInformationRegion
         ) const noexcept -> bool override;
-        auto ApplicableToAircraft(
+        [[nodiscard]] auto ApplicableToAircraft(
                 const EuroScopePlugIn::CFlightPlan& flightplan, const EuroScopePlugIn::CRadarTarget& radarTarget
         ) const -> bool override;
 
