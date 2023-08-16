@@ -1,6 +1,7 @@
 #include "ECFMP/SdkFactory.h"
 #include "ECFMP/SdkEvents.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
+#include "ECFMP/flowmeasure/CustomFlowMeasureFilter.h"
 #include "ECFMP/http/HttpClient.h"
 #include "ECFMP/log/Logger.h"
 #include "InternalSdk.h"
@@ -32,7 +33,8 @@ namespace ECFMP::Plugin {
                             std::make_unique<Api::FlowMeasureFilterParser>(
                                     GetLogger(), std::make_shared<Euroscope::EuroscopeAircraftFactoryImpl>()
                             ),
-                            std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetLogger(), GetEventBus()
+                            std::make_unique<Api::FlowMeasureMeasureParser>(GetLogger()), GetLogger(), GetEventBus(),
+                            GetCustomFlowMeasureFilters()
                     ),
                     GetLogger()
             );
@@ -59,7 +61,7 @@ namespace ECFMP::Plugin {
             );
         }
 
-        auto CreateLogger() -> std::shared_ptr<Log::Logger>
+        [[nodiscard]] auto CreateLogger() -> std::shared_ptr<Log::Logger>
         {
             if (logger == nullptr) {
                 logger = std::make_unique<Log::NullLogger>();
@@ -68,7 +70,7 @@ namespace ECFMP::Plugin {
             return std::make_shared<Log::LogDecorator>(std::move(logger));
         }
 
-        auto GetLogger() -> std::shared_ptr<Log::Logger>
+        [[nodiscard]] auto GetLogger() -> std::shared_ptr<Log::Logger>
         {
             if (!wrappedLogger) {
                 wrappedLogger = CreateLogger();
@@ -77,13 +79,24 @@ namespace ECFMP::Plugin {
             return wrappedLogger;
         }
 
-        auto GetEventBus() -> std::shared_ptr<EventBus::InternalEventBus>
+        [[nodiscard]] auto GetEventBus() -> std::shared_ptr<EventBus::InternalEventBus>
         {
             if (!eventBus) {
                 eventBus = EventBus::MakeEventBus();
             }
 
             return eventBus;
+        }
+
+        [[nodiscard]] auto GetCustomFlowMeasureFilters()
+                -> std::shared_ptr<std::vector<std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>>>
+        {
+            if (!customFlowMeasureFilters) {
+                customFlowMeasureFilters =
+                        std::make_shared<std::vector<std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>>>();
+            }
+
+            return customFlowMeasureFilters;
         }
 
         // For performing HTTP requests
@@ -97,6 +110,9 @@ namespace ECFMP::Plugin {
 
         // For broadcasting events
         std::shared_ptr<EventBus::InternalEventBus> eventBus = nullptr;
+
+        // Fir airfield filters
+        std::shared_ptr<std::vector<std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>>> customFlowMeasureFilters;
     };
 
     SdkFactory::SdkFactory() : impl(std::make_unique<SdkFactoryImpl>())
@@ -129,6 +145,13 @@ namespace ECFMP::Plugin {
         return *this;
     }
 
+    auto SdkFactory::WithCustomFlowMeasureFilter(const std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>& filter)
+            -> SdkFactory&
+    {
+        impl->GetCustomFlowMeasureFilters()->push_back(filter);
+        return *this;
+    }
+
     auto SdkFactory::Instance() -> std::shared_ptr<Sdk>
     {
         if (!impl->httpClient) {
@@ -139,7 +162,7 @@ namespace ECFMP::Plugin {
         impl->RegisterEventListeners();
 
         // Set up the SDK
-        auto sdk = std::make_shared<InternalSdk>(impl->GetEventBus());
+        auto sdk = std::make_shared<InternalSdk>(impl->GetEventBus(), impl->GetCustomFlowMeasureFilters());
         impl->GetEventBus()->SubscribeAsync<Plugin::FlightInformationRegionsUpdatedEvent>(sdk);
         impl->GetEventBus()->SubscribeAsync<Plugin::EventsUpdatedEvent>(sdk);
         impl->GetEventBus()->SubscribeAsync<Plugin::FlowMeasuresUpdatedEvent>(sdk);

@@ -2,6 +2,7 @@
 #include "ECFMP/SdkEvents.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
+#include "ECFMP/flowmeasure/FlowMeasureFilters.h"
 #include "ECFMP/log/Logger.h"
 #include "FlowMeasureFilterParser.h"
 #include "FlowMeasureMeasureParser.h"
@@ -16,15 +17,17 @@ namespace ECFMP::Api {
     FlowMeasureDataParser::FlowMeasureDataParser(
             std::unique_ptr<FlowMeasureFilterParserInterface> filterParser,
             std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser, std::shared_ptr<Log::Logger> logger,
-            std::shared_ptr<EventBus::InternalEventBus> eventBus
+            std::shared_ptr<EventBus::InternalEventBus> eventBus,
+            std::shared_ptr<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>> customFilters
     )
         : filterParser(std::move(filterParser)), measureParser(std::move(measureParser)), logger(std::move(logger)),
-          eventBus(std::move(eventBus))
+          eventBus(std::move(eventBus)), customFilters(std::move(customFilters))
     {
         assert(this->filterParser != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: filterParser is null");
         assert(this->measureParser != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: measureParser is null");
         assert(this->logger != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: logger is null");
         assert(this->eventBus != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: eventBus is null");
+        assert(this->customFilters != nullptr && "FlowMeasureDataParser::FlowMeasureDataParser: customFilters is null");
     }
 
     auto FlowMeasureDataParser::ParseFlowMeasures(
@@ -89,7 +92,7 @@ namespace ECFMP::Api {
             auto flowMeasure = std::make_shared<FlowMeasure::ConcreteFlowMeasure>(
                     flowMeasureData.at("id").get<int>(), event, flowMeasureData.at("ident").get<std::string>(),
                     flowMeasureData.at("reason").get<std::string>(), startTime, endTime, withdrawnAt, measureStatus,
-                    std::move(notifiedFirs), std::move(measure), std::move(filters)
+                    std::move(notifiedFirs), std::move(measure), std::move(filters), customFilters
             );
             flowMeasures->Add(flowMeasure);
         }

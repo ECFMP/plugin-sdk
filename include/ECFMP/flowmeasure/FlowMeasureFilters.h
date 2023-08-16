@@ -21,6 +21,8 @@ namespace ECFMP::FlowMeasure {
     /**
      * Represents a collection of flow measure filters, along with some helper
      * methods for commonly used queries.
+     *
+     * It does not include any custom filters provided by the user.
      */
     class FlowMeasureFilters
     {

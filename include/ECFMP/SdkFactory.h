@@ -1,5 +1,7 @@
 #pragma once
+#include "ECFMP/flowmeasure/CustomFlowMeasureFilter.h"
 #include "Sdk.h"
+#include <memory>
 
 namespace ECFMP {
     namespace Http {
@@ -49,6 +51,14 @@ namespace ECFMP::Plugin {
          * Throws an SdkConfigurationException if a logger has already been provided.
          */
         [[nodiscard]] auto WithLogger(std::unique_ptr<Log::Logger> log) -> SdkFactory&;
+
+        /**
+         * Allows consumers to provide a custom filter for flow measures. This will be called for every
+         * flow measure that is received from ECFMP when checking if the flow measure is applicable to
+         * the given aircraft.
+         */
+        [[nodiscard]] auto
+        WithCustomFlowMeasureFilter(const std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>& filter) -> SdkFactory&;
 
         /**
          * Returns the configured SDK instance.

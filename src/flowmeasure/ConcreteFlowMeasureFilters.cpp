@@ -7,7 +7,6 @@
 #include "ECFMP/flowmeasure/RangeToDestinationFilter.h"
 #include "ECFMP/flowmeasure/RouteFilter.h"
 #include "euroscope/EuroscopeAircraftFactory.h"
-#include <algorithm>
 
 namespace ECFMP::FlowMeasure {
 

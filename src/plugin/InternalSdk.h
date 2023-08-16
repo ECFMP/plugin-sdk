@@ -7,12 +7,12 @@
 #include "api/InternalElementCollectionTypes.h"
 
 namespace ECFMP {
-    namespace Api {
-        class ApiDataScheduler;
-    }
     namespace EventBus {
         class InternalEventBus;
-    }
+    }// namespace EventBus
+    namespace FlowMeasure {
+        class CustomFlowMeasureFilter;
+    }// namespace FlowMeasure
 }// namespace ECFMP
 
 namespace ECFMP::Plugin {
@@ -23,9 +23,15 @@ namespace ECFMP::Plugin {
                         public EventBus::EventListener<Plugin::FlowMeasuresUpdatedEvent>
     {
         public:
-        InternalSdk(std::shared_ptr<EventBus::InternalEventBus> eventBus);
+        InternalSdk(
+                std::shared_ptr<EventBus::InternalEventBus> eventBus,
+                std::shared_ptr<std::vector<std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>>>
+                        customFlowMeasureFilters
+        );
         ~InternalSdk() override = default;
 
+        [[nodiscard]] auto CustomFlowMeasureFilters() const noexcept
+                -> const std::vector<std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>>&;
         [[nodiscard]] auto FlightInformationRegions() const noexcept
                 -> std::shared_ptr<const Api::FlightInformationRegionCollection> override;
         [[nodiscard]] auto Events() const noexcept -> std::shared_ptr<const Api::EventCollection> override;
@@ -51,6 +57,9 @@ namespace ECFMP::Plugin {
 
         // The flow measures that are currently loaded.
         std::shared_ptr<Api::FlowMeasureCollection> flowMeasures;
+
+        // The custom flow measure filters that are currently loaded.
+        std::shared_ptr<std::vector<std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>>> customFlowMeasureFilters;
 
         // Locks the class for returning the flight information regions.
         mutable std::mutex mutex;

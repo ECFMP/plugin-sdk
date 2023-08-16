@@ -1,8 +1,5 @@
 #pragma once
-#include "ECFMP/flowmeasure/FlowMeasureFilters.h"
-#include "ECFMP/flowmeasure/LevelRangeFilter.h"
-#include "ECFMP/flowmeasure/MultipleLevelFilter.h"
-#include "ECFMP/flowmeasure/RangeToDestinationFilter.h"
+#include "ECFMP/flowmeasure/LevelRangeFilterType.h"
 #include "FlowMeasureFilterParserInterface.h"
 
 namespace ECFMP {
@@ -11,7 +8,11 @@ namespace ECFMP {
     }// namespace Euroscope
     namespace FlowMeasure {
         class AirportFilter;
+        class CustomFlowMeasureFilter;
         class EventFilter;
+        class LevelRangeFilter;
+        class MultipleLevelFilter;
+        class RangeToDestinationFilter;
         class RouteFilter;
     }// namespace FlowMeasure
     namespace Log {

@@ -3,13 +3,18 @@
 #include "eventbus/InternalEventBus.h"
 
 namespace ECFMP::Plugin {
-    InternalSdk::InternalSdk(std::shared_ptr<EventBus::InternalEventBus> eventBus)
+    InternalSdk::InternalSdk(
+            std::shared_ptr<EventBus::InternalEventBus> eventBus,
+            std::shared_ptr<std::vector<std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>>> customFlowMeasureFilters
+    )
         : eventBus(std::move(eventBus)),
           flightInformationRegions(std::make_shared<Api::InternalFlightInformationRegionCollection>()),
           events(std::make_shared<Api::InternalEventCollection>()),
-          flowMeasures(std::make_shared<Api::InternalFlowMeasureCollection>())
+          flowMeasures(std::make_shared<Api::InternalFlowMeasureCollection>()),
+          customFlowMeasureFilters(std::move(customFlowMeasureFilters))
     {
         assert(this->eventBus && "Event bus not set in ConcreteSdk");
+        assert(this->customFlowMeasureFilters && "Custom flow measure filters not set in ConcreteSdk");
     }
 
     void InternalSdk::Destroy()
@@ -62,5 +67,11 @@ namespace ECFMP::Plugin {
     {
         auto lock = std::lock_guard(mutex);
         flowMeasures = eventType.flowMeasures;
+    }
+
+    auto InternalSdk::CustomFlowMeasureFilters() const noexcept
+            -> const std::vector<std::shared_ptr<FlowMeasure::CustomFlowMeasureFilter>>&
+    {
+        return *customFlowMeasureFilters;
     }
 }// namespace ECFMP::Plugin

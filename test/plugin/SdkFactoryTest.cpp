@@ -1,6 +1,7 @@
 #include "ECFMP/SdkFactory.h"
 #include "ECFMP/SdkEvents.h"
 #include "ECFMP/eventbus/EventBus.h"
+#include "ECFMP/flowmeasure/CustomFlowMeasureFilter.h"
 #include "api/ApiDataDownloadedEvent.h"
 #include "api/ApiDataDownloader.h"
 #include "api/ApiDataParser.h"
@@ -15,6 +16,18 @@
 #include "plugin/InternalSdkEvents.h"
 
 namespace ECFMPTest::Plugin {
+
+    class MockCustomFlowMeasureFilter : public ECFMP::FlowMeasure::CustomFlowMeasureFilter
+    {
+        public:
+        MOCK_METHOD(
+                bool, ApplicableToAircraft,
+                (const EuroScopePlugIn::CFlightPlan&, const EuroScopePlugIn::CRadarTarget&,
+                 const ECFMP::FlowMeasure::FlowMeasure&),
+                (const, noexcept, override)
+        );
+    };
+
     class SdkFactoryTest : public testing::Test
     {
         public:
@@ -180,6 +193,23 @@ namespace ECFMPTest::Plugin {
                                            {ECFMP::EventBus::EventDispatchMode::Async, false}
                                    );
         EXPECT_TRUE(hasListener);
+        instance->Destroy();
+    }
+
+    TEST_F(SdkFactoryTest, ItAddsCustomFilters)
+    {
+        const auto customFilter = std::make_shared<MockCustomFlowMeasureFilter>();
+        const auto customFilter2 = std::make_shared<MockCustomFlowMeasureFilter>();
+        const auto instance = ECFMP::Plugin::SdkFactory::Build()
+                                      .WithHttpClient(std::move(http))
+                                      .WithCustomFlowMeasureFilter(customFilter)
+                                      .WithCustomFlowMeasureFilter(customFilter2)
+                                      .Instance();
+
+        const auto customerFilters = ((ECFMP::Plugin::InternalSdk*) instance.get())->CustomFlowMeasureFilters();
+        EXPECT_EQ(2, customerFilters.size());
+        EXPECT_EQ(customFilter, customerFilters[0]);
+        EXPECT_EQ(customFilter2, customerFilters[1]);
         instance->Destroy();
     }
 }// namespace ECFMPTest::Plugin

@@ -20,7 +20,12 @@ namespace ECFMPTest::Plugin {
     class ConcreteSdkTest : public testing::Test
     {
         public:
-        ConcreteSdkTest() : eventBus(ECFMP::EventBus::MakeEventBus()), instance(eventBus)
+        ConcreteSdkTest()
+            : eventBus(ECFMP::EventBus::MakeEventBus()),
+              instance(
+                      eventBus,
+                      std::make_shared<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>>()
+              )
         {}
 
         std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;

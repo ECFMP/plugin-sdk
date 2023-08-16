@@ -4,9 +4,14 @@
 #include "eventbus/InternalEventBus.h"
 #include "nlohmann/json_fwd.hpp"
 
-namespace ECFMP::Log {
-    class Logger;
-}// namespace ECFMP::Log
+namespace ECFMP {
+    namespace FlowMeasure {
+        class CustomFlowMeasureFilter;
+    }// namespace FlowMeasure
+    namespace Log {
+        class Logger;
+    }// namespace Log
+}// namespace ECFMP
 
 namespace ECFMP::Api {
 
@@ -19,7 +24,8 @@ namespace ECFMP::Api {
         FlowMeasureDataParser(
                 std::unique_ptr<FlowMeasureFilterParserInterface> filterParser,
                 std::unique_ptr<FlowMeasureMeasureParserInterface> measureParser, std::shared_ptr<Log::Logger> logger,
-                std::shared_ptr<EventBus::InternalEventBus> eventBus
+                std::shared_ptr<EventBus::InternalEventBus> eventBus,
+                std::shared_ptr<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>> customFilters
         );
         ~FlowMeasureDataParser() override = default;
         [[nodiscard]] auto ParseFlowMeasures(
@@ -50,6 +56,9 @@ namespace ECFMP::Api {
 
         // Event bus
         std::shared_ptr<EventBus::InternalEventBus> eventBus;
+
+        // Custom flow measure filters
+        std::shared_ptr<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>> customFilters;
     };
 
 }// namespace ECFMP::Api

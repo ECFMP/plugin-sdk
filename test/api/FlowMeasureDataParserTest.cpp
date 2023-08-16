@@ -1,5 +1,6 @@
 #include "api/FlowMeasureDataParser.h"
 #include "ECFMP/SdkEvents.h"
+#include "ECFMP/flowmeasure/CustomFlowMeasureFilter.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "ECFMP/flowmeasure/Measure.h"
 #include "ECFMP/flowmeasure/MultipleLevelFilter.h"
@@ -127,8 +128,11 @@ namespace ECFMPTest::Api {
             eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasuresUpdatedEvent>(mockEventHandler);
             eventBus->SubscribeSync<ECFMP::Plugin::InternalFlowMeasuresUpdatedEvent>(mockEventHandlerInternal);
 
+            customFilters =
+                    std::make_shared<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>>();
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
-                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus
+                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus,
+                    customFilters
             );
 
             firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
@@ -144,6 +148,7 @@ namespace ECFMPTest::Api {
             ));
         }
 
+        std::shared_ptr<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>> customFilters;
         std::shared_ptr<MockFlowMeasuresUpdatedEventHandler> mockEventHandler;
         std::shared_ptr<MockInternalFlowMeasuresUpdatedEventHandler> mockEventHandlerInternal;
         std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
@@ -346,8 +351,11 @@ namespace ECFMPTest::Api {
             eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasuresUpdatedEvent>(mockEventHandler);
             eventBus->SubscribeSync<ECFMP::Plugin::InternalFlowMeasuresUpdatedEvent>(mockEventHandlerInternal);
 
+            customFilters =
+                    std::make_shared<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>>();
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
-                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus
+                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus,
+                    customFilters
             );
 
             firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
@@ -363,6 +371,7 @@ namespace ECFMPTest::Api {
             ));
         }
 
+        std::shared_ptr<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>> customFilters;
         std::shared_ptr<MockFlowMeasuresUpdatedEventHandler> mockEventHandler;
         std::shared_ptr<MockInternalFlowMeasuresUpdatedEventHandler> mockEventHandlerInternal;
         std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;
@@ -807,8 +816,11 @@ namespace ECFMPTest::Api {
             eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasuresUpdatedEvent>(mockEventHandler);
             eventBus->SubscribeSync<ECFMP::Plugin::InternalFlowMeasuresUpdatedEvent>(mockEventHandlerInternal);
 
+            customFilters =
+                    std::make_shared<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>>();
             parser = std::make_unique<ECFMP::Api::FlowMeasureDataParser>(
-                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus
+                    std::move(filterParser), std::move(measureParser), std::make_shared<Log::MockLogger>(), eventBus,
+                    customFilters
             );
 
             firs.Add(std::make_shared<ECFMP::FlightInformationRegion::ConcreteFlightInformationRegion>(
@@ -824,6 +836,7 @@ namespace ECFMPTest::Api {
             ));
         }
 
+        std::shared_ptr<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>> customFilters;
         std::shared_ptr<MockFlowMeasuresUpdatedEventHandler> mockEventHandler;
         std::shared_ptr<MockInternalFlowMeasuresUpdatedEventHandler> mockEventHandlerInternal;
         std::shared_ptr<ECFMP::EventBus::InternalEventBus> eventBus;

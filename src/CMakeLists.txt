@@ -24,7 +24,7 @@ set(src_eventbus
         ../include/ECFMP/eventbus/EventFilter.h ../include/ECFMP/eventbus/EventBus.h eventbus/InternalEventBus.h eventbus/EventDispatcher.h eventbus/SynchronousEventDispatcher.h eventbus/AsynchronousEventDispatcher.h eventbus/EuroscopeEventDispatcher.h eventbus/PendingEuroscopeEvents.cpp eventbus/PendingEuroscopeEvents.h eventbus/EventDispatcherFactory.h eventbus/SubscriptionFlags.h)
 
 set(src_flowmeasures
-        flowmeasure/ConcreteFlowMeasure.cpp flowmeasure/ConcreteFlowMeasure.h flowmeasure/ConcreteAirportFilter.cpp flowmeasure/ConcreteAirportFilter.h flowmeasure/ConcreteEventFilter.cpp flowmeasure/ConcreteEventFilter.h flowmeasure/ConcreteLevelRangeFilter.cpp flowmeasure/ConcreteLevelRangeFilter.h flowmeasure/ConcreteRouteFilter.cpp flowmeasure/ConcreteRouteFilter.h flowmeasure/ConcreteMeasure.cpp flowmeasure/ConcreteMeasure.h flowmeasure/ConcreteMeasureFactory.cpp flowmeasure/ConcreteMeasureFactory.h flowmeasure/ConcreteFlowMeasureFilters.cpp flowmeasure/ConcreteFlowMeasureFilters.h api/FlowMeasureFilterParserInterface.h ../include/ECFMP/flowmeasure/MultipleLevelFilter.h flowmeasure/ConcreteMultipleLevelFilter.cpp flowmeasure/ConcreteMultipleLevelFilter.h ../include/mock/MultipleLevelFilterMock.h ../include/ECFMP/flowmeasure/RangeToDestinationFilter.h flowmeasure/ConcreteRangeToDestinationFilter.cpp flowmeasure/ConcreteRangeToDestinationFilter.h flowmeasure/CanonicalFlowMeasureInfo.cpp ../include/ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h flowmeasure/FlowMeasureStatusUpdates.cpp flowmeasure/FlowMeasureStatusUpdates.h ../include/ECFMP/flowmeasure/ChecksAircraftApplicability.h)
+        flowmeasure/ConcreteFlowMeasure.cpp flowmeasure/ConcreteFlowMeasure.h flowmeasure/ConcreteAirportFilter.cpp flowmeasure/ConcreteAirportFilter.h flowmeasure/ConcreteEventFilter.cpp flowmeasure/ConcreteEventFilter.h flowmeasure/ConcreteLevelRangeFilter.cpp flowmeasure/ConcreteLevelRangeFilter.h flowmeasure/ConcreteRouteFilter.cpp flowmeasure/ConcreteRouteFilter.h flowmeasure/ConcreteMeasure.cpp flowmeasure/ConcreteMeasure.h flowmeasure/ConcreteMeasureFactory.cpp flowmeasure/ConcreteMeasureFactory.h flowmeasure/ConcreteFlowMeasureFilters.cpp flowmeasure/ConcreteFlowMeasureFilters.h api/FlowMeasureFilterParserInterface.h ../include/ECFMP/flowmeasure/MultipleLevelFilter.h flowmeasure/ConcreteMultipleLevelFilter.cpp flowmeasure/ConcreteMultipleLevelFilter.h ../include/mock/MultipleLevelFilterMock.h ../include/ECFMP/flowmeasure/RangeToDestinationFilter.h flowmeasure/ConcreteRangeToDestinationFilter.cpp flowmeasure/ConcreteRangeToDestinationFilter.h flowmeasure/CanonicalFlowMeasureInfo.cpp ../include/ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h flowmeasure/FlowMeasureStatusUpdates.cpp flowmeasure/FlowMeasureStatusUpdates.h ../include/ECFMP/flowmeasure/ChecksAircraftApplicability.h ../include/ECFMP/flowmeasure/CustomFlowMeasureFilter.h ../include/ECFMP/flowmeasure/LevelRangeFilterType.h)
 
 set(src_log log/LogDecorator.cpp log/LogDecorator.h log/LogDecorator.h log/NullLogger.cpp log/NullLogger.h)
 
@@ -64,7 +64,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_include_directories(${PROJECT_NAME} PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR};"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
-)
+        )
 
 # Treat Euroscope as a system include directory to suppress warning, because they have lots
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE

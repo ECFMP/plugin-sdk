@@ -1,6 +1,7 @@
 #include "ConcreteFlowMeasure.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h"
+#include "ECFMP/flowmeasure/CustomFlowMeasureFilter.h"
 #include "ECFMP/flowmeasure/FlowMeasureFilters.h"
 #include "ECFMP/flowmeasure/Measure.h"
 
@@ -11,14 +12,18 @@ namespace ECFMP::FlowMeasure {
             std::chrono::system_clock::time_point startTime, std::chrono::system_clock::time_point endTime,
             std::chrono::system_clock::time_point withdrawnTime, MeasureStatus status,
             const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> notifiedFirs,
-            std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters
+            std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters,
+            std::shared_ptr<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>> customFilters
     )
         : id(id), event(std::move(event)), identifier(std::move(identifier)),
           canonicalInformation(std::make_unique<CanonicalFlowMeasureInfo>(this->identifier)), reason(std::move(reason)),
           startTime(startTime), endTime(endTime), withdrawnTime(withdrawnTime), status(status),
-          notifiedFirs(notifiedFirs), measure(std::move(measure)), filters(std::move(filters))
+          notifiedFirs(notifiedFirs), measure(std::move(measure)), filters(std::move(filters)),
+          customFilters(std::move(customFilters))
     {
         assert(this->measure && "Measure not set in ConcreteFlowMeasure");
+        assert(this->filters && "Filters not set in ConcreteFlowMeasure");
+        assert(this->customFilters && "Custom filters not set in ConcreteFlowMeasure");
     }
 
     ConcreteFlowMeasure::~ConcreteFlowMeasure() = default;
@@ -117,6 +122,12 @@ namespace ECFMP::FlowMeasure {
             const EuroScopePlugIn::CFlightPlan& flightplan, const EuroScopePlugIn::CRadarTarget& radarTarget
     ) const
     {
-        return filters->ApplicableToAircraft(flightplan, radarTarget);
+        return filters->ApplicableToAircraft(flightplan, radarTarget)
+                && std::all_of(
+                        customFilters->cbegin(), customFilters->cend(),
+                        [&flightplan, &radarTarget, this](const std::shared_ptr<CustomFlowMeasureFilter>& filter) {
+                            return filter->ApplicableToAircraft(flightplan, radarTarget, *this);
+                        }
+                );
     }
 }// namespace ECFMP::FlowMeasure

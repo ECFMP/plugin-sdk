@@ -7,6 +7,8 @@ namespace ECFMP::FlightInformationRegion {
 
 namespace ECFMP::FlowMeasure {
 
+    class CustomFlowMeasureFilter;
+
     class ConcreteFlowMeasure : public FlowMeasure
     {
         public:
@@ -15,7 +17,8 @@ namespace ECFMP::FlowMeasure {
                 std::chrono::system_clock::time_point startTime, std::chrono::system_clock::time_point endTime,
                 std::chrono::system_clock::time_point withdrawnTime, MeasureStatus status,
                 const std::vector<std::shared_ptr<const FlightInformationRegion::FlightInformationRegion>> notifiedFirs,
-                std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters
+                std::unique_ptr<class Measure> measure, std::unique_ptr<FlowMeasureFilters> filters,
+                std::shared_ptr<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>> customFilters
         );
         ~ConcreteFlowMeasure() override;
         [[nodiscard]] auto Id() const noexcept -> int override;
@@ -77,5 +80,8 @@ namespace ECFMP::FlowMeasure {
 
         // The filters
         std::unique_ptr<FlowMeasureFilters> filters;
+
+        // Custom filters
+        std::shared_ptr<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>> customFilters;
     };
 }// namespace ECFMP::FlowMeasure

@@ -2,6 +2,8 @@
 #include "ECFMP/event/Event.h"
 #include "ECFMP/flowmeasure/EventFilter.h"
 #include "ECFMP/flowmeasure/LevelRangeFilter.h"
+#include "ECFMP/flowmeasure/MultipleLevelFilter.h"
+#include "ECFMP/flowmeasure/RangeToDestinationFilter.h"
 #include "ECFMP/flowmeasure/RouteFilter.h"
 #include "api/InternalApiElementCollection.h"
 #include "flowmeasure/ConcreteAirportFilter.h"

@@ -1,6 +1,7 @@
 #include "flowmeasure/ConcreteFlowMeasure.h"
 #include "ECFMP/flightinformationregion/FlightInformationRegion.h"
 #include "ECFMP/flowmeasure/CanonicalFlowMeasureInfo.h"
+#include "ECFMP/flowmeasure/CustomFlowMeasureFilter.h"
 #include "ECFMP/flowmeasure/MultipleLevelFilter.h"
 #include "ECFMP/flowmeasure/RangeToDestinationFilter.h"
 #include "event/ConcreteEvent.h"
@@ -47,7 +48,8 @@ namespace ECFMPTest::FlowMeasure {
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{},
                               std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
-                      )
+                      ),
+                      std::make_shared<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>>()
               ),
               measureWithNoEvent(
                       2, nullptr, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
@@ -61,7 +63,8 @@ namespace ECFMPTest::FlowMeasure {
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{},
                               std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
-                      )
+                      ),
+                      std::make_shared<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>>()
               ),
               withdrawnMeasure(
                       3, nullptr, "EGTT01A", "Reason", startTime, endTime, withdrawnTime,
@@ -75,7 +78,8 @@ namespace ECFMPTest::FlowMeasure {
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
                               std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{},
                               std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
-                      )
+                      ),
+                      std::make_shared<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>>()
               )
         {}
 
@@ -127,7 +131,8 @@ namespace ECFMPTest::FlowMeasure {
                         std::list<std::shared_ptr<ECFMP::FlowMeasure::MultipleLevelFilter>>{},
                         std::list<std::shared_ptr<ECFMP::FlowMeasure::RangeToDestinationFilter>>{},
                         std::make_shared<Euroscope::MockEuroscopeAircraftFactory>()
-                )
+                ),
+                std::make_shared<std::vector<std::shared_ptr<ECFMP::FlowMeasure::CustomFlowMeasureFilter>>>()
         );
 
         EXPECT_EQ("EGTT02B", measure2.CanonicalInformation().Identifier());

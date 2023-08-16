@@ -1,6 +1,9 @@
 #pragma once
 #include "../../src/pch.h"
 
+#include "Sdk.h"
+#include "SdkEvents.h"
+#include "SdkFactory.h"
 #include "api/ApiElementCollection.h"
 #include "api/StringIdentifierApiElementCollection.h"
 #include "event/Event.h"
@@ -11,6 +14,7 @@
 #include "flightinformationregion/FlightInformationRegion.h"
 #include "flowmeasure/AirportFilter.h"
 #include "flowmeasure/CanonicalFlowMeasureInfo.h"
+#include "flowmeasure/CustomFlowMeasureFilter.h"
 #include "flowmeasure/EventFilter.h"
 #include "flowmeasure/FlowMeasure.h"
 #include "flowmeasure/FlowMeasureFilters.h"
@@ -20,6 +24,3 @@
 #include "flowmeasure/RouteFilter.h"
 #include "http/HttpClient.h"
 #include "log/Logger.h"
-#include "Sdk.h"
-#include "SdkFactory.h"
-#include "SdkEvents.h"

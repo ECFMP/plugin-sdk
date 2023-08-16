@@ -1,13 +1,8 @@
 #pragma once
 #include "ChecksAircraftApplicability.h"
+#include "LevelRangeFilterType.h"
 
 namespace ECFMP::FlowMeasure {
-
-    enum LevelRangeFilterType
-    {
-        AtOrAbove = 1,
-        AtOrBelow = 2
-    };
 
     /**
      * A filter that pertains to the cruising level of the aircraft.
