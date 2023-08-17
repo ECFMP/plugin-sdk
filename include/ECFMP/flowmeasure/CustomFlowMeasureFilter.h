@@ -1,5 +1,9 @@
 #pragma once
-#include "EuroScopePlugIn.h"
+
+namespace EuroScopePlugIn {
+    class CFlightPlan;
+    class CRadarTarget;
+}// namespace EuroScopePlugIn
 
 namespace ECFMP::FlowMeasure {
     class FlowMeasure;
