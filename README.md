@@ -4,6 +4,14 @@ A Software Development Kit (SDK) for the ECFMP Flow Control API
 
 ## Integrating With The SDK
 
+### CMake
+
+You can integrate this SDK into your EuroScope plugin by adding its subdirectory in CMake, for example:
+
+```cmake
+add_subdirectory(third_party/ecfmp/src)
+```
+
 ### Create a HTTP Client
 
 Rather than ship with an opinionated viewpoint as to what you should use for HTTP requests, this SDK
@@ -52,6 +60,10 @@ These listeners must implement the `EventListener` interface.
 auto eventListener = std::make_shared<MyListener<ECFMP::Plugin::FlowMeasureActivatedEvent>>();
 ecfmp.EventBus().Subscribe<ECFMP::Plugin::FlowMeasureActivatedEvent>(eventListener);
 ```
+
+### Disposing
+
+You can dispose of the SDK by calling `Dispose()` on the SDK instance.
 
 ## Testing Your Integration
 
