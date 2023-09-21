@@ -26,7 +26,7 @@ namespace ECFMP::FlowMeasure {
             if (!canonicalFlowMeasures.contains(canonicalInformation.Identifier())) {
                 canonicalFlowMeasures[canonicalInformation.Identifier()] = measure;
                 BroadcastStatusUpdate(measure);
-                return;
+                continue;
             }
 
             // Switch the measure we have stored out for the new one
