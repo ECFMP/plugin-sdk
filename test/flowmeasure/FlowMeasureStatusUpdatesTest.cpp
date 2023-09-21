@@ -43,6 +43,44 @@ namespace ECFMPTest::FlowMeasure {
         std::shared_ptr<ECFMP::FlowMeasure::FlowMeasure> expectedMeasure;
     };
 
+    template<typename EventType>
+    class FlowMeasureStatusUpdatesMultipleEventListener : public ECFMP::EventBus::EventListener<EventType>
+    {
+        public:
+        FlowMeasureStatusUpdatesMultipleEventListener(
+                std::unordered_map<int, std::shared_ptr<ECFMP::FlowMeasure::FlowMeasure>> expectedMeasures
+        )
+            : expectedMeasures(std::move(expectedMeasures))
+        {}
+
+        void OnEvent(const EventType& event) override
+        {
+            callCount++;
+            EXPECT_TRUE(expectedMeasures.contains(event.flowMeasure->Id()));
+            expectedMeasures.erase(event.flowMeasure->Id());
+        }
+
+        void AssertCalledOnce()
+        {
+            EXPECT_EQ(callCount, 1);
+        }
+
+        void AssertCalledTwice()
+        {
+            EXPECT_EQ(callCount, 2);
+        }
+
+        void AssertNotCalled()
+        {
+            EXPECT_EQ(callCount, 0);
+        }
+
+        private:
+        int callCount = 0;
+
+        std::unordered_map<int, std::shared_ptr<ECFMP::FlowMeasure::FlowMeasure>> expectedMeasures;
+    };
+
     class FlowMeasureReissuedEventListener
         : public ECFMP::EventBus::EventListener<ECFMP::Plugin::FlowMeasureReissuedEvent>
     {
@@ -87,12 +125,13 @@ namespace ECFMPTest::FlowMeasure {
         {}
 
         [[nodiscard]] static auto
-        GetMeasureMock(const std::string& identifier, const ECFMP::FlowMeasure::MeasureStatus status)
+        GetMeasureMock(const std::string& identifier, const ECFMP::FlowMeasure::MeasureStatus status, int id = 1)
                 -> std::shared_ptr<ECFMP::Mock::FlowMeasure::FlowMeasureMock>
         {
             auto measure = std::make_shared<ECFMP::Mock::FlowMeasure::FlowMeasureMock>();
             auto canonicalInformation = std::make_shared<ECFMP::FlowMeasure::CanonicalFlowMeasureInfo>(identifier);
 
+            ON_CALL(*measure, Id).WillByDefault(testing::Return(id));
             ON_CALL(*measure, CanonicalInformation)
                     .WillByDefault(testing::Invoke(
                             [canonicalInformation]() -> const ECFMP::FlowMeasure::CanonicalFlowMeasureInfo& {
@@ -263,6 +302,52 @@ namespace ECFMPTest::FlowMeasure {
         listenerActivated->AssertNotCalled();
         listenerWithdrawn->AssertNotCalled();
         listenerExpired->AssertCalledOnce();
+    }
+
+    TEST_F(FlowMeasureStatusUpdatesTest, ItBroadcastsMultipleMeasures)
+    {
+        // Set up the measure and collection
+        auto measure1 = GetMeasureMock("EGTT01A", ECFMP::FlowMeasure::MeasureStatus::Expired);
+        auto measure2 = GetMeasureMock("EGTT01B", ECFMP::FlowMeasure::MeasureStatus::Expired, 2);
+        std::shared_ptr<ECFMP::Api::InternalFlowMeasureCollection> flowMeasures =
+                std::make_shared<ECFMP::Api::InternalFlowMeasureCollection>();
+        flowMeasures->Add(measure1);
+        flowMeasures->Add(measure2);
+
+        // Set up event listeners
+        auto listenerNotified =
+                std::make_shared<FlowMeasureStatusUpdatesEventListener<ECFMP::Plugin ::FlowMeasureNotifiedEvent>>(
+                        measure1
+                );
+        auto listenerActivated =
+                std::make_shared<FlowMeasureStatusUpdatesEventListener<ECFMP::Plugin::FlowMeasureActivatedEvent>>(
+                        measure1
+                );
+        auto listenerWithdrawn =
+                std::make_shared<FlowMeasureStatusUpdatesEventListener<ECFMP::Plugin::FlowMeasureWithdrawnEvent>>(
+                        measure1
+                );
+
+        const std::unordered_map<int, std::shared_ptr<ECFMP::FlowMeasure::FlowMeasure>> expectedMeasures = {
+                {measure1->Id(), measure1},
+                {measure2->Id(), measure2}};
+        auto listenerExpired =
+                std::make_shared<FlowMeasureStatusUpdatesMultipleEventListener<ECFMP::Plugin::FlowMeasureExpiredEvent>>(
+                        expectedMeasures
+                );
+
+        eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasureNotifiedEvent>(listenerNotified);
+        eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasureActivatedEvent>(listenerActivated);
+        eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasureWithdrawnEvent>(listenerWithdrawn);
+        eventBus->SubscribeSync<ECFMP::Plugin::FlowMeasureExpiredEvent>(listenerExpired);
+
+        // Run event and check the events broadcast
+        EXPECT_EQ(2, flowMeasures->GetUnderlyingCollection().size());
+        flowMeasureStatusUpdates->OnEvent({flowMeasures});
+        listenerNotified->AssertNotCalled();
+        listenerActivated->AssertNotCalled();
+        listenerWithdrawn->AssertNotCalled();
+        listenerExpired->AssertCalledTwice();
     }
 
     TEST_F(FlowMeasureStatusUpdatesTest, ItBroadcastsReissuedEventOnCanonicalUpodate)
