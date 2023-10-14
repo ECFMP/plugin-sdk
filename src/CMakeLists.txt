@@ -36,6 +36,10 @@ set(src_plugin
         plugin/InternalSdk.cpp
         plugin/SdkFactory.cpp ../include/ECFMP/SdkEvents.h plugin/InternalSdkEvents.h)
 
+set(src_thread
+        thread/ThreadPool.cpp
+        thread/ThreadPool.h)
+
 set(src_time time/Clock.cpp time/Clock.h)
 
 set(ALL_FILES
@@ -49,6 +53,7 @@ set(ALL_FILES
         ${src_log}
         ${src_pch}
         ${src_plugin}
+        ${src_thread}
         ${src_time})
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
@@ -59,17 +64,17 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 target_include_directories(${PROJECT_NAME} PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/nlohmann;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/euroscope;"
-        )
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR};"
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
-        )
+)
 
 # Treat Euroscope as a system include directory to suppress warning, because they have lots
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/euroscope;"
-        )
+)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
@@ -89,4 +94,4 @@ target_compile_options(${PROJECT_NAME} PRIVATE
         /WX;
         -Wno-unused-parameter; # Lots of interfaces don't use everything
         -Wno-missing-field-initializers; # Windows has loads of this sadly
-        )
+)

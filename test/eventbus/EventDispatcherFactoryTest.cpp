@@ -1,6 +1,7 @@
 #include "eventbus/EventDispatcherFactory.h"
 #include "eventbus/PendingEuroscopeEvents.h"
 #include "eventbus/SubscriptionFlags.h"
+#include "thread/ThreadPool.h"
 
 namespace ECFMPTest::EventBus {
 
@@ -24,8 +25,11 @@ namespace ECFMPTest::EventBus {
     {
         public:
         EventDispatcherFactoryTest()
-            : pendingEvents(std::make_shared<ECFMP::EventBus::PendingEuroscopeEvents>()),
-              eventDispatcherFactory(std::make_shared<ECFMP::EventBus::EventDispatcherFactory>(pendingEvents))
+            : threadPool(std::make_shared<ECFMP::Thread::ThreadPool>()),
+              pendingEvents(std::make_shared<ECFMP::EventBus::PendingEuroscopeEvents>()),
+              eventDispatcherFactory(
+                      std::make_shared<ECFMP::EventBus::EventDispatcherFactory>(pendingEvents, threadPool)
+              )
         {}
 
         [[nodiscard]] static auto CreateListener() -> std::shared_ptr<MockEventDispatcherListener>
@@ -41,6 +45,7 @@ namespace ECFMPTest::EventBus {
             }
         }
 
+        std::shared_ptr<ECFMP::Thread::ThreadPool> threadPool;
         std::shared_ptr<ECFMP::EventBus::PendingEuroscopeEvents> pendingEvents;
         std::shared_ptr<ECFMP::EventBus::EventDispatcherFactory> eventDispatcherFactory;
     };

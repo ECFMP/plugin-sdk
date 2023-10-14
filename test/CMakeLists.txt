@@ -32,7 +32,7 @@ set(test__eventbus
 
 set(test__flightinformationregion
         flightinformationregion/ConcreteFlightInformationRegionTest.cpp
-        )
+)
 
 set(test__flowmeasure
         flowmeasure/ConcreteAirportFilterTest.cpp
@@ -46,7 +46,7 @@ set(test__flowmeasure
 
 set(test__log
         log/LogDecoratorTest.cpp
-        )
+)
 
 set(test__mock
         mock/MockEuroscopeAircraft.h
@@ -57,11 +57,14 @@ set(test__mock
 set(test__pch
         pch/pch.cpp
         pch/pch.h
-        )
+)
 
 set(test__plugin
         plugin/SdkFactoryTest.cpp
         plugin/InternalSdkTest.cpp)
+
+set(test__thread
+        thread/ThreadPoolTest.cpp)
 
 set(test__other
         main.cpp
@@ -80,8 +83,9 @@ add_executable(${PROJECT_NAME}
         ${test__log}
         ${test__mock}
         ${test__plugin}
+        ${test__thread}
         ${test__other}
-        )
+)
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -90,7 +94,7 @@ add_dependencies(${PROJECT_NAME}
         ecfmp_sdk
         gtest
         gmock
-        )
+)
 
 #### INCLUDES
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -99,12 +103,12 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/../include;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/googletest/googlemock/include;"
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/nlohmann;"
-        )
+)
 
 # Treat Euroscope as a system include directory to suppress warning, because they have lots
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/euroscope;"
-        )
+)
 
 #### LINKS
 target_link_directories(
@@ -117,7 +121,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         gmock
         ecfmp_sdk
         "EuroScopePlugInDll;"
-        )
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS " -m32" LINK_FLAGS "-m32" JSON_MultipleHeaders "ON ")
 
@@ -142,7 +146,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
         -Wno-unused-parameter; # Lots of interfaces don't use everything
         -Wno-missing-field-initializers; # Windows has loads of this sadly
         /EHa;
-        )
+)
 
 #### LINK OPTIONS
 target_link_options(${PROJECT_NAME} PRIVATE
@@ -159,10 +163,10 @@ target_link_options(${PROJECT_NAME} PRIVATE
         >
         /NODEFAULTLIB:LIBCMT;
         /SUBSYSTEM:CONSOLE;
-        )
+)
 
 # Post-build copy the EuroScope binary
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../lib/EuroScopePlugInDll.dll" "${PROJECT_BINARY_DIR}/EuroScopePlugInDll.dll"
         COMMENT "Copied EuroScope shared library to ${PROJECT_BINARY_DIR}/EuroScopePlugInDll.dll"
-        )
+)
