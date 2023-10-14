@@ -5,16 +5,20 @@
 #include "PendingEuroscopeEvents.h"
 #include "SubscriptionFlags.h"
 #include "SynchronousEventDispatcher.h"
-#include <assert.h>
+#include "thread/ThreadPool.h"
 
 namespace ECFMP::EventBus {
     class EventDispatcherFactory
     {
         public:
-        explicit EventDispatcherFactory(const std::shared_ptr<PendingEuroscopeEvents>& pendingEuroscopeEvents)
-            : pendingEuroscopeEvents(pendingEuroscopeEvents)
+        EventDispatcherFactory(
+                const std::shared_ptr<PendingEuroscopeEvents>& pendingEuroscopeEvents,
+                const std::shared_ptr<Thread::ThreadPool>& threadPool
+        )
+            : pendingEuroscopeEvents(pendingEuroscopeEvents), threadPool(threadPool)
         {
             assert(pendingEuroscopeEvents != nullptr && "pendingEuroscopeEvents cannot be null");
+            assert(threadPool != nullptr && "threadPool cannot be null");
         }
         virtual ~EventDispatcherFactory() = default;
 
@@ -26,7 +30,7 @@ namespace ECFMP::EventBus {
             case EventDispatchMode::Sync:
                 return std::make_shared<SynchronousEventDispatcher<EventType>>(listener);
             case EventDispatchMode::Async:
-                return std::make_shared<AsynchronousEventDispatcher<EventType>>(listener);
+                return std::make_shared<AsynchronousEventDispatcher<EventType>>(listener, threadPool);
             case EventDispatchMode::Euroscope:
                 return std::make_shared<EuroscopeEventDispatcher<EventType>>(listener, pendingEuroscopeEvents);
             default:
@@ -37,5 +41,8 @@ namespace ECFMP::EventBus {
         private:
         // A place that stores events that should be dispatched on the Euroscope thread.
         std::shared_ptr<PendingEuroscopeEvents> pendingEuroscopeEvents;
+
+        // The thread pool to use for dispatching events
+        std::shared_ptr<Thread::ThreadPool> threadPool;
     };
 }// namespace ECFMP::EventBus

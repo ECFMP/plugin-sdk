@@ -19,6 +19,7 @@ namespace ECFMP::Plugin {
 
     void InternalSdk::Destroy()
     {
+        // Resetting the event bus naturally means we wait for threads to finish.
         eventBus.reset();
     }
 
